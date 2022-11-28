@@ -1,0 +1,164 @@
+---
+sidebar_position: 2
+---
+
+# osmosis
+
+## Links 
+
+- **Contract address:** 
+- **Testnet address:**
+- **Contract repo:** https://github.com/mars-protocol/outposts/tree/master/contracts/oracle/osmosis
+- **contract.rs:** https://github.com/mars-protocol/outposts/blob/master/contracts/oracle/osmosis/src/contract.rs
+- **msg.rs (packages):** https://github.com/mars-protocol/outposts/blob/master/contracts/oracle/osmosis/src/msg.rs
+- **Tests:** https://github.com/mars-protocol/outposts/tree/master/contracts/oracle/osmosis/tests
+- **Audit:**
+
+## InstantiateMsg
+
+<CH.Section>
+<CH.Code>
+
+```rust contract.rs focus=1:19,35
+#[cfg(not(feature = "library"))]
+pub mod entry {
+    use cosmwasm_std::{entry_point, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
+
+    use mars_oracle_base::ContractResult;
+    use mars_outpost::oracle::{ExecuteMsg, InstantiateMsg, QueryMsg};
+
+    use super::*;
+
+    #[entry_point]
+    pub fn instantiate(
+        deps: DepsMut,
+        _env: Env,
+        _info: MessageInfo,
+        msg: InstantiateMsg,
+    ) -> StdResult<Response> {
+        cw2::set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
+        OsmosisOracle::default().instantiate(deps, msg)
+    }
+
+    #[entry_point]
+    pub fn execute(
+        deps: DepsMut,
+        _env: Env,
+        info: MessageInfo,
+        msg: ExecuteMsg<OsmosisPriceSource>,
+    ) -> ContractResult<Response> {
+        OsmosisOracle::default().execute(deps, info, msg)
+    }
+
+    #[entry_point]
+    pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
+        OsmosisOracle::default().query(deps, env, msg)
+    }
+}
+```
+
+</CH.Code>
+</CH.Section>
+
+## ExecuteMsg
+
+<CH.Section>
+<CH.Code>
+
+```rust contract.rs focus=1:8,21:29,35
+#[cfg(not(feature = "library"))]
+pub mod entry {
+    use cosmwasm_std::{entry_point, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
+
+    use mars_oracle_base::ContractResult;
+    use mars_outpost::oracle::{ExecuteMsg, InstantiateMsg, QueryMsg};
+
+    use super::*;
+
+    #[entry_point]
+    pub fn instantiate(
+        deps: DepsMut,
+        _env: Env,
+        _info: MessageInfo,
+        msg: InstantiateMsg,
+    ) -> StdResult<Response> {
+        cw2::set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
+        OsmosisOracle::default().instantiate(deps, msg)
+    }
+
+    #[entry_point]
+    pub fn execute(
+        deps: DepsMut,
+        _env: Env,
+        info: MessageInfo,
+        msg: ExecuteMsg<OsmosisPriceSource>,
+    ) -> ContractResult<Response> {
+        OsmosisOracle::default().execute(deps, info, msg)
+    }
+
+    #[entry_point]
+    pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
+        OsmosisOracle::default().query(deps, env, msg)
+    }
+}
+```
+
+</CH.Code>
+</CH.Section>
+
+## QueryMsg
+
+<CH.Section>
+<CH.Code>
+
+```rust contract.rs focus=1:8,31:35
+#[cfg(not(feature = "library"))]
+pub mod entry {
+    use cosmwasm_std::{entry_point, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
+
+    use mars_oracle_base::ContractResult;
+    use mars_outpost::oracle::{ExecuteMsg, InstantiateMsg, QueryMsg};
+
+    use super::*;
+
+    #[entry_point]
+    pub fn instantiate(
+        deps: DepsMut,
+        _env: Env,
+        _info: MessageInfo,
+        msg: InstantiateMsg,
+    ) -> StdResult<Response> {
+        cw2::set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
+        OsmosisOracle::default().instantiate(deps, msg)
+    }
+
+    #[entry_point]
+    pub fn execute(
+        deps: DepsMut,
+        _env: Env,
+        info: MessageInfo,
+        msg: ExecuteMsg<OsmosisPriceSource>,
+    ) -> ContractResult<Response> {
+        OsmosisOracle::default().execute(deps, info, msg)
+    }
+
+    #[entry_point]
+    pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
+        OsmosisOracle::default().query(deps, env, msg)
+    }
+}
+```
+
+```rust test
+#[test]
+fn test_instantiating() {
+    let deps = helpers::setup_test();
+
+    let cfg: Config<String> = helpers::query(deps.as_ref(), QueryMsg::Config {});
+    assert_eq!(cfg.owner, "owner".to_string());
+    assert_eq!(cfg.base_denom, "uosmo".to_string());
+}
+```
+
+</CH.Code>
+</CH.Section>

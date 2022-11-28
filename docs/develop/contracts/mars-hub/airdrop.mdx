@@ -1,0 +1,928 @@
+---
+sidebar_position: 1
+---
+
+# airdrop
+
+The Airdrop contract is responsible for distributing the MARS token airdrop on Mars Hub.
+
+## Links
+
+- **Contract address:** 
+- **Testnet address:**
+- **Contract repo:** https://github.com/mars-protocol/periphery/tree/main/contracts/airdrop
+- **contract.rs:** https://github.com/mars-protocol/periphery/blob/main/contracts/airdrop/src/contract.rs
+- **msg.rs (packages):** https://github.com/mars-protocol/periphery/blob/main/contracts/airdrop/src/msg.rs
+- **Tests:** https://github.com/mars-protocol/periphery/tree/main/contracts/airdrop/tests
+- **Video walkthrough:** [Part 1](https://youtu.be/FRRPslvVfpc) / [Part 2](https://youtu.be/VeRMEtyLxyk)
+- **Article breakdown:** [Part 1](https://blog.marsprotocol.io/blog/mars-protocol-code-review-breakdown-session-1-airdrop-contract) / [Part 2](https://blog.marsprotocol.io/blog/mars-protocol-code-review-breakdown-session-2-airdrop-contract-in-action-overview-of-the-vesting-contract)
+- **Audit:**
+
+## InstantiateMsg
+
+Instantiates the Airdrop contract.
+
+The deployer must transfer MARS tokens corresponding to the total airdrop amount to the contract at instantiation. The instantiate function does not check whether the correct amount of tokens is received, or whether the Merkle root is valid (e.g. of correct length). The deployer must make sure these are accurate.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "merkle_root": "..."
+}
+```
+
+```rust msg.rs
+#[cw_serde]
+pub struct InstantiateMsg {
+    pub merkle_root: String,
+}
+```
+
+```rust contract.rs
+#[cfg_attr(not(feature = "library"), entry_point)]
+pub fn instantiate(
+    deps: DepsMut,
+    _env: Env,
+    _info: MessageInfo,
+    msg: InstantiateMsg,
+) -> StdResult<Response> {
+    set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
+
+    ROOT.save(deps.storage, &msg.merkle_root)?;
+
+    Ok(Response::new())
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| `merkle_root`   | `String`       | Root of the Merkle tree, in hex encoding; each leaf is the SHA256 hash of the string `{recipient},{amount}`        |
+
+</CH.Section>
+
+## ExecuteMsg
+
+### `claim`
+
+In order to claim the MARS token airdrop, a Terra user needs to:
+
+- [add Mars Hub to Keplr wallet](https://docs.keplr.app/api/suggest-chain.html) and obtain a Mars address to receive the airdrop
+- sign a message with the Terra account's private key to prove their ownership of the account and to specify the recipient Mars address
+- generate the Merkle proof
+
+The message to be signed is:
+
+`airdrop for {terra-address} of {amount} umars shall be released to {mars-address}`
+
+The `execute_msg` is as follows:
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+  "claim": {
+    "terra_acct_pk": "...",
+    "mars_acct": "...",
+    "amount": "...",
+    "proof": [
+      "...",
+      "...",
+      "..."
+    ],
+    "signature": "..."
+  }
+}
+```
+
+```rust msg.rs
+#[cw_serde]
+pub enum ExecuteMsg {
+    Claim {
+        terra_acct_pk: String,
+        mars_acct: String,
+        amount: Uint128,
+        proof: Vec<String>,
+        signature: String,
+    },
+}
+```
+
+```rust contract.rs
+#[cfg_attr(not(feature = "library"), entry_point)]
+pub fn execute(
+    deps: DepsMut,
+    _env: Env,
+    _info: MessageInfo,
+    msg: ExecuteMsg,
+) -> StdResult<Response<MarsMsg>> {
+    let api = deps.api;
+    match msg {
+        ExecuteMsg::Claim {
+            terra_acct_pk,
+            mars_acct,
+            amount,
+            proof,
+            signature,
+        } => claim(deps, terra_acct_pk, api.addr_validate(&mars_acct)?, amount, proof, signature),
+    }
+}
+
+pub fn claim(
+    deps: DepsMut,
+    terra_acct_pk: String,
+    mars_acct: Addr,
+    amount: Uint128,
+    proof: Vec<String>,
+    signature: String,
+) -> StdResult<Response<MarsMsg>> {
+    let root = ROOT.load(deps.storage)?;
+
+    let terra_acct = pubkey_to_addr(&terra_acct_pk, "terra")?;
+
+    // The Terra account must not have already claimed
+    CLAIMED.update(deps.storage, &terra_acct, |claimed| {
+        if claimed.is_some() {
+            return Err(StdError::generic_err("account has already claimed"));
+        }
+        Ok(amount)
+    })?;
+
+    // The signature must be valid
+    let msg = msg(&terra_acct, mars_acct.as_str(), amount);
+    if !verify_signature(deps.api, &msg, &terra_acct_pk, &signature)? {
+        return Err(StdError::generic_err("invalid signature"));
+    }
+
+    // The Merkle proof must be valid
+    let leaf = leaf(&terra_acct, amount);
+    if !verify_proof(&leaf, &root, &proof)? {
+        return Err(StdError::generic_err("invalid proof"));
+    }
+
+    Ok(Response::new()
+        .add_message(CosmosMsg::Bank(BankMsg::Send {
+            to_address: mars_acct.to_string(),
+            amount: coins(amount.u128(), "umars"),
+        }))
+        .add_attribute("action", "mars/airdrop/claim")
+        .add_attribute("terra_acct", terra_acct)
+        .add_attribute("mars_acct", mars_acct)
+        .add_attribute("amount", amount))
+}
+```
+
+```rust test
+#[test]
+fn claiming() {
+    let mut deps = setup_test();
+
+    // valid test case generated by `scripts/1_build_merkle_tree.ts` and `scripts/2_sign_messages.ts`
+    let terra_acct_pk = "02306e8b60d390b54aa36a79b825dfebc49b1f3483a110c448a36db2bdfebed248";
+    let terra_acct = "terra1757tkx08n0cqrw7p86ny9lnxsqeth0wgp0em95";
+    let mars_acct = "mars1757tkx08n0cqrw7p86ny9lnxsqeth0wg6k6zj0";
+    let amount = Uint128::new(42069);
+    let proof = vec![
+        "43e1c4776372ff2136f9f8db4f2c9e8392ebd9c378bf47eeba18871309c453d7".to_string(),
+        "37c71107165d3dc28551f006263453fa642d78fc013c04d2d89d96de022fde24".to_string(),
+        "7089ea1db485169381b9e3539e5c61e3818b53c03a34f8f2aeecf35a3e112c3a".to_string(),
+    ];
+    let signature = "a0927f2beea637682263e91afd39c2e11f987e41c3239cc6e6a6d8bb9f07decc27c69c02968da59567449d2baf8c24990ddf0a6457fb1e7c6187e1cc6723483e";
+
+    // valid proof, valid signature
+    let res = execute(
+        deps.as_mut(),
+        mock_env(),
+        mock_info("claimer", &[]),
+        ExecuteMsg::Claim {
+            terra_acct_pk: terra_acct_pk.to_string(),
+            mars_acct: mars_acct.to_string(),
+            amount,
+            proof: proof.clone(),
+            signature: signature.to_string(),
+        },
+    )
+    .unwrap();
+
+    assert_eq!(res.messages.len(), 1);
+    assert_eq!(
+        res.messages[0],
+        SubMsg::new(CosmosMsg::Bank(BankMsg::Send {
+            to_address: mars_acct.to_string(),
+            amount: coins(42069, "umars"),
+        })),
+    );
+
+    // "claimed" should have been updated
+    let claimed = CLAIMED.load(deps.as_ref().storage, terra_acct).unwrap();
+    assert_eq!(claimed, Uint128::new(42069));
+
+    // the same account cannot claim twice
+    let err = execute(
+        deps.as_mut(),
+        mock_env(),
+        mock_info("claimer", &[]),
+        ExecuteMsg::Claim {
+            terra_acct_pk: terra_acct_pk.to_string(),
+            mars_acct: mars_acct.to_string(),
+            amount,
+            proof: proof.clone(),
+            signature: signature.to_string(),
+        },
+    )
+    .unwrap_err();
+
+    assert_eq!(err, StdError::generic_err("account has already claimed"));
+
+    // reset "claimed" for the next test
+    CLAIMED.remove(deps.as_mut().storage, terra_acct);
+
+    // invalid proof, valid signature
+    let err = execute(
+        deps.as_mut(),
+        mock_env(),
+        mock_info("claimer", &[]),
+        ExecuteMsg::Claim {
+            terra_acct_pk: terra_acct_pk.to_string(),
+            mars_acct: mars_acct.to_string(),
+            amount,
+            proof: vec![
+                "f3712e76d8b9288a381de1d22720fe3673d9e2636f1c11b2b26d6e7889a78692".to_string(),
+                "37c71107165d3dc28551f006263453fa642d78fc013c04d2d89d96de022fde24".to_string(),
+                "bff2934478464bb50326325e6b2a2d47ba13475eccfa991e9825442b06ae7efc".to_string(),
+            ],
+            signature: signature.to_string(),
+        },
+    )
+    .unwrap_err();
+
+    assert_eq!(err, StdError::generic_err("invalid proof"));
+
+    // reset "claimed" for the next test
+    CLAIMED.remove(deps.as_mut().storage, terra_acct);
+
+    // valid proof, but invalid signature
+    let err = execute(
+            deps.as_mut(),
+            mock_env(),
+            mock_info("claimer", &[]),
+            ExecuteMsg::Claim {
+                terra_acct_pk: terra_acct_pk.to_string(),
+                mars_acct: mars_acct.to_string(),
+                amount,
+                proof: proof.clone(),
+                signature: "7f73595b39e4e8ed853e3fbe49ca32438e9a9b6f1f578dfa6acfda1d267c60953b749ba2b091b6058c0258db3f9231a4529651962b718b77db3e0ed8887e7cd1".to_string(),
+            },
+        )
+        .unwrap_err();
+
+    assert_eq!(err, StdError::generic_err("invalid signature"));
+}
+```
+
+</CH.Code>
+
+Where [`terra_acct_pk`](focus://json#3), [`proof`](focus://json#6:10), and [`signature`](focus://json#11) are hex-encoded strings.
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`terra_acct_pk`](focus://json#3)   | `String`        | Public key of the Mars Classic token holder, in hex encoding        |
+| [`mars_acct`](focus://json#4)      | `String`       | Mars address to which the claimed tokens shall to sent       |
+| [`amount`](focus://json#5)   | `Uint128`        | Amount of Mars tokens claim      |
+| [`proof`](focus://json#6:10)   | `Vec<String>`        | Proof that leaf `{terra-acct}:{amount}` exists in the Merkle tree, in hex encoding      |
+| [`signature`](focus://json#11)   | `String`        | Signature produced by signing message `airdrop for {terra-acct} of {amount} umars shall be released to {mars-acct}` by the Terra account's private key, in hex encoding      |
+
+See scripts [1](https://github.com/mars-protocol/periphery/blob/main/scripts/1_build_merkle_tree.ts) and [2](https://github.com/mars-protocol/periphery/blob/main/scripts/2_sign_message.ts) for examples on how to construct the Merkle proof and sign the message.
+
+</CH.Section>
+
+## SudoMsg 
+
+### `clawback`
+
+The contract also defines a deadline for claiming. Once the deadline is passed, anyone can invoke the `clawback` function to transfer the unclaimed tokens to the community pool.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+   "clawback": {} 
+}
+```
+
+```rust msg.rs
+#[cw_serde]
+pub enum SudoMsg {
+    Clawback {},
+}
+```
+
+```rust contract.rs
+#[cfg_attr(not(feature = "library"), entry_point)]
+pub fn sudo(deps: DepsMut, env: Env, msg: SudoMsg) -> StdResult<Response<MarsMsg>> {
+    match msg {
+        SudoMsg::Clawback {} => clawback(deps, env),
+    }
+}
+
+pub fn clawback(deps: DepsMut, env: Env) -> StdResult<Response<MarsMsg>> {
+    let amount = deps.querier.query_all_balances(&env.contract.address)?;
+
+    let amount_str = amount.iter().map(|coin| coin.to_string()).collect::<Vec<_>>().join(",");
+
+    Ok(Response::new()
+        .add_message(CosmosMsg::Custom(MarsMsg::FundCommunityPool {
+            amount,
+        }))
+        .add_attribute("action", "mars/airdrop/clawback")
+        .add_attribute("timestamp", env.block.time.seconds().to_string())
+        .add_attribute("amount", amount_str))
+}
+```
+
+```rust test
+#[test]
+fn clawing_back() {
+    let mut deps = setup_test();
+
+    let res = sudo(deps.as_mut(), mock_env(), SudoMsg::Clawback {}).unwrap();
+
+    assert_eq!(res.messages.len(), 1);
+    assert_eq!(
+        res.messages[0],
+        SubMsg::new(CosmosMsg::Custom(MarsMsg::FundCommunityPool {
+            amount: coins(1000000000, "umars"),
+        })),
+    );
+}
+```
+
+</CH.Code>
+</CH.Section>
+
+## QueryMsg
+
+### `config`
+
+Returns the contract's configuration parameters.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "config": {}
+}
+```
+
+```rust msg.rs focus=1:5,28
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(ConfigResponse)]
+    Config {},
+    #[returns(ClaimedResponse)]
+    Claimed {
+        terra_acct: String,
+    },
+    #[returns(Vec<ClaimedResponse>)]
+    AllClaimed {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(bool)]
+    VerifySignature {
+        terra_acct_pk: String,
+        mars_acct: String,
+        amount: Uint128,
+        signature: String,
+    },
+    #[returns(bool)]
+    VerifyProof {
+        terra_acct: String,
+        amount: Uint128,
+        proof: Vec<String>,
+    },
+}
+```
+
+```rust contract.rs focus=1:4,23:24,26:30
+#[cfg_attr(not(feature = "library"), entry_point)]
+pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
+    match msg {
+        QueryMsg::Config {} => to_binary(&query_config(deps)?),
+        QueryMsg::Claimed {
+            terra_acct,
+        } => to_binary(&query_claimed(deps, terra_acct)?),
+        QueryMsg::AllClaimed {
+            start_after,
+            limit,
+        } => to_binary(&query_all_claimed(deps, start_after, limit)?),
+        QueryMsg::VerifySignature {
+            terra_acct_pk,
+            mars_acct,
+            amount,
+            signature,
+        } => to_binary(&query_verify_signature(deps, terra_acct_pk, mars_acct, amount, signature)?),
+        QueryMsg::VerifyProof {
+            terra_acct,
+            amount,
+            proof,
+        } => to_binary(&query_verify_proof(deps, terra_acct, amount, proof)?),
+    }
+}
+
+pub fn query_config(deps: Deps) -> StdResult<ConfigResponse> {
+    Ok(ConfigResponse {
+        merkle_root: ROOT.load(deps.storage)?,
+    })
+}
+```
+
+</CH.Code>
+</CH.Section>
+
+#### `ConfigResponse`
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "merkle_root": "..."
+}
+```
+
+```rust msg.rs
+pub type ConfigResponse = InstantiateMsg;
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| `merkle_root`   | `String`       | Root of the Merkle tree, in hex encoding; each leaf is the SHA256 hash of the string `{recipient},{amount}`        |
+
+</CH.Section>
+
+### `claimed`
+
+Returns the amount of tokens that an account has claimed. 
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "claimed": {
+        "terra_acct": "terra..."
+    }
+}
+```
+
+```rust msg.rs focus=1:3,6:9,28
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(ConfigResponse)]
+    Config {},
+    #[returns(ClaimedResponse)]
+    Claimed {
+        terra_acct: String,
+    },
+    #[returns(Vec<ClaimedResponse>)]
+    AllClaimed {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(bool)]
+    VerifySignature {
+        terra_acct_pk: String,
+        mars_acct: String,
+        amount: Uint128,
+        signature: String,
+    },
+    #[returns(bool)]
+    VerifyProof {
+        terra_acct: String,
+        amount: Uint128,
+        proof: Vec<String>,
+    },
+}
+```
+
+```rust contract.rs focus=1:3,5:7,23:24,26:31
+#[cfg_attr(not(feature = "library"), entry_point)]
+pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
+    match msg {
+        QueryMsg::Config {} => to_binary(&query_config(deps)?),
+        QueryMsg::Claimed {
+            terra_acct,
+        } => to_binary(&query_claimed(deps, terra_acct)?),
+        QueryMsg::AllClaimed {
+            start_after,
+            limit,
+        } => to_binary(&query_all_claimed(deps, start_after, limit)?),
+        QueryMsg::VerifySignature {
+            terra_acct_pk,
+            mars_acct,
+            amount,
+            signature,
+        } => to_binary(&query_verify_signature(deps, terra_acct_pk, mars_acct, amount, signature)?),
+        QueryMsg::VerifyProof {
+            terra_acct,
+            amount,
+            proof,
+        } => to_binary(&query_verify_proof(deps, terra_acct, amount, proof)?),
+    }
+}
+
+pub fn query_claimed(deps: Deps, terra_acct: String) -> StdResult<ClaimedResponse> {
+    Ok(ClaimedResponse {
+        amount: CLAIMED.load(deps.storage, &terra_acct).unwrap_or_else(|_| Uint128::zero()),
+        terra_acct,
+    })
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`terra_acct`](focus://json#3)   | `String`       | The user's Terra account address |
+
+</CH.Section>
+
+#### `ClaimedResponse`
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "terra_acct": "terra...", 
+    "amount": 123
+}
+```
+
+```rust msg.rs
+#[cw_serde]
+pub struct ClaimedResponse {
+    pub terra_acct: String,
+    pub amount: Uint128,
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`terra_acct`](focus://json#2)   | `String`       | The user's Terra account address |
+| [`amount`](focus://json#3)   | `Uint128`       | The amount of tokens this user has claimed |
+
+
+</CH.Section>
+
+### `all_claimed`
+
+Enumerates all accounts that have been claimed.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "all_claimed": {
+        "start_after": "...",
+        "limit": 123
+    }
+}
+```
+
+```rust msg.rs focus=1:3,10:14,28
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(ConfigResponse)]
+    Config {},
+    #[returns(ClaimedResponse)]
+    Claimed {
+        terra_acct: String,
+    },
+    #[returns(Vec<ClaimedResponse>)]
+    AllClaimed {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(bool)]
+    VerifySignature {
+        terra_acct_pk: String,
+        mars_acct: String,
+        amount: Uint128,
+        signature: String,
+    },
+    #[returns(bool)]
+    VerifyProof {
+        terra_acct: String,
+        amount: Uint128,
+        proof: Vec<String>,
+    },
+}
+```
+
+```rust contract.rs focus=1:3,8:11,23:24,26:45
+#[cfg_attr(not(feature = "library"), entry_point)]
+pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
+    match msg {
+        QueryMsg::Config {} => to_binary(&query_config(deps)?),
+        QueryMsg::Claimed {
+            terra_acct,
+        } => to_binary(&query_claimed(deps, terra_acct)?),
+        QueryMsg::AllClaimed {
+            start_after,
+            limit,
+        } => to_binary(&query_all_claimed(deps, start_after, limit)?),
+        QueryMsg::VerifySignature {
+            terra_acct_pk,
+            mars_acct,
+            amount,
+            signature,
+        } => to_binary(&query_verify_signature(deps, terra_acct_pk, mars_acct, amount, signature)?),
+        QueryMsg::VerifyProof {
+            terra_acct,
+            amount,
+            proof,
+        } => to_binary(&query_verify_proof(deps, terra_acct, amount, proof)?),
+    }
+}
+
+pub fn query_all_claimed(
+    deps: Deps,
+    start_after: Option<String>,
+    limit: Option<u32>,
+) -> StdResult<Vec<ClaimedResponse>> {
+    let start = start_after.as_ref().map(|terra_acct| Bound::exclusive(terra_acct.as_str()));
+    let limit = limit.unwrap_or(DEFAULT_LIMIT).min(MAX_LIMIT) as usize;
+
+    CLAIMED
+        .range(deps.storage, start, None, Order::Ascending)
+        .take(limit)
+        .map(|res| {
+            let (terra_acct, amount) = res?;
+            Ok(ClaimedResponse {
+                terra_acct,
+                amount,
+            })
+        })
+        .collect()
+}
+```
+
+```rust test
+#[test]
+fn querying_all_claimed() {
+    let mut deps = setup_test();
+
+    CLAIMED.save(deps.as_mut().storage, "larry", &Uint128::new(42069)).unwrap();
+    CLAIMED.save(deps.as_mut().storage, "jake", &Uint128::new(69420)).unwrap();
+
+    let res: Vec<ClaimedResponse> = query_helper(
+        deps.as_ref(),
+        mock_env(),
+        QueryMsg::AllClaimed {
+            start_after: None,
+            limit: None,
+        },
+    );
+    assert_eq!(
+        res,
+        vec![
+            ClaimedResponse {
+                terra_acct: "jake".to_string(),
+                amount: Uint128::new(69420),
+            },
+            ClaimedResponse {
+                terra_acct: "larry".to_string(),
+                amount: Uint128::new(42069),
+            }
+        ],
+    );
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`start_after`](focus://json#3)   | `Option<String>`       | A Terra account address to start after |
+| [`limit`](focus://json#4)   | `Option<u32>`       | The amount of addresses to list |
+    
+</CH.Section>
+
+#### `Vec<ClaimedResponse>`
+
+`all_claimed` returns a vector of the [`ClaimedResponse`](#claimedresponse) struct defined above.
+
+### `verify_signature`
+
+Verifies the validity of a signature.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "verify_signature": {
+        "terra_acct_pk": "...",
+        "mars_acct": "mars...",
+        "amount": 123,
+        "signature": "..."
+    }
+}
+```
+
+```rust msg.rs focus=1:3,15:21,28
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(ConfigResponse)]
+    Config {},
+    #[returns(ClaimedResponse)]
+    Claimed {
+        terra_acct: String,
+    },
+    #[returns(Vec<ClaimedResponse>)]
+    AllClaimed {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(bool)]
+    VerifySignature {
+        terra_acct_pk: String,
+        mars_acct: String,
+        amount: Uint128,
+        signature: String,
+    },
+    #[returns(bool)]
+    VerifyProof {
+        terra_acct: String,
+        amount: Uint128,
+        proof: Vec<String>,
+    },
+}
+```
+
+```rust contract.rs focus=1:3,12:17,23:24,26:36
+#[cfg_attr(not(feature = "library"), entry_point)]
+pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
+    match msg {
+        QueryMsg::Config {} => to_binary(&query_config(deps)?),
+        QueryMsg::Claimed {
+            terra_acct,
+        } => to_binary(&query_claimed(deps, terra_acct)?),
+        QueryMsg::AllClaimed {
+            start_after,
+            limit,
+        } => to_binary(&query_all_claimed(deps, start_after, limit)?),
+        QueryMsg::VerifySignature {
+            terra_acct_pk,
+            mars_acct,
+            amount,
+            signature,
+        } => to_binary(&query_verify_signature(deps, terra_acct_pk, mars_acct, amount, signature)?),
+        QueryMsg::VerifyProof {
+            terra_acct,
+            amount,
+            proof,
+        } => to_binary(&query_verify_proof(deps, terra_acct, amount, proof)?),
+    }
+}
+
+pub fn query_verify_signature(
+    deps: Deps,
+    terra_acct_pk: String,
+    mars_acct: String,
+    amount: Uint128,
+    signature: String,
+) -> StdResult<bool> {
+    let terra_acct = pubkey_to_addr(&terra_acct_pk, "terra")?;
+
+    verify_signature(deps.api, &msg(&terra_acct, &mars_acct, amount), &terra_acct_pk, &signature)
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`terra_acct_pk`](focus://json#3)   | `String`        | Public key of the Mars Classic token holder, in hex encoding        |
+| [`mars_acct`](focus://json#4)      | `String`       | Mars address to which the claimed tokens shall to sent       |
+| [`amount`](focus://json#5)   | `Uint128`        | Amount of Mars tokens claim      |
+| [`signature`](focus://json#6)   | `String`        | Signature produced by signing message `airdrop for {terra-acct} of {amount} umars shall be released to {mars-acct}` by the Terra account's private key, in hex encoding      |
+
+</CH.Section>
+
+Returns `bool`
+
+### `verify_proof`
+
+Verifies a Merkle proof.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "verify_proof": {
+        "terra_acct": "terra...", 
+        "amount": 123,
+        "proof": "..."
+    }
+}
+```
+
+```rust msg.rs focus=1:3,22:28
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(ConfigResponse)]
+    Config {},
+    #[returns(ClaimedResponse)]
+    Claimed {
+        terra_acct: String,
+    },
+    #[returns(Vec<ClaimedResponse>)]
+    AllClaimed {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(bool)]
+    VerifySignature {
+        terra_acct_pk: String,
+        mars_acct: String,
+        amount: Uint128,
+        signature: String,
+    },
+    #[returns(bool)]
+    VerifyProof {
+        terra_acct: String,
+        amount: Uint128,
+        proof: Vec<String>,
+    },
+}
+```
+
+```rust contract.rs focus=1:3,18:22,23:24,26:35
+#[cfg_attr(not(feature = "library"), entry_point)]
+pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
+    match msg {
+        QueryMsg::Config {} => to_binary(&query_config(deps)?),
+        QueryMsg::Claimed {
+            terra_acct,
+        } => to_binary(&query_claimed(deps, terra_acct)?),
+        QueryMsg::AllClaimed {
+            start_after,
+            limit,
+        } => to_binary(&query_all_claimed(deps, start_after, limit)?),
+        QueryMsg::VerifySignature {
+            terra_acct_pk,
+            mars_acct,
+            amount,
+            signature,
+        } => to_binary(&query_verify_signature(deps, terra_acct_pk, mars_acct, amount, signature)?),
+        QueryMsg::VerifyProof {
+            terra_acct,
+            amount,
+            proof,
+        } => to_binary(&query_verify_proof(deps, terra_acct, amount, proof)?),
+    }
+}
+
+pub fn query_verify_proof(
+    deps: Deps,
+    terra_acct: String,
+    amount: Uint128,
+    merkle_proof: Vec<String>,
+) -> StdResult<bool> {
+    let merkle_root = ROOT.load(deps.storage)?;
+
+    verify_proof(&leaf(&terra_acct, amount), &merkle_root, &merkle_proof)
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`terra_acct`](focus://json#3)   | `String`        | Public key of the Mars Classic token holder, in hex encoding        |
+| [`amount`](focus://json#4)   | `Uint128`        | Amount of Mars tokens claim      |
+| [`proof`](focus://json#5)   | `Vec<String>`        | Proof that leaf `{terra-acct}:{amount}` exists in the Merkle tree, in hex encoding      |
+
+</CH.Section>
+
+Returns `bool`

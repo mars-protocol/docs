@@ -1,0 +1,134 @@
+---
+sidebar_position: 1
+---
+
+import Admonition from '@theme/Admonition'
+
+# Basics
+
+Create, import, export and delete keys using the CLI keyring.
+
+## Create a new key
+
+You can create a new key with the name demo-user as in the following example:
+
+```bash
+marsd keys add demo-user --coin-type 118
+```
+
+`--coin-type` is a parameter used when generating private keys from seed phrases, as defined in [SLIP-0044](https://github.com/satoshilabs/slips/blob/master/slip-0044.md). Most Cosmos chains use `118`. For the sake of a better interchain UX, we recommend everyone use `118`.
+
+The following is an example response:
+
+```
+- name: demo-user
+  type: local
+  address: mars1quw5r22pxy8znjtdkgqc65atrm3x5hg6vycm5n
+  pubkey: marspub1addwnpepqdct05khsxvtaaj0stuvayrpw0j8t6styr7vu05k3y63d5540ftuz8x6tsq
+  mnemonic: ""
+  threshold: 0
+  pubkeys: []
+
+**Important** write this mnemonic phrase in a safe place.
+It is the only way to recover your account if you ever forget your password.
+
+spare leopard potato hospital series salt model myself bronze print despair please mutual rival battle lumber crater brain food artwork goose west talent ritual
+```
+
+<Admonition type="warning" title="WARNING">
+It is important that you keep the mnemonic for address secure, as there is **no way** to recover it. You would not be able to recover and access the funds in the wallet if you forget the mnemonic phrase. 
+</Admonition>
+
+## Restore existing key by seed phrase
+
+You can restore an existing key with the mnemonic.
+
+```bash
+$ marsd keys add demo-user_restore --recover
+> Enter your bip39 mnemonic
+## Enter your 24-word mnemonic here ##
+```
+
+## List your keys
+
+Multiple keys can be created when needed. You can list all keys saved under the storage path.
+
+```bash
+marsd keys list
+```
+
+The following is an example response:
+
+```
+- name: demo-user
+    type: local
+    address: ## Address of "Default" ##
+    pubkey: ## Pubkey of "Default" ##
+    mnemonic: ""
+    threshold: 0
+    pubkeys: []
+  - name: Default_restore
+    type: local
+    address: ## Address of "Default_restore" ##
+    pubkey: ## Pubkey of "Default_restore" ##
+    mnemonic: ""
+    threshold: 0
+    pubkeys: []
+```
+
+## Retrieving key information
+
+You can retrieve key information by its name:
+
+```
+# Account Address and its public key
+$ marsd keys show demo-user --bech acc
+
+# Validator Address and its public key
+$ marsd keys show demo-user --bech val
+
+# Consensus nodes Address and its public key
+$ marsd keys show demo-user --bech cons
+```
+
+The following is an example response: 
+
+```
+- name: demo-user
+  type: local
+  address: marscncl1zdlttjrqh9jsgk2l8tgn6f0kxlfy98s3prz35z
+  pubkey: marscnclpub1addwnpepq0ua07k8p3vrv5dap4pl77n4gjyyqsqrndzu0tdrr60ddhfg6ah0ck5ad5l
+  mnemonic: ""
+  threshold: 0
+  pubkeys: []
+```
+
+## Delete a key
+
+You can delete a key in your storage path.
+
+<Admonition type="warning" title="WARNING">
+Make sure you have backed up the key mnemonic before removing any of your keys, as there will be no way to recover your key without the mnemonic.
+</Admonition>
+
+```bash
+$ marsd keys delete demo-user_restore1
+Key reference will be deleted. Continue? [y/N]: y
+Key deleted forever (uh oh!)
+```
+
+## Export private keys
+
+You can export and backup your key by using the `export` subcommand:
+
+```bash
+$ marsd keys export demo-user
+Enter passphrase to encrypt the exported key: ## Insert passphrase (must be at least 8 characters)##
+-----BEGIN TENDERMINT PRIVATE KEY-----
+kdf: bcrypt
+salt: ## Salt of the key ##
+type: secp256k1
+
+## Tendermint private key ##
+-----END TENDERMINT PRIVATE KEY-----
+```

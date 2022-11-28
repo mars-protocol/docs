@@ -1,0 +1,21 @@
+---
+sidebar_position: 1
+---
+
+import RedBankArchitectureUrl from '@site/static/img/learn/red-bank/red-bank-architecture.png';
+
+# Red Bank Architecture
+
+Each deployment of the Red Bank for a given outpost is comprised of the following stakeholders:
+
+- **Validators/Stakers:** Stake MARS on Mars Hub, secure the Mars Hub network, govern outposts, implement new features and set risk parameters. In return for doing so, they earn a portion of protocol revenues.
+
+- **Lenders:** Deposit assets into Mars liquidity pools, earning a fee analogous to an interest rate.
+
+- **Borrowers (collateralised):** Borrow assets from Mars liquidity pools using their deposited assets as collateral. These borrowers must, therefore, also be depositors.
+
+- **Borrowers (contract-based):** Smart contracts that are whitelisted to borrow assets from Mars liquidity pools without posting collateral (as the contracts themselves will hold collateral). Each smart contract must be approved by governance, with a set credit limit to mitigate the protocol’s risk exposure. These credit lines power Mars’ credit accounts, giving end users access to leverage without first requiring Red Bank deposits.
+
+- **Liquidators:** Third parties that liquidate Red Bank positions by repaying the debt of under-collateralised users in exchange for a fee
+
+<img src={RedBankArchitectureUrl} />

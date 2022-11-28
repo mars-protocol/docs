@@ -1,0 +1,15 @@
+---
+sidebar_position: 4
+---
+
+# Rover Liquidations
+
+The Credit Manager module is responsible for tracking the health of each credit account and ensuring that accounts at risk are liquidated promptly in order to avoid the accumulation of bad debt.
+
+Mars governance should strive for whitelisting only robust assets and strategies such that liquidations can always be performed in an orderly manner and insolvencies are mitigated. Mars contributors expect to release an open-source framework designed to help assess the riskiness of assets and protocols. While this framework is non-binding, it can be used by governance to ensure the Martian Council is approving appropriate assets, strategies and risk parameters.
+
+When and if an asset passes the whitelisting process, it will be assigned a Liquidation LTV. Liquidation LTVs are used to calculate a Health Factor (HF) for each credit account. A HF determines if the risk-adjusted value of the total positions in a credit account exceeds the total amount borrowed in the account and is represented in the form of a ratio. If the HF drops below 1, the account is deemed at risk and is available to be liquidated. Note that a health factor below 1 does not necessarily mean that the credit account is insolvent, but rather that it has exceeded its Liquidation LTV and may be approaching insolvency.
+
+Since HFs apply to all assets in a given rover credit account, all of the user’s collateral becomes eligible for liquidation. Liquidators could receive back a diverse range of tokens (i.e. axlUSDC, OSMO and ATOM). The liquidation mechanism in rover credit accounts mirrors the process outlined in the section on [Red Bank Liquidation Mechanisms](https://github.com/mars-protocol/whitepaper#red-bank-liquidation-mechanisms).
+
+Note that liquidations occur inside the liquidator’s credit account. Any liquidated assets are sent directly to the liquidator’s rover rather than the user’s wallet. Because liquidators must use the credit manager to initiate a liquidation, they can borrow the funds required to pay down Red Bank debt. This is possible because the transactions can be completed in a single transaction. Specifically, a liquidator can borrow the debt asset, swap the collateral asset back to the debt asset and repay the Red Bank all at once. In this way, credit accounts enable a flash-loan like mechanism to facilitate liquidations.

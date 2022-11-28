@@ -1,0 +1,128 @@
+---
+sidebar_position: 2
+---
+
+# Marsd
+
+This guide will explain how to install the marsd binary (Mars CLI) onto your system as a command-line interface tool for interacting with nodes on Mars Hub. 
+
+While `marsd` is a requirement to run a full node, you don't have to run a full local node yourself to interact with the network. You can specify a remote node with the `—node` flag. 
+
+With `marsd` connected to a remote node you can:
+- Generates keys 
+- Send transactions 
+- Deploy and interact with contracts
+- and more
+
+## Setup
+
+Login to your user account (you don't want to use root) and install some essential packages:
+
+```shell
+sudo apt update
+sudo apt upgrade
+sudo apt install build-essential git vim jq libleveldb-dev
+sudo apt autoremove
+```
+
+Install the Go programming language:
+
+```shell
+curl -LO https://golang.org/dl/go1.18.3.linux-amd64.tar.gz
+tar xfz ./go1.18.3.linux-amd64.tar.gz
+sudo mv go /usr/local
+go version
+```
+
+Configure related environment variables:
+
+```bash
+# vim .bashrc
+
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/.go
+export GOBIN=$GOPATH/bin
+export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
+```
+
+## Compile the Mars App Daemon
+
+Clone the mars repo, checkout and install v0.0.0:
+
+Download the Mars Hub source code and checkout the latest stable release, which in our case is v0.0.0:
+
+```bash
+git clone https://github.com/mars-protocol/hub
+cd hub
+git checkout v0.0.0
+```
+The command to compile the app is defined in Makefile. For most Cosmos apps it is make install, which will generate an executable in your $GOBIN folder. 
+
+```bash
+make install
+```
+
+## Commands
+
+This section describes essential commands for validators from marsd, the command line interface that connects a running marsd process.
+
+#### `keys`
+
+Manages Keyring commands. For a list of syntax and subcommands, see the keys subcommands.
+
+#### `query`
+
+Manages queries. For a list of syntax and subcommands, see the query subcommands. 
+
+#### `start`
+
+Runs the full node application with Tendermint in or out of process. By default, the application runs with Tendermint in process:
+
+```bash
+marsd start
+```
+
+#### `status`
+
+Displays the status of a remote node:
+
+```bash
+marsd status
+```
+
+#### `tx`
+
+Retrieves a transaction by its hash, account sequence, or signature. For a list of full syntax and subcommands, see the tx subcommands.
+
+Syntax to query by hash:
+
+```bash 
+marsd query tx <hash>
+```
+
+Syntax to query by account sequence:
+
+```bash
+marsd query tx --type=acc_seq <address>:<sequence>
+```
+
+Syntax to query by signature:
+
+```bash
+marsd query tx --type=signature <sig1_base64,sig2_base64...>
+```
+
+#### `txs`
+
+Retrieves transactions that match the specified events where results are paginated:
+
+```bash
+marsd query txs --events '<event>' --page <page-number> --limit <number-of-results>
+```
+
+Example:
+
+
+```bash
+marsd query txs --events 'message.sender=cosmos1...&message.action=withdraw_delegator_reward' --page 1 --limit 30
+```

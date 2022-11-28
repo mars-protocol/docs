@@ -1,0 +1,37 @@
+---
+sidebar_position: 2
+---
+
+import CollateralisedBorrowing1Url from '@site/static/img/learn/red-bank/collateralised-borrowing1.png';
+
+import CollateralisedBorrowing2Url from '@site/static/img/learn/red-bank/collateralised-borrowing2.png';
+
+# Collateralised Borrowing
+
+Users who deposit assets into smart contract liquidity pools may borrow other assets listed on the Red Bank using their original deposits as collateral, also known as non-custodial, over-collateralised borrowing.
+
+Lending thus serves two purposes: generating yield and, if the user chooses, acting as collateral to borrow against. The interest rates paid by borrowers and received by lenders are determined algorithmically, taking into account supply and demand via a utilisation rate target.
+
+The first Red Bank outpost is expected to launch on Osmosis with borrowing and lending support for ATOM, OSMO and axlUSDC (Axelar USDC).
+
+Since Mars is designed to be asset-agnostic — and able to support any native Cosmos asset — the community will then be able to propose further assets to be listed. To facilitate its deliberations, the Martian Council is expected to adopt an open-source framework for setting risk parameters and assessing the riskiness of specific assets.
+
+The following figures illustrate collateralised borrowing and how loan-to-value and margin maintenance work with volatile assets.
+
+<img src={CollateralisedBorrowing1Url} alt={"Borrowing volatile assets with stablecoin collateral"} />
+
+<p style={{
+    textAlign: 'center', 
+    color: 'rgb(136, 153, 168)', 
+    fontWeight: '700',
+    fontSize: '14px',
+}}>Borrowing volatile assets with stablecoin collateral</p>
+
+<img src={CollateralisedBorrowing2Url} alt={"Borrowing volatile assets with stablecoin collateral"} />
+
+<p style={{
+    textAlign: 'center', 
+    color: 'rgb(136, 153, 168)', 
+    fontWeight: '700',
+    fontSize: '14px',
+}}>Borrowing stablecoin assets with volatile collateral</p>

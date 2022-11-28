@@ -1,0 +1,24 @@
+---
+sidebar_position: 1
+---
+
+import TheVisionUrl from '@site/static/img/the-vision.png';
+import TheVision2Url from '@site/static/img/the-vision2.png';
+
+# The Vision
+
+The original vision of Mars was built on a new primitive called [Contract-To-Contract (C2C) Lending](https://mars-protocol.medium.com/a-vision-for-the-fields-of-mars-and-contract-to-contract-c2c-lending-9c6e4239f72c). This allowed whitelisted smart contracts to borrow assets from a lending pool within the Red Bank for a predefined purpose. Both collateral and borrowed assets were held by the whitelisted contract, which made them liquidatable and allowed for greater leverage and capital efficiency.
+
+While this provided a powerful generalised credit primitive, it was unable to facilitate cross-margin between different C2C strategies. This resulted in a sub-optimal borrower experience since users needed to post separate collateral and manage liquidation levels for each individual strategy.
+
+Moreover, DeFi in general remains fragmented and complex. Something as simple as moving tokens from one chain to another might require multiple wallets and an understanding of addresses, bridges and security. Meanwhile, trading, accessing leverage and yield farming typically requires interactions with multiple standalone dapps.
+
+<img src={TheVisionUrl} />
+
+Mars v2 leverages the same smart contract credit line primitive to propose a novel credit account primitive: the Rover. Users can fund a rover (represented by an NFT) via Mars' credit manager smart contract. Once funded, the user can interact with any whitelisted C2C strategy. This architecture gives users the ability to cross-collateralise different leveraged strategies into a single account with a single liquidation LTV.
+
+Crucially, in addition to enabling cross-collateralisation between C2C strategies, rovers can also integrate with other Decentralised Finance (DeFi) primitives. This allows users to perform leveraged interactions with any whitelisted decentralised application (dApp) with a single account-level LTV. Rovers will be represented as NFTs and a wallet may hold several distinct rovers, similar to the “sub-account” experience familiar to users of centralised exchanges.
+
+<img src={TheVision2Url} />
+
+Rovers effectively allow for a “rebundled” DeFi experience as users would be able to access their favourite tokens, farms, and protocols, using leverage, through the Mars credit account. This integrated experience represents the next evolution of DeFi, providing a user experience (UX) comparable to centralised exchanges (CEXes) on many important dimensions (such as speed, leverage, liquidation penalty, and asset choice), while gaining the potential to integrate key DeFi primitives and maintaining the advantages of decentralisation: self-custody and censorship-resistance.

@@ -1,0 +1,1594 @@
+---
+sidebar_position: 3
+---
+
+# vesting
+
+The Vesting contract is responsible for distributing the MARS token to Mars contributors.
+
+## Links
+
+- **Contract address:** 
+- **Testnet address:** 
+- **Contract repo:** https://github.com/mars-protocol/periphery/tree/main/contracts/vesting
+- **contract.rs:** https://github.com/mars-protocol/periphery/blob/main/contracts/vesting/src/contract.rs
+- **msg.rs (packages):** https://github.com/mars-protocol/periphery/blob/main/contracts/vesting/src/msg.rs
+- **Tests:** https://github.com/mars-protocol/periphery/tree/main/contracts/vesting/tests
+- **Video walkthrough:** https://youtu.be/VeRMEtyLxyk
+- **Article breakdown:** https://blog.marsprotocol.io/blog/mars-protocol-code-review-breakdown-session-2-airdrop-contract-in-action-overview-of-the-vesting-contract
+- **Audit:** 
+
+## InstantiateMsg
+
+Instantiates the Vesting contract. Takes in a contract owner and an `unlock_schedule` for token unlocking. Schedule is the same for all users.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "owner": "...",
+    "unlock_schedule": {
+        "start_time": 123, 
+        "cliff": 123, 
+        "duration": 123
+    }
+}
+```
+
+```rust msg.rs
+#[cw_serde]
+pub struct InstantiateMsg {
+    pub owner: String,
+    pub unlock_schedule: Schedule,
+}
+```
+
+```rust contract.rs
+#[cfg_attr(not(feature = "library"), entry_point)]
+pub fn instantiate(
+    deps: DepsMut,
+    _env: Env,
+    _info: MessageInfo,
+    msg: InstantiateMsg,
+) -> StdResult<Response> {
+    set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
+
+    OWNER.save(deps.storage, &deps.api.addr_validate(&msg.owner)?)?;
+    UNLOCK_SCHEDULE.save(deps.storage, &msg.unlock_schedule)?;
+
+    Ok(Response::new())
+}
+```
+
+```rust test
+#[test]
+fn proper_instantiation() {
+    let deps = setup_test();
+
+    let config: ConfigResponse = query_helper(deps.as_ref(), mock_env(), QueryMsg::Config {});
+    assert_eq!(
+        config,
+        ConfigResponse {
+            owner: "owner".to_string(),
+            unlock_schedule: Schedule {
+                start_time: 1662033600,
+                cliff: 0,
+                duration: 63072000,
+            },
+        },
+    );
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`owner`](focus://json#2)   | `String`        | The contract's owner        |
+| [`unlock_schedule`](focus://json#3:7)      | [`Schedule`](#schedule)       | Schedule for token unlocking; this schedule is the same for all users       |
+
+</CH.Section>
+
+#### `Schedule`
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "start_time": 123,
+    "cliff": 123, 
+    "duration": 123
+}
+```
+
+```rust msg.rs
+#[cw_serde]
+pub struct Schedule {
+    pub start_time: u64,
+    pub cliff: u64,
+    pub duration: u64,
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`start_time`](focus://json#2)   | `u64`        | Time when vesting/unlocking starts        |
+| [`cliff`](focus://json#3)      | `u64`       | Time before with no token is to be vested/unlocked       |
+| [`duration`](focus://json#4)   | `u64`        | Duration of the vesting/unlocking process. At time `start_time + duration`, the tokens are vested/unlocked in full        |
+
+</CH.Section>
+
+## ExecuteMsg
+
+### `create_position`
+
+Creates a new vesting position for a user.
+
+<CH.Section> 
+<CH.Code> 
+
+```json json
+{
+    "create_position": {
+        "user" "mars...", 
+        "vest_schedule": {
+            "start_time": 123,
+            "cliff": 123, 
+            "duration": 123
+        }
+    }
+}
+```
+
+```rust msg.rs focus=1:6,12
+#[cw_serde]
+pub enum ExecuteMsg {
+    CreatePosition {
+        user: String,
+        vest_schedule: Schedule,
+    },
+    TerminatePosition {
+        user: String,
+    },
+    Withdraw {},
+    TransferOwnership(String),
+}
+```
+
+```rust contract.rs focus=1:8,16:17,19:72
+#[cfg_attr(not(feature = "library"), entry_point)]
+pub fn execute(deps: DepsMut, env: Env, info: MessageInfo, msg: ExecuteMsg) -> StdResult<Response> {
+    let api = deps.api;
+    match msg {
+        ExecuteMsg::CreatePosition {
+            user,
+            vest_schedule,
+        } => create_position(deps, info, api.addr_validate(&user)?, vest_schedule),
+        ExecuteMsg::TerminatePosition {
+            user,
+        } => terminate_position(deps, env, info, api.addr_validate(&user)?),
+        ExecuteMsg::Withdraw {} => withdraw(deps, env.block.time.seconds(), info.sender),
+        ExecuteMsg::TransferOwnership(new_owner) => {
+            transfer_ownership(deps, info.sender, api.addr_validate(&new_owner)?)
+        }
+    }
+}
+
+pub fn create_position(
+    deps: DepsMut,
+    info: MessageInfo,
+    user_addr: Addr,
+    vest_schedule: Schedule,
+) -> StdResult<Response> {
+    // only owner can create allocations
+    let owner_addr = OWNER.load(deps.storage)?;
+    if info.sender != owner_addr {
+        return Err(StdError::generic_err("only owner can create allocations"));
+    }
+
+    // must send exactly one coin
+    if info.funds.len() != 1 {
+        return Err(StdError::generic_err(format!(
+            "wrong number of coins: expecting 1, received {}",
+            info.funds.len()
+        )));
+    }
+
+    // the coin must be the vesting coin
+    let coin = &info.funds[0];
+    if coin.denom != VEST_DENOM {
+        return Err(StdError::generic_err(format!(
+            "wrong denom: expecting {}, received {}",
+            VEST_DENOM, coin.denom
+        )));
+    }
+
+    // the amount must be greater than zero
+    let total = coin.amount;
+    if total.is_zero() {
+        return Err(StdError::generic_err("wrong amount: must be greater than zero"));
+    }
+
+    POSITIONS.update(deps.storage, &user_addr, |position| {
+        if position.is_some() {
+            return Err(StdError::generic_err("user has a vesting position"));
+        }
+        Ok(Position {
+            total,
+            vest_schedule: vest_schedule.clone(),
+            withdrawn: Uint128::zero(),
+        })
+    })?;
+
+    Ok(Response::new()
+        .add_attribute("action", "mars/vesting/position_created")
+        .add_attribute("user", user_addr)
+        .add_attribute("total", total)
+        .add_attribute("start_time", vest_schedule.start_time.to_string())
+        .add_attribute("cliff", vest_schedule.cliff.to_string())
+        .add_attribute("duration", vest_schedule.duration.to_string()))
+}
+```
+
+```rust test
+#[test]
+fn creating_positions() {
+    let mut deps = setup_test();
+
+    let msg = ExecuteMsg::CreatePosition {
+        user: "larry".to_string(),
+        vest_schedule: Schedule {
+            start_time: 1614600000, // 2021-03-01
+            cliff: 31536000,        // 1 year
+            duration: 94608000,     // 3 years
+        },
+    };
+
+    // non-owner cannot create positions
+    let err =
+        execute(deps.as_mut(), mock_env(), mock_info("non_owner", &[]), msg.clone()).unwrap_err();
+    assert_eq!(err, StdError::generic_err("only owner can create allocations"));
+
+    // cannot create a position without sending a coin
+    let err = execute(deps.as_mut(), mock_env(), mock_info("owner", &[]), msg.clone()).unwrap_err();
+    assert_eq!(err, StdError::generic_err("wrong number of coins: expecting 1, received 0"));
+
+    // cannot create a position sending more than one coin
+    let err = execute(
+        deps.as_mut(),
+        mock_env(),
+        mock_info("owner", &[coin(12345, "umars"), coin(23456, "uosmo")]),
+        msg.clone(),
+    )
+    .unwrap_err();
+    assert_eq!(err, StdError::generic_err("wrong number of coins: expecting 1, received 2"));
+
+    // cannot create a position with the wrong coin
+    let err = execute(
+        deps.as_mut(),
+        mock_env(),
+        mock_info("owner", &[coin(23456, "uosmo")]),
+        msg.clone(),
+    )
+    .unwrap_err();
+    assert_eq!(err, StdError::generic_err("wrong denom: expecting umars, received uosmo"));
+
+    // cannot create a position with the correct coin but with zero amount
+    let err =
+        execute(deps.as_mut(), mock_env(), mock_info("owner", &[coin(0, "umars")]), msg.clone())
+            .unwrap_err();
+    assert_eq!(err, StdError::generic_err("wrong amount: must be greater than zero"));
+
+    // properly create a position
+    let res = execute(
+        deps.as_mut(),
+        mock_env(),
+        mock_info("owner", &[coin(12345, "umars")]),
+        msg.clone(),
+    )
+    .unwrap();
+    assert_eq!(res.messages.len(), 0);
+
+    let position = POSITIONS.load(deps.as_ref().storage, &Addr::unchecked("larry")).unwrap();
+    assert_eq!(
+        position,
+        Position {
+            total: Uint128::new(12345),
+            withdrawn: Uint128::zero(),
+            vest_schedule: Schedule {
+                start_time: 1614600000,
+                cliff: 31536000,
+                duration: 94608000,
+            }
+        },
+    );
+}
+```
+
+</CH.Code> 
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`user`](focus://json#3)   | `String`        | User address receiving vested tokens        |
+| [`vest_schedule`](focus://json#4:8)      | [`Schedule`](#schedule)       | Schedule for token unlocking; this schedule is the same for all users       |
+
+</CH.Section> 
+
+### `terminate_position`
+
+Terminates a vesting position, and collects all unvested tokens.
+
+<CH.Section> 
+<CH.Code> 
+
+```json json
+{
+    "terminate_position": {
+        "user": "..."
+    }
+}
+```
+
+```rust msg.rs focus=1:2,7:9,12
+#[cw_serde]
+pub enum ExecuteMsg {
+    CreatePosition {
+        user: String,
+        vest_schedule: Schedule,
+    },
+    TerminatePosition {
+        user: String,
+    },
+    Withdraw {},
+    TransferOwnership(String),
+}
+```
+
+```rust contract.rs focus=1:4,9:11,16:17,19:61
+#[cfg_attr(not(feature = "library"), entry_point)]
+pub fn execute(deps: DepsMut, env: Env, info: MessageInfo, msg: ExecuteMsg) -> StdResult<Response> {
+    let api = deps.api;
+    match msg {
+        ExecuteMsg::CreatePosition {
+            user,
+            vest_schedule,
+        } => create_position(deps, info, api.addr_validate(&user)?, vest_schedule),
+        ExecuteMsg::TerminatePosition {
+            user,
+        } => terminate_position(deps, env, info, api.addr_validate(&user)?),
+        ExecuteMsg::Withdraw {} => withdraw(deps, env.block.time.seconds(), info.sender),
+        ExecuteMsg::TransferOwnership(new_owner) => {
+            transfer_ownership(deps, info.sender, api.addr_validate(&new_owner)?)
+        }
+    }
+}
+
+pub fn terminate_position(
+    deps: DepsMut,
+    env: Env,
+    info: MessageInfo,
+    user_addr: Addr,
+) -> StdResult<Response> {
+    let current_time = env.block.time.seconds();
+
+    // only owner can terminate allocations
+    let owner_addr = OWNER.load(deps.storage)?;
+    if info.sender != owner_addr {
+        return Err(StdError::generic_err("only owner can terminate allocations"));
+    }
+
+    let unlock_schedule = UNLOCK_SCHEDULE.load(deps.storage)?;
+    let mut position = POSITIONS.load(deps.storage, &user_addr)?;
+
+    let (vested, _, _) = compute_withdrawable(
+        current_time,
+        position.total,
+        position.withdrawn,
+        &position.vest_schedule,
+        &unlock_schedule,
+    );
+
+    // unvested tokens are to be reclaimed by the owner
+    let reclaim = position.total - vested;
+
+    // set position total amount to be the vested amount so far, and vesting end time to now
+    position.total = vested;
+    position.vest_schedule.duration = current_time - position.vest_schedule.start_time;
+    POSITIONS.save(deps.storage, &user_addr, &position)?;
+
+    Ok(Response::new()
+        .add_message(CosmosMsg::Bank(BankMsg::Send {
+            to_address: owner_addr.into(),
+            amount: coins(reclaim.u128(), VEST_DENOM),
+        }))
+        .add_attribute("action", "mars/vesting/terminate_position")
+        .add_attribute("user", user_addr)
+        .add_attribute("vested", vested)
+        .add_attribute("relaimed", reclaim))
+}
+```
+
+```rust test
+#[test]
+fn terminating_positions() {
+    let mut deps = setup_test();
+
+    execute(
+        deps.as_mut(),
+        mock_env(),
+        mock_info("owner", &[coin(12345, "umars")]),
+        ExecuteMsg::CreatePosition {
+            user: "larry".to_string(),
+            vest_schedule: Schedule {
+                start_time: 1614600000, // 2021-03-01
+                cliff: 31536000,        // 1 year
+                duration: 126144000,    // 4 years
+            },
+        },
+    )
+    .unwrap();
+
+    // for this test, we simulate the most general case
+    // the user first makes a withdrawal
+    // 2022-10-01
+    // vested:       12345 * (1664625600 - 1614600000) / 126144000 = 4895
+    // unlocked:     12345 * (1664625600 - 1662033600) / 63072000  = 507
+    // withdrawable: min(4895, 507) - 0 = 507
+    execute(
+        deps.as_mut(),
+        mock_env_at_timestamp(1664625600),
+        mock_info("larry", &[]),
+        ExecuteMsg::Withdraw {},
+    )
+    .unwrap();
+
+    // 2023-10-01
+    // vested:       12345 * (1696161600 - 1614600000) / 126144000 = 7981
+    // unlocked:     12345 * (1696161600 - 1662033600) / 63072000  = 6679
+    // withdrawable: min(7981, 6679) - 507 = 6172
+    let env = mock_env_at_timestamp(1696161600);
+
+    let msg = ExecuteMsg::TerminatePosition {
+        user: "larry".to_string(),
+    };
+
+    // non-owner can't terminate allocation
+    let err =
+        execute(deps.as_mut(), env.clone(), mock_info("non_owner", &[]), msg.clone()).unwrap_err();
+    assert_eq!(err, StdError::generic_err("only owner can terminate allocations"));
+
+    // owner properly terminates position
+    let res = execute(deps.as_mut(), env.clone(), mock_info("owner", &[]), msg).unwrap();
+    assert_eq!(res.messages.len(), 1);
+    assert_eq!(
+        res.messages[0],
+        SubMsg::new(BankMsg::Send {
+            to_address: "owner".to_string(),
+            amount: coins(4364, "umars"), // 12345 - 7981
+        })
+    );
+
+    // the position should have been updated
+    let position = POSITIONS.load(deps.as_ref().storage, &Addr::unchecked("larry")).unwrap();
+    assert_eq!(
+        position,
+        Position {
+            total: Uint128::new(7981),
+            withdrawn: Uint128::new(507),
+            vest_schedule: Schedule {
+                start_time: 1614600000,
+                cliff: 31536000,
+                duration: 81561600
+            }
+        },
+    );
+
+    // voting power should be correct
+    // total - withdrawn = 7981 - 507 = 7474
+    let vpr: VotingPowerResponse = query_helper(
+        deps.as_ref(),
+        mock_env_at_timestamp(1696161600),
+        QueryMsg::VotingPower {
+            user: "larry".to_string(),
+        },
+    );
+    assert_eq!(vpr.voting_power, Uint128::new(7474));
+}
+```
+
+</CH.Code> 
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`user`](focus://json#3)   | `String`        | User address being terminated        |
+
+</CH.Section> 
+
+### `withdraw`
+
+Withdraws vested and unlocked MARS tokens.
+
+<CH.Section> 
+<CH.Code> 
+
+```json json
+{
+    "withdraw": {}
+}
+```
+
+```rust msg.rs focus=1:2,10,12
+#[cw_serde]
+pub enum ExecuteMsg {
+    CreatePosition {
+        user: String,
+        vest_schedule: Schedule,
+    },
+    TerminatePosition {
+        user: String,
+    },
+    Withdraw {},
+    TransferOwnership(String),
+}
+```
+
+```rust contract.rs focus=1:4,12,16:17,19:47
+#[cfg_attr(not(feature = "library"), entry_point)]
+pub fn execute(deps: DepsMut, env: Env, info: MessageInfo, msg: ExecuteMsg) -> StdResult<Response> {
+    let api = deps.api;
+    match msg {
+        ExecuteMsg::CreatePosition {
+            user,
+            vest_schedule,
+        } => create_position(deps, info, api.addr_validate(&user)?, vest_schedule),
+        ExecuteMsg::TerminatePosition {
+            user,
+        } => terminate_position(deps, env, info, api.addr_validate(&user)?),
+        ExecuteMsg::Withdraw {} => withdraw(deps, env.block.time.seconds(), info.sender),
+        ExecuteMsg::TransferOwnership(new_owner) => {
+            transfer_ownership(deps, info.sender, api.addr_validate(&new_owner)?)
+        }
+    }
+}
+
+pub fn withdraw(deps: DepsMut, time: u64, user_addr: Addr) -> StdResult<Response> {
+    let unlock_schedule = UNLOCK_SCHEDULE.load(deps.storage)?;
+    let mut position = POSITIONS.load(deps.storage, &user_addr)?;
+
+    let (_, _, withdrawable) = compute_withdrawable(
+        time,
+        position.total,
+        position.withdrawn,
+        &position.vest_schedule,
+        &unlock_schedule,
+    );
+
+    if withdrawable.is_zero() {
+        return Err(StdError::generic_err("withdrawable amount is zero"));
+    }
+
+    position.withdrawn += withdrawable;
+    POSITIONS.save(deps.storage, &user_addr, &position)?;
+
+    Ok(Response::new()
+        .add_message(CosmosMsg::Bank(BankMsg::Send {
+            to_address: user_addr.to_string(),
+            amount: coins(withdrawable.u128(), VEST_DENOM),
+        }))
+        .add_attribute("action", "mars/vesting/withdraw")
+        .add_attribute("user", user_addr)
+        .add_attribute("timestamp", time.to_string())
+        .add_attribute("withdrawable", withdrawable))
+}
+```
+
+```rust test
+#[test]
+fn withdrawing() {
+    let mut deps = setup_test();
+
+    execute(
+        deps.as_mut(),
+        mock_env(),
+        mock_info("owner", &[coin(12345, "umars")]),
+        ExecuteMsg::CreatePosition {
+            user: "larry".to_string(),
+            vest_schedule: Schedule {
+                start_time: 1614600000, // 2021-03-01
+                cliff: 31536000,        // 1 year
+                duration: 126144000,    // 4 years
+            },
+        },
+    )
+    .unwrap();
+
+    // 2021-09-01
+    // before the end of cliff period, withdrawable amount is zero
+    let err = execute(
+        deps.as_mut(),
+        mock_env_at_timestamp(1630497600),
+        mock_info("larry", &[]),
+        ExecuteMsg::Withdraw {},
+    )
+    .unwrap_err();
+    assert_eq!(err, StdError::generic_err("withdrawable amount is zero"));
+
+    // 2022-05-01
+    // after the cliff period, but unlock hasn't start yet, withdrawable amount is zero
+    let err = execute(
+        deps.as_mut(),
+        mock_env_at_timestamp(1651406400),
+        mock_info("larry", &[]),
+        ExecuteMsg::Withdraw {},
+    )
+    .unwrap_err();
+    assert_eq!(err, StdError::generic_err("withdrawable amount is zero"));
+
+    // 2022-10-01
+    // vested:       12345 * (1664625600 - 1614600000) / 126144000 = 4895
+    // unlocked:     12345 * (1664625600 - 1662033600) / 63072000  = 507
+    // withdrawable: min(4895, 507) - 0 = 507
+    let res = execute(
+        deps.as_mut(),
+        mock_env_at_timestamp(1664625600),
+        mock_info("larry", &[]),
+        ExecuteMsg::Withdraw {},
+    )
+    .unwrap();
+    assert_eq!(res.messages.len(), 1);
+    assert_eq!(
+        res.messages[0],
+        SubMsg::new(CosmosMsg::Bank(BankMsg::Send {
+            to_address: "larry".to_string(),
+            amount: coins(507, "umars"),
+        })),
+    );
+
+    // withdrawn amount should have been recorded
+    let position = POSITIONS.load(deps.as_ref().storage, &Addr::unchecked("larry")).unwrap();
+    assert_eq!(position.withdrawn, Uint128::new(507));
+
+    // try immediately withdraw again in the same block, withdrawable amount should be zero
+    let err = execute(
+        deps.as_mut(),
+        mock_env_at_timestamp(1664625600),
+        mock_info("larry", &[]),
+        ExecuteMsg::Withdraw {},
+    )
+    .unwrap_err();
+    assert_eq!(err, StdError::generic_err("withdrawable amount is zero"));
+
+    // 2023-10-01
+    // vested:       12345 * (1696161600 - 1614600000) / 126144000 = 7981
+    // unlocked:     12345 * (1696161600 - 1662033600) / 63072000  = 6679
+    // withdrawable: min(7981, 6679) - 507 = 6172
+    let res = execute(
+        deps.as_mut(),
+        mock_env_at_timestamp(1696161600),
+        mock_info("larry", &[]),
+        ExecuteMsg::Withdraw {},
+    )
+    .unwrap();
+    assert_eq!(res.messages.len(), 1);
+    assert_eq!(
+        res.messages[0],
+        SubMsg::new(CosmosMsg::Bank(BankMsg::Send {
+            to_address: "larry".to_string(),
+            amount: coins(6172, "umars"),
+        })),
+    );
+
+    let position = POSITIONS.load(deps.as_ref().storage, &Addr::unchecked("larry")).unwrap();
+    assert_eq!(position.withdrawn, Uint128::new(6679));
+
+    // 2024-10-01
+    // vested:       12345 * (1727784000 - 1614600000) / 126144000 = 11076
+    // unlocked:     12345 (unlocking finished)
+    // withdrawable: min(11076, 12345) - 6679 = 4397
+    let res = execute(
+        deps.as_mut(),
+        mock_env_at_timestamp(1727784000),
+        mock_info("larry", &[]),
+        ExecuteMsg::Withdraw {},
+    )
+    .unwrap();
+    assert_eq!(res.messages.len(), 1);
+    assert_eq!(
+        res.messages[0],
+        SubMsg::new(CosmosMsg::Bank(BankMsg::Send {
+            to_address: "larry".to_string(),
+            amount: coins(4397, "umars"),
+        })),
+    );
+
+    let position = POSITIONS.load(deps.as_ref().storage, &Addr::unchecked("larry")).unwrap();
+    assert_eq!(position.withdrawn, Uint128::new(11076));
+
+    // 2025-10-01
+    // withdrawable: 12345 - 11076 = 1269
+    let res = execute(
+        deps.as_mut(),
+        mock_env_at_timestamp(1759320000),
+        mock_info("larry", &[]),
+        ExecuteMsg::Withdraw {},
+    )
+    .unwrap();
+    assert_eq!(res.messages.len(), 1);
+    assert_eq!(
+        res.messages[0],
+        SubMsg::new(CosmosMsg::Bank(BankMsg::Send {
+            to_address: "larry".to_string(),
+            amount: coins(1269, "umars"),
+        })),
+    );
+
+    let position = POSITIONS.load(deps.as_ref().storage, &Addr::unchecked("larry")).unwrap();
+    assert_eq!(position.withdrawn, Uint128::new(12345));
+}
+```
+
+</CH.Code> 
+</CH.Section> 
+
+### `transfer_ownership`
+
+Transfers the contract's ownership to another account. 
+
+<CH.Section> 
+<CH.Code> 
+
+```json json
+{
+    "transfer_ownership": {}
+}
+```
+
+```rust msg.rs focus=1:2,11:12
+#[cw_serde]
+pub enum ExecuteMsg {
+    CreatePosition {
+        user: String,
+        vest_schedule: Schedule,
+    },
+    TerminatePosition {
+        user: String,
+    },
+    Withdraw {},
+    TransferOwnership(String),
+}
+```
+
+```rust contract.rs focus=1:4,13:17,19:35
+#[cfg_attr(not(feature = "library"), entry_point)]
+pub fn execute(deps: DepsMut, env: Env, info: MessageInfo, msg: ExecuteMsg) -> StdResult<Response> {
+    let api = deps.api;
+    match msg {
+        ExecuteMsg::CreatePosition {
+            user,
+            vest_schedule,
+        } => create_position(deps, info, api.addr_validate(&user)?, vest_schedule),
+        ExecuteMsg::TerminatePosition {
+            user,
+        } => terminate_position(deps, env, info, api.addr_validate(&user)?),
+        ExecuteMsg::Withdraw {} => withdraw(deps, env.block.time.seconds(), info.sender),
+        ExecuteMsg::TransferOwnership(new_owner) => {
+            transfer_ownership(deps, info.sender, api.addr_validate(&new_owner)?)
+        }
+    }
+}
+
+pub fn transfer_ownership(
+    deps: DepsMut,
+    sender_addr: Addr,
+    new_owner_addr: Addr,
+) -> StdResult<Response> {
+    let owner_addr = OWNER.load(deps.storage)?;
+    if sender_addr != owner_addr {
+        return Err(StdError::generic_err("only owner can transfer ownership"));
+    }
+
+    OWNER.save(deps.storage, &new_owner_addr)?;
+
+    Ok(Response::new()
+        .add_attribute("action", "mars/vesting/transfer_ownership")
+        .add_attribute("previous_owner", owner_addr)
+        .add_attribute("new_owner", new_owner_addr))
+}
+```
+
+```rust test
+#[test]
+fn transferring_ownership() {
+    let mut deps = setup_test();
+
+    // non-owner cannot transfer ownership
+    let err = execute(
+        deps.as_mut(),
+        mock_env(),
+        mock_info("non_owner", &[]),
+        ExecuteMsg::TransferOwnership("new_owner".to_string()),
+    )
+    .unwrap_err();
+    assert_eq!(err, StdError::generic_err("only owner can transfer ownership"));
+
+    // owner can propose a transfer
+    let res = execute(
+        deps.as_mut(),
+        mock_env(),
+        mock_info("owner", &[]),
+        ExecuteMsg::TransferOwnership("new_owner".to_string()),
+    )
+    .unwrap();
+    assert_eq!(res.messages.len(), 0);
+
+    let config: ConfigResponse = query_helper(deps.as_ref(), mock_env(), QueryMsg::Config {});
+    assert_eq!(config.owner, "new_owner".to_string());
+}
+```
+
+</CH.Code> 
+</CH.Section> 
+
+## QueryMsg
+
+### `config`
+
+Returns the contract's configuration parameters.
+
+<CH.Section> 
+<CH.Code> 
+
+```json json
+{
+    "config": {}
+}
+```
+
+```rust msg.rs focus=1:5,24
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(ConfigResponse)]
+    Config {},
+    #[returns(VotingPowerResponse)]
+    VotingPower {
+        user: String,
+    },
+    #[returns(Vec<VotingPowerResponse>)]
+    VotingPowers {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(PositionResponse)]
+    Position {
+        user: String,
+    },
+    #[returns(Vec<PositionResponse>)]
+    Positions {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+}
+```
+
+```rust contract.rs focus=1:5,20:21,23:28
+#[cfg_attr(not(feature = "library"), entry_point)]
+pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
+    let api = deps.api;
+    match msg {
+        QueryMsg::Config {} => to_binary(&query_config(deps)?),
+        QueryMsg::VotingPower {
+            user,
+        } => to_binary(&query_voting_power(deps, api.addr_validate(&user)?)?),
+        QueryMsg::VotingPowers {
+            start_after,
+            limit,
+        } => to_binary(&query_voting_powers(deps, start_after, limit)?),
+        QueryMsg::Position {
+            user,
+        } => to_binary(&query_position(deps, env.block.time.seconds(), api.addr_validate(&user)?)?),
+        QueryMsg::Positions {
+            start_after,
+            limit,
+        } => to_binary(&query_positions(deps, env.block.time.seconds(), start_after, limit)?),
+    }
+}
+
+pub fn query_config(deps: Deps) -> StdResult<ConfigResponse> {
+    Ok(ConfigResponse {
+        owner: OWNER.load(deps.storage)?.into(),
+        unlock_schedule: UNLOCK_SCHEDULE.load(deps.storage)?,
+    })
+}
+```
+
+</CH.Code> 
+</CH.Section> 
+
+#### `ConfigResponse`
+
+<CH.Section> 
+<CH.Code> 
+
+```json json
+{
+    "owner": "...",
+    "unlock_schedule": {
+        "start_time": 123, 
+        "cliff": 123, 
+        "duration": 123
+    }
+}
+```
+
+```rust msg.rs
+pub type ConfigResponse = InstantiateMsg;
+
+```
+
+</CH.Code> 
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`owner`](focus://json#2)   | `String`        | The contract's owner        |
+| [`unlock_schedule`](focus://json#3:7)      | [`Schedule`](#schedule)       | Schedule for token unlocking; this schedule is the same for all users       |
+
+</CH.Section> 
+
+### `voting_power`
+
+Returns the amount of MARS tokens of a vesting recipient currently locked in the contract.
+
+<CH.Section> 
+<CH.Code> 
+
+```json json
+{
+    "voting_power": {
+        "user": "mars..."
+    }
+}
+```
+
+```rust msg.rs focus=1:3,6:9,24
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(ConfigResponse)]
+    Config {},
+    #[returns(VotingPowerResponse)]
+    VotingPower {
+        user: String,
+    },
+    #[returns(Vec<VotingPowerResponse>)]
+    VotingPowers {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(PositionResponse)]
+    Position {
+        user: String,
+    },
+    #[returns(Vec<PositionResponse>)]
+    Positions {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+}
+```
+
+```rust contract.rs focus=1:4,6:8,20:21,23:34
+#[cfg_attr(not(feature = "library"), entry_point)]
+pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
+    let api = deps.api;
+    match msg {
+        QueryMsg::Config {} => to_binary(&query_config(deps)?),
+        QueryMsg::VotingPower {
+            user,
+        } => to_binary(&query_voting_power(deps, api.addr_validate(&user)?)?),
+        QueryMsg::VotingPowers {
+            start_after,
+            limit,
+        } => to_binary(&query_voting_powers(deps, start_after, limit)?),
+        QueryMsg::Position {
+            user,
+        } => to_binary(&query_position(deps, env.block.time.seconds(), api.addr_validate(&user)?)?),
+        QueryMsg::Positions {
+            start_after,
+            limit,
+        } => to_binary(&query_positions(deps, env.block.time.seconds(), start_after, limit)?),
+    }
+}
+
+pub fn query_voting_power(deps: Deps, user_addr: Addr) -> StdResult<VotingPowerResponse> {
+    let voting_power = match POSITIONS.may_load(deps.storage, &user_addr) {
+        Ok(Some(position)) => position.total - position.withdrawn,
+        Ok(None) => Uint128::zero(),
+        Err(err) => return Err(err),
+    };
+
+    Ok(VotingPowerResponse {
+        user: user_addr.to_string(),
+        voting_power,
+    })
+}
+```
+
+</CH.Code> 
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`user`](focus://json#3)   | `String`        | Address of the user        |
+
+</CH.Section> 
+
+#### `VotingPowerResponse`
+
+<CH.Section> 
+<CH.Code> 
+
+```json json
+{
+    "user": "mars...",
+    "voting_power": 123
+}
+```
+
+```rust msg.rs
+#[cw_serde]
+pub struct VotingPowerResponse {
+    pub user: String,
+    pub voting_power: Uint128,
+}
+```
+
+</CH.Code> 
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`user`](focus://json#2)   | `String`        | Address of the user        |
+| [`voting_power`](focus://json#3)   | `Uint128`        | The user's current voting power, i.e. the amount of MARS tokens locked in vesting contract        |
+
+</CH.Section> 
+
+### `voting_powers`
+
+Enumerates all vesting recipients and returns their current voting power.
+
+<CH.Section> 
+<CH.Code> 
+
+```json json
+{
+    "voting_powers": {
+        "start_after": "mars...",
+        "limit": 123
+    }
+}
+```
+
+```rust msg.rs focus=1:3,10:14,24
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(ConfigResponse)]
+    Config {},
+    #[returns(VotingPowerResponse)]
+    VotingPower {
+        user: String,
+    },
+    #[returns(Vec<VotingPowerResponse>)]
+    VotingPowers {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(PositionResponse)]
+    Position {
+        user: String,
+    },
+    #[returns(Vec<PositionResponse>)]
+    Positions {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+}
+```
+
+```rust contract.rs focus=1:4,9:12,20:21,23:50
+#[cfg_attr(not(feature = "library"), entry_point)]
+pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
+    let api = deps.api;
+    match msg {
+        QueryMsg::Config {} => to_binary(&query_config(deps)?),
+        QueryMsg::VotingPower {
+            user,
+        } => to_binary(&query_voting_power(deps, api.addr_validate(&user)?)?),
+        QueryMsg::VotingPowers {
+            start_after,
+            limit,
+        } => to_binary(&query_voting_powers(deps, start_after, limit)?),
+        QueryMsg::Position {
+            user,
+        } => to_binary(&query_position(deps, env.block.time.seconds(), api.addr_validate(&user)?)?),
+        QueryMsg::Positions {
+            start_after,
+            limit,
+        } => to_binary(&query_positions(deps, env.block.time.seconds(), start_after, limit)?),
+    }
+}
+
+pub fn query_voting_powers(
+    deps: Deps,
+    start_after: Option<String>,
+    limit: Option<u32>,
+) -> StdResult<Vec<VotingPowerResponse>> {
+    let addr: Addr;
+    let start = match &start_after {
+        Some(addr_str) => {
+            addr = deps.api.addr_validate(addr_str)?;
+            Some(Bound::exclusive(&addr))
+        }
+        None => None,
+    };
+
+    let limit = limit.unwrap_or(DEFAULT_LIMIT).min(MAX_LIMIT) as usize;
+
+    POSITIONS
+        .range(deps.storage, start, None, Order::Ascending)
+        .take(limit)
+        .map(|res| {
+            let (user_addr, position) = res?;
+            Ok(VotingPowerResponse {
+                user: user_addr.to_string(),
+                voting_power: position.total - position.withdrawn,
+            })
+        })
+        .collect()
+}
+```
+
+</CH.Code> 
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`start_after`](focus://json#3)   | `Option<String>`       | A Mars account address to start after |
+| [`limit`](focus://json#4)   | `Option<u32>`       | The amount of addresses to list |
+
+</CH.Section> 
+
+#### `Vec<VotingPowerResponse>`
+
+`voting_powers` returns a vector of the [`VotingPowerResponse`](#votingpowerresponse) struct defined above. 
+
+### `position`
+
+Returns details of a recipient's vesting position. Note: This query depends on block time, therefore it may not work with time travel queries. In such cases, use WASM raw query instead.
+
+<CH.Section> 
+<CH.Code> 
+
+```json json
+{
+    "position": {
+        "user": "mars..."
+    }
+}
+```
+
+```rust msg.rs focus=1:3,15:18,24
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(ConfigResponse)]
+    Config {},
+    #[returns(VotingPowerResponse)]
+    VotingPower {
+        user: String,
+    },
+    #[returns(Vec<VotingPowerResponse>)]
+    VotingPowers {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(PositionResponse)]
+    Position {
+        user: String,
+    },
+    #[returns(Vec<PositionResponse>)]
+    Positions {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+}
+```
+
+```rust contract.rs focus=1:4,13:15,20:21,23:28
+#[cfg_attr(not(feature = "library"), entry_point)]
+pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
+    let api = deps.api;
+    match msg {
+        QueryMsg::Config {} => to_binary(&query_config(deps)?),
+        QueryMsg::VotingPower {
+            user,
+        } => to_binary(&query_voting_power(deps, api.addr_validate(&user)?)?),
+        QueryMsg::VotingPowers {
+            start_after,
+            limit,
+        } => to_binary(&query_voting_powers(deps, start_after, limit)?),
+        QueryMsg::Position {
+            user,
+        } => to_binary(&query_position(deps, env.block.time.seconds(), api.addr_validate(&user)?)?),
+        QueryMsg::Positions {
+            start_after,
+            limit,
+        } => to_binary(&query_positions(deps, env.block.time.seconds(), start_after, limit)?),
+    }
+}
+
+pub fn query_position(deps: Deps, time: u64, user_addr: Addr) -> StdResult<PositionResponse> {
+    let unlock_schedule = UNLOCK_SCHEDULE.load(deps.storage)?;
+    let position = POSITIONS.load(deps.storage, &user_addr)?;
+
+    Ok(compute_position_response(time, user_addr, &position, &unlock_schedule))
+}
+```
+
+</CH.Code> 
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`user`](focus://json#3)   | `String`        | Address of the user        |
+
+</CH.Section> 
+
+#### `PositionResponse`
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "user": "mars...",
+    "total": 123, 
+    "vested": 123, 
+    "unlocked": 123, 
+    "withdrawn": 123, 
+    "withdrawable": 123, 
+    "vest_schedule": {
+        "start_time": 123, 
+        "cliff": 123,
+        "duration": 123
+    }
+}
+```
+
+```rust msg.rs
+#[cw_serde]
+pub struct PositionResponse {
+    pub user: String,
+    pub total: Uint128,
+    pub vested: Uint128,
+    pub unlocked: Uint128,
+    pub withdrawn: Uint128,
+    pub withdrawable: Uint128,
+    pub vest_schedule: Schedule,
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`user`](focus://json#2)   | `String`        | Address of the user        |
+| [`total`](focus://json#3)   | `Uint128`        | Total amount of MARS tokens allocated to this recipient        |
+| [`vested`](focus://json#4)   | `Uint128`        | Amount of tokens that have been vested, according to the vesting schedule        |
+| [`unlocked`](focus://json#5)   | `Uint128`        | Amount of tokens that have been unlocked, according to the unlocking schedule        |
+| [`withdrawn`](focus://json#6)   | `Uint128`        | Amount of tokens that have already been withdrawn        |
+| [`withdrawable`](focus://json#7)   | `Uint128`        | Amount of tokens that can be withdrawn now, defined as the smaller of vested and unlocked amounts, minus the amount already withdrawn        |
+| [`vest_schedule`](focus://json#8:12)   | [`Schedule`](#schedule)        | The vesting position's vesting schedule        |
+
+</CH.Section>
+
+### `positions`
+
+Enumerates all vesting positions. Note: This query depends on block time, therefore it may not work with time travel queries. In such cases, use  WASM raw query instead. 
+
+<CH.Section> 
+<CH.Code> 
+
+```json json
+{
+    "positions": {
+        "start_after": "mars...",
+        "limit": 123,
+    }
+}
+```
+
+```rust msg.rs focus=1:3,19:24
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(ConfigResponse)]
+    Config {},
+    #[returns(VotingPowerResponse)]
+    VotingPower {
+        user: String,
+    },
+    #[returns(Vec<VotingPowerResponse>)]
+    VotingPowers {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(PositionResponse)]
+    Position {
+        user: String,
+    },
+    #[returns(Vec<PositionResponse>)]
+    Positions {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+}
+```
+
+```rust contract.rs focus=1:4,16:21,23:50
+#[cfg_attr(not(feature = "library"), entry_point)]
+pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
+    let api = deps.api;
+    match msg {
+        QueryMsg::Config {} => to_binary(&query_config(deps)?),
+        QueryMsg::VotingPower {
+            user,
+        } => to_binary(&query_voting_power(deps, api.addr_validate(&user)?)?),
+        QueryMsg::VotingPowers {
+            start_after,
+            limit,
+        } => to_binary(&query_voting_powers(deps, start_after, limit)?),
+        QueryMsg::Position {
+            user,
+        } => to_binary(&query_position(deps, env.block.time.seconds(), api.addr_validate(&user)?)?),
+        QueryMsg::Positions {
+            start_after,
+            limit,
+        } => to_binary(&query_positions(deps, env.block.time.seconds(), start_after, limit)?),
+    }
+}
+
+pub fn query_positions(
+    deps: Deps,
+    time: u64,
+    start_after: Option<String>,
+    limit: Option<u32>,
+) -> StdResult<Vec<PositionResponse>> {
+    let unlock_schedule = UNLOCK_SCHEDULE.load(deps.storage)?;
+
+    let addr: Addr;
+    let start = match &start_after {
+        Some(addr_str) => {
+            addr = deps.api.addr_validate(addr_str)?;
+            Some(Bound::exclusive(&addr))
+        }
+        None => None,
+    };
+
+    let limit = limit.unwrap_or(DEFAULT_LIMIT).min(MAX_LIMIT) as usize;
+
+    POSITIONS
+        .range(deps.storage, start, None, Order::Ascending)
+        .take(limit)
+        .map(|res| {
+            let (user_addr, position) = res?;
+            Ok(compute_position_response(time, user_addr, &position, &unlock_schedule))
+        })
+        .collect()
+}
+```
+
+```rust test
+#[test]
+fn querying_positions() {
+    let mut deps = setup_test();
+
+    execute(
+        deps.as_mut(),
+        mock_env(),
+        mock_info("owner", &[coin(12345, "umars")]),
+        ExecuteMsg::CreatePosition {
+            user: "larry".to_string(),
+            vest_schedule: Schedule {
+                start_time: 1614600000, // 2021-03-01
+                cliff: 31536000,        // 1 year
+                duration: 126144000,    // 4 years
+            },
+        },
+    )
+    .unwrap();
+
+    execute(
+        deps.as_mut(),
+        mock_env(),
+        mock_info("owner", &[coin(23456, "umars")]),
+        ExecuteMsg::CreatePosition {
+            user: "jake".to_string(),
+            vest_schedule: Schedule {
+                start_time: 612964800, // 1989-06-04
+                cliff: 0,
+                duration: 1040688000, // 33 years
+            },
+        },
+    )
+    .unwrap();
+
+    // larry withdraws some - 507 umars
+    execute(
+        deps.as_mut(),
+        mock_env_at_timestamp(1664625600),
+        mock_info("larry", &[]),
+        ExecuteMsg::Withdraw {},
+    )
+    .unwrap();
+
+    // 2023-10-01
+    //
+    // larry
+    // vested:       12345 * (1696161600 - 1614600000) / 126144000 = 7981
+    // unlocked:     12345 * (1696161600 - 1662033600) / 63072000  = 6679
+    // withdrawable: min(7981, 6679) - 507 = 6172
+    //
+    // jake
+    // vested:       23456 (vesting finished)
+    // unlocked:     23456 * (1696161600 - 1662033600) / 63072000 = 12691
+    // withdrawable: min(23456, 12691) - 0 = 12691
+    let expected_larry = PositionResponse {
+        user: "larry".to_string(),
+        total: Uint128::new(12345),
+        vested: Uint128::new(7981),
+        unlocked: Uint128::new(6679),
+        withdrawn: Uint128::new(507),
+        withdrawable: Uint128::new(6172),
+        vest_schedule: Schedule {
+            start_time: 1614600000, // 2021-03-01
+            cliff: 31536000,        // 1 year
+            duration: 126144000,    // 4 years
+        },
+    };
+    let expected_jake = PositionResponse {
+        user: "jake".to_string(),
+        total: Uint128::new(23456),
+        vested: Uint128::new(23456),
+        unlocked: Uint128::new(12691),
+        withdrawn: Uint128::zero(),
+        withdrawable: Uint128::new(12691),
+        vest_schedule: Schedule {
+            start_time: 612964800, // 1989-06-04
+            cliff: 0,
+            duration: 1040688000, // 33 years
+        },
+    };
+
+    let res: PositionResponse = query_helper(
+        deps.as_ref(),
+        mock_env_at_timestamp(1696161600),
+        QueryMsg::Position {
+            user: "larry".to_string(),
+        },
+    );
+    assert_eq!(res, expected_larry);
+
+    let res: PositionResponse = query_helper(
+        deps.as_ref(),
+        mock_env_at_timestamp(1696161600),
+        QueryMsg::Position {
+            user: "jake".to_string(),
+        },
+    );
+    assert_eq!(res, expected_jake);
+
+    let res: Vec<PositionResponse> = query_helper(
+        deps.as_ref(),
+        mock_env_at_timestamp(1696161600),
+        QueryMsg::Positions {
+            start_after: None,
+            limit: None,
+        },
+    );
+    assert_eq!(res.len(), 2);
+    assert_eq!(res[0], expected_jake);
+    assert_eq!(res[1], expected_larry);
+
+    let res: Vec<PositionResponse> = query_helper(
+        deps.as_ref(),
+        mock_env_at_timestamp(1696161600),
+        QueryMsg::Positions {
+            start_after: None,
+            limit: Some(1),
+        },
+    );
+    assert_eq!(res.len(), 1);
+    assert_eq!(res[0], expected_jake);
+
+    let res: Vec<PositionResponse> = query_helper(
+        deps.as_ref(),
+        mock_env_at_timestamp(1696161600),
+        QueryMsg::Positions {
+            start_after: Some("jake".to_string()),
+            limit: None,
+        },
+    );
+    assert_eq!(res.len(), 1);
+    assert_eq!(res[0], expected_larry);
+
+    // voting power
+    // larry: 12345 - 507         = 11838
+    // jake:  23456 - 0           = 23456
+    // total: 12345 + 23456 - 507 = 35294
+    let vpr: VotingPowerResponse = query_helper(
+        deps.as_ref(),
+        mock_env_at_timestamp(1696161600),
+        QueryMsg::VotingPower {
+            user: "larry".to_string(),
+        },
+    );
+    assert_eq!(vpr.voting_power, Uint128::new(11838));
+
+    let vpr: VotingPowerResponse = query_helper(
+        deps.as_ref(),
+        mock_env_at_timestamp(1696161600),
+        QueryMsg::VotingPower {
+            user: "jake".to_string(),
+        },
+    );
+    assert_eq!(vpr.voting_power, Uint128::new(23456));
+
+    // query the voting power of a user who doesn't have a vesting position; should return zero
+    let vpr: VotingPowerResponse = query_helper(
+        deps.as_ref(),
+        mock_env_at_timestamp(1696161600),
+        QueryMsg::VotingPower {
+            user: "pumpkin".to_string(),
+        },
+    );
+    assert_eq!(vpr.voting_power, Uint128::zero());
+
+    let vprs: Vec<VotingPowerResponse> = query_helper(
+        deps.as_ref(),
+        mock_env_at_timestamp(1696161600),
+        QueryMsg::VotingPowers {
+            start_after: None,
+            limit: None,
+        },
+    );
+    assert_eq!(
+        vprs,
+        vec![
+            VotingPowerResponse {
+                user: "jake".to_string(),
+                voting_power: Uint128::new(23456),
+            },
+            VotingPowerResponse {
+                user: "larry".to_string(),
+                voting_power: Uint128::new(11838),
+            }
+        ],
+    );
+}
+```
+
+</CH.Code> 
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`start_after`](focus://json#3)   | `Option<String>`       | A Mars account address to start after |
+| [`limit`](focus://json#4)   | `Option<u32>`       | The amount of addresses to list |
+
+</CH.Section> 
+
+#### `Vec<PositionResponse>`
+
+`positions` returns a vector of the [`PositionResponse`](#positionresponse) struct defined above.
+ 

@@ -1,0 +1,44 @@
+---
+sidebar_position: 2
+---
+
+import Margin1Url from '@site/static/img/learn/rover/margin1.png';
+
+import Margin2Url from '@site/static/img/learn/rover/margin2.png';
+
+# Margin
+
+## Leveraged Shorts
+To enable leveraged shorts, the asset must already be borrowable in the Red Bank. Assets that are not yet borrowable can be added via standard governance procedures (more below).
+
+Once an asset is borrowable in the Red Bank and approved for leveraged shorting, the user could then select the asset they’d like to short and the asset to short it against. Specifically, the short transaction involves borrowing an asset from Mars and selling it for another asset they’re willing to hold for the duration of the short. The credit account will atomically and seamlessly swap the assets behind the scenes.
+
+As with every other activity supported by credit accounts, the user will be able to short assets using leverage. This ultimately means that the user will be able to short a higher value asset than the sum value of the user’s deposited collateral as long as their HF is > 1.
+
+## Leveraged Longs  
+
+For leveraged longs, the user will be able to select an asset to borrow from the Red Bank (typically a stablecoin) and an asset to long. Behind the scenes, the credit account will automatically borrow stablecoins from the Red Bank and swap them for the desired asset.
+
+## Hypothetical trading examples within a credit account
+
+Imagine a hypothetical trader who sees a market opportunity to short ATOM, which is trading at $10. The trader sells 100 ATOM on margin against axlUSDC, borrowing against his collateral in the process. On the backend, the credit account borrows 100 ATOM from the Red Bank and swaps it for 1,000 axlUSDC. The trader’s total debt is now 100 ATOM. Fig. 11 shows two hypothetical outcomes from this trade.
+
+<img src={Margin1Url} alt={"Short selling example within a credit account"} />
+
+<p style={{
+    textAlign: 'center', 
+    color: 'rgb(136, 153, 168)', 
+    fontWeight: '700',
+    fontSize: '14px',
+}}>Short selling example within a credit account</p>
+
+Now, imagine a hypothetical trader who sees a market opportunity to long ATOM, which is trading at $10. The trader buys 200 ATOM on margin by borrowing axlUSDC against his collateral. On the backend, the credit account borrows 2,000 axlUSDC from the Red Bank and swaps it for 200 ATOM. The trader’s total debt is now 2,000 axlUSDC. Fig. 12 shows two hypothetical outcomes from this trade.
+
+<img src={Margin2Url} alt={"Leveraged long example within a credit account"} />
+
+<p style={{
+    textAlign: 'center', 
+    color: 'rgb(136, 153, 168)', 
+    fontWeight: '700',
+    fontSize: '14px',
+}}>Leveraged long example within a credit account</p>

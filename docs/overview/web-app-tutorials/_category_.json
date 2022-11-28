@@ -1,0 +1,8 @@
+{
+    "label": "Web App Tutorials",
+    "position": 5,
+    "link": {
+      "type": "generated-index", 
+      "description": "Beginner guides to Mars Protocol with astronaut-approved step-by-step screenshots."
+    }
+}

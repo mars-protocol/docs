@@ -1,0 +1,30 @@
+---
+sidebar_position: 3
+---
+
+# Mars Risk Framework
+
+Each new protocol and asset approved for borrowing and lending comes with unique risks and unique profit opportunities. It’s the job of the Martian Council to balance these risks and rewards and safeguard against shortfall events by setting calculated risk parameters.
+
+Delphi Labs has proposed a [rigorous risk framework](https://github.com/mars-protocol/mips/blob/main/Mars-Risk-Framework.md) to help guide those decisions for Mars v2. Designed to assess the riskiness and determine the risk parameters of protocols and assets to be incorporated into the protocol, this framework adapts internationally used best practices to the fast-changing, experimental reality of DeFi. While the framework is initially put at the disposal of the Mars Council, it could be applied more broadly to any DeFi platform that needs to evaluate asset or protocol-related risks.
+
+It would supersede Mars’ [original risk framework](https://mars-protocol.medium.com/introducing-mars-protocols-risk-framework-1a452b49ad33), and covers new protocol integrations as well as two specific token types:
+
+- Single-asset tokens (i.e. OSMO) 
+- Liquidity provisioning (LP) tokens (i.e. OSMO-axlUSDC LP tokens)
+
+## Framework summary
+
+The Mars risk framework uses proven TradFi risk metrics (including Conditional Value at Risk or CVaR and the Amihud Illiquidity Measure) with new crypto-specific metrics (including oracle analysis and decentralization tests) to standardize how risk is measured in DeFi.
+
+A two-step process is used to incorporate a new protocol or asset into the platform. The first step involves assessing the protocol or asset’s technical and centralization risks. In the second step, the framework defines how the different risk parameters should be set for the given asset/LP token based on market and liquidity risk metrics.
+
+The Risk Framework scores all assets on a spectrum. The riskier an asset is, the greater the limitations the protocol imposes on that asset. 
+
+## Supporting new assets and LP tokens
+
+Like new protocols, any new asset or LP token that’s under consideration for support on Mars should be carefully examined for technical and centralization risks. The Martian Council should also consider oracle and bridging risks (where applicable).
+
+Because LP tokens are potentially subject to impermanent loss (IL), they may have further limits imposed on their LTVs.
+
+

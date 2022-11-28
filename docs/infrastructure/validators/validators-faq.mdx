@@ -1,0 +1,53 @@
+---
+sidebar_position: 6
+---
+
+import Admonition from '@theme/Admonition'
+
+# Validators FAQ
+
+### What is the minimum amount of validators needed for mainnet? Is there a cap?
+
+<Admonition type="info" title="">
+100 validators are needed for mainnet. Any validator who falls outside of the top 100 in delegated MARS will stop producing blocks and earning rewards.
+</Admonition>
+
+### Is there a minimum required to stake and become a validator?
+
+<Admonition type="info" title="">
+No
+</Admonition>
+
+### How long is the unbonding period (the length of time to return staking amount after unstaking)?
+
+<Admonition type="info" title="">
+28 days
+</Admonition>
+
+### How many rewards can a validator earn?
+
+<Admonition type="info" title="">
+Validators earn rewards through...
+</Admonition>
+
+### Is there slashing on the network?
+
+<Admonition type="info" title="">
+Yes, poorly performing validator nodes (i.e. those that are offline or have weak network connections) will be penalized and earn fewer rewards.
+</Admonition>
+
+### Is it required to use sentry nodes as a security measure?
+
+<Admonition type="caution" title="">
+Although not required, validators should consider using sentry nodes as a security measure.
+
+To learn more about sentry node architecture, see [here](./sentry-node-architecture). 
+</Admonition>
+
+### Should I host my validator through a cloud provider or a "bare metal" server?
+
+<Admonition type="info" title="">
+When you use a cloud provider to host your validator, you are likely using a shared SSD, which is generally pretty slow. You will likely miss some blocks, which will effect your total up-time.
+
+Bare metal servers generally offer better performance than cloud providers. There are some bare metal hosting services that allow for remote access to dedicated servers.
+</Admonition>

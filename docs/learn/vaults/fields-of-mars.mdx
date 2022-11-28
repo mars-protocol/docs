@@ -1,0 +1,48 @@
+---
+sidebar_position: 2
+---
+
+import FieldsofMars1Url from '@site/static/img/learn/vaults/fields-of-mars1.png';
+
+import FieldsofMars2Url from '@site/static/img/learn/vaults/fields-of-mars2.png';
+
+import FieldsofMars3Url from '@site/static/img/learn/vaults/fields-of-mars3.png';
+
+# Fields of Mars
+
+In the Fields of Mars users can leverage yield farm vault positions by using rover credit accounts.
+
+Initially, each deposit into a Fields vault creates a credit account with a single position. Fig. 14 shows, at a high level, how deposits work with the OSMO-ATOM strategy, resulting in an effective 2x leverage ratio for the user.
+
+<img src={FieldsofMars1Url} alt={"A leveraged yield farming position in the Fields of Mars"} />
+
+<p style={{
+    textAlign: 'center', 
+    color: 'rgb(136, 153, 168)', 
+    fontWeight: '700',
+    fontSize: '14px',
+}}>A leveraged yield farming position in the Fields of Mars</p>
+
+This allows the user to farm with leverage with increased yield (in the form of OSMO tokens issued as bonding rewards). However, should the value of OSMO drop, the risk of liquidation is increased. Both scenarios are illustrated below.
+
+In scenario 1 (Fig. 15), the user supplies ATOM and borrows OSMO from the Red Bank's OSMO pool. The ATOM and OSMO are deposited in the ATOM-OSMO LP pool and staked in the Osmosis staking contract. As long as the yield in fees and OSMO rewards exceeds the interest rate, the user's profit will increase faster than borrowing costs.
+
+<img src={FieldsofMars2Url} alt={"Value of LP asset remains constant or increases"} />
+
+<p style={{
+    textAlign: 'center', 
+    color: 'rgb(136, 153, 168)', 
+    fontWeight: '700',
+    fontSize: '14px',
+}}>Value of LP asset remains constant or increases</p>
+
+In Scenario 2 (see Fig. 16), the ATOM-OSMO LP share is held as collateral by the smart contract and the value of the collateral and debt is tracked over time (using the AMM itself as the oracle). If the ratio of debt to collateral exceeds a certain level defined in the smart contract (i.e. the margin requirement), the LP share is liquidated to pay back the debt.
+
+<img src={FieldsofMars3Url} alt={"Value of LP asset decreases, resulting in liquidation"} />
+
+<p style={{
+    textAlign: 'center', 
+    color: 'rgb(136, 153, 168)', 
+    fontWeight: '700',
+    fontSize: '14px',
+}}>Value of LP asset decreases, resulting in liquidation</p>

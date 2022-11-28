@@ -1,0 +1,17 @@
+---
+sidebar_position: 1
+---
+
+import RoverArchitectureUrl from '@site/static/img/learn/rover/rover-architecture.png';
+
+# Rover Architecture
+
+Rover credit accounts enable users to trade and farm with leverage across DeFi strategies & protocols all in one account with a health factor and cross-collateralised assets. Users can draw leverage by borrowing from the Mars Red Bank in their credit account and use it to interact with governance-whitelisted external contracts.
+
+Credit accounts hold a user’s assets and compute a health factor based on the value and riskiness of the user’s positions, as determined by on-chain data and the Martian Council, respectively. In a similar vein to the Red Bank, if this health factor drops below the minimum threshold, a liquidation engine incentivises third parties to repay the debt and keep the system solvent. Mars v2 designs limit the credit account, which is represented by an NFT, to interact only with whitelisted contracts in order to avoid users exfiltrating borrowed funds.
+
+A user can have one or several credit accounts, each of which are represented as an NFT. NFT accounts open up an exciting world of possibilities, which are explored below.
+
+The architecture is modular and extensible, allowing new protocols and integrations to be added easily.
+
+<img src={RoverArchitectureUrl} />

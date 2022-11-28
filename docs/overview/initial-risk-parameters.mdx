@@ -1,0 +1,43 @@
+---
+sidebar_position: 4
+---
+
+# Initial Risk Parameters
+
+## Summary 
+
+|  Asset | Liq. LTV  | Liq. Bonus  |  RB Deposit Cap 1 | Rover Vault Cap 1  |
+|:----:|:----:|:----:|:----:|:----:|
+| axlUSDC  | 80%  | 10%  | 2.5M  | -  |
+| ATOM  | 72%  | 15%  | 700,000  | -  |
+| OSMO  | 61%  | 15%  | 13M  | -  |
+| ATOM/OSMO  | 66%  | 15%  | -  | 17M  |
+| axlUSDC/OSMO  | 68%  | 15%  | -  | 5M  |
+
+## Liquidation Bonus Methodology
+
+### Risky (non-stable) assets
+
+Liquidation profitability analysis is done by simulating a price decline in 30 minutes equal to the worse 30-minute drawdown of the asset: 
+
+- The first priority is for liquidations to be profitable at a considerable amount of blocks using different initial health factors (HFs). 
+- The second priority is that for most HFs, there’s a period of profitable liquidations before the HF goes below the min such that liquidations lead to an increase in HF after liquidation.
+
+### Non-risky (stable) assets
+
+Liquidation profitability analysis is done by simulating a price increase in 30 minutes equal to the max 30-minute increase of any asset in the money market: 
+
+- The first priority is for liquidations to be profitable at a considerable amount of blocks using different initial HFs.
+- The second priority is that for most HFs, there’s a period of profitable liquidations before the HF goes below the min such that liquidations lead to an increase in HF after liquidation.
+
+## Caps
+
+### Caps 1
+
+Initial caps are defined as 10% of on-chain liquidity for the asset. On-chain liquidity includes both assets when considering XYK pools. In other words, if the ATOM/OSMO pool has 80M in liquidity, we consider both ATOM and OSMO to have 80M in liquidity from this pool.
+
+The idea for the initial caps is to be very conservative at the initial stage after deployment. After a few weeks/months, if everything is working correctly we can increase caps.
+
+### Caps 2
+
+Governance could double caps in the second epoch to 20% on-chain liquidity.

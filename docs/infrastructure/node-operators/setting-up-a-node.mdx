@@ -1,0 +1,278 @@
+---
+sidebar_position: 1
+---
+
+import Admonition from '@theme/Admonition'
+
+# Setting up a Node
+
+## Links
+
+- Mars contributor @larry0x's workshop: https://github.com/larry0x/workshops/tree/main/how-to-run-a-validator
+
+
+## Server Requirements 
+
+A production-ready server typically requires:
+
+- **8-core x86 CPU.** Cosmos apps do compile on ARM chips (e.g. Apple's M1 processor) but the reliability is not battle-tested. Notably, chains that incorporate the [CosmWasm](https://cosmwasm.com/) module [won't even compile](https://github.com/CosmWasm/wasmvm#builds-of-libwasmvm) on ARM servers.
+- **64 GB RAM.** Cosmos apps typically use less than 32 GB under normal conditions, but during events such as chain upgrades, up to 64 GB is usually needed.
+- **4 TB NVME SSD.** Hard drive I/O speed is crucial! Nodes that run on HDD or SATA SSD often find themselves missing blocks. Requirements on disk space depends on the chain and your pruning settings but generally at least 2 TB is recommended. 
+- **Linux operating system.**
+
+## [Compile the Mars App Daemon](../../develop/mars-cli/marsd)
+
+
+## Generate Operator Key
+
+Each node needs three private keys: `operator key`, `consensus key` and `node key`. Let's first generate the `operator key`.
+
+Run these commands to create a new private key named `demo-user`:
+
+```shell
+# to generate a new seed phrase
+marsd keys add demo-user --coin-type 118
+
+# to use an existing seed phrase
+marsd keys add demo-user --recover --coin-type 118
+
+mards keys show demo-user
+```
+
+`--coin-type` is a parameter used when generating private keys from seed phrases, as defined in [SLIP-0044](https://github.com/satoshilabs/slips/blob/master/slip-0044.md). Most Cosmos chains use `118`. For the sake of a better interchain UX, we recommend everyone use `118`.
+
+<Admonition type="warning" title="WARNING">
+It is important that you keep the mnemonic phrase secure, as there is no way to recover it. 
+</Admonition>
+
+## Initialise Mars Node
+
+Running this command creates your consensus key, node key, as well as some config files for your node:
+
+```bash
+marsd init yourmoniker --chain-id mars-1
+```
+
+Replace `yourmoniker` with any string you'd like. This is a name to identify your server. For prospective validators, this is NOT your validator's moniker. It may be a good practice to not include any personally identifying info in this moniker for security reasons.
+
+<Admonition type="info" title="">
+For testnet, the chain-id is ares-1. 
+</Admonition>
+
+This command will generate a .mars folder under your home directory:
+
+```bash
+wget -O ~/.marsd/config/genesis.json https://github.com/mars-protocol/networks/raw/main/hub-1/genesis.json
+```
+
+```bash
+~/.mars
+├─┬ config
+│ ├── app.toml
+│ ├── client.toml
+│ ├── config.toml
+│ ├── node_key.json
+│ ├── priv_validator_key.json
+└─┬ data
+  └── priv_validator_state.json
+```
+
+<Admonition type="info" title="">
+For testnet, use the testnet genesis file: https://github.com/mars-protocol/networks/raw/main/hubtest-1/genesis.json 
+</Admonition>
+
+Let's walk over each file in the folder:
+- `config.toml` The config file for Tendermint. In case you don't already know, Cosmos chains use a modular/layered design, where on the bottom there is Tendermint, which handles networking, P2P connections, and consensus. On top of it are the SDK modules, which handle application logics such as accounts, token transfers, smart contracts and so on. `config.toml` is for the Tendermint part of the stack.
+- `app.toml` This is the config for the SDK modules part of the stack.
+`client.toml` This is the config for the app's command line interface (CLI). For example, later on we will see we often have to specify parameters such as `--chain-id` when using CLI commands. You can set a default `--chain-id` in this file so you don't have to type the same thing in every command.
+- `genesis.json` This is the genesis state of the blockchain. This file should contain crucial info needed for bootstrapping the chain such as initial token balance for each account, initial validator set, etc.
+- `node_key.json` **Important.:This is the node key.** This key is used in P2P connections for nodes to identify each other. Since it is not used in consensus, it is not a deal-breaker if lost, but it's recommended to back it up just in case.
+- `priv_validator_key.json` **Important: This is the consensus key**. Your node uses this key to sign blocks. **You should backup this file and don't show anyone else  its content.**
+`priv_validator_state.json` Tendermint uses this file to prevent your node from double-signing. 
+
+An important remainder:
+
+BACKUP YOUR `priv_validator_key.json` file
+
+## Configure Node
+
+`config.toml` and `app.toml` contain important config parameters node operators will need to be aware of.
+
+### `config.toml`
+
+Firstly, marsd uses a number of ports for P2P communications. In general these do not need to be changed, but in case you are running multiple Cosmos chain nodes on the same server (common for IBC relayers), make sure to change the default settings, so that chain apps don't compete for the same ports:
+
+```toml
+proxy_app = "tcp://127.0.0.1:26658"
+
+[rpc]
+laddr = "tcp://127.0.0.1:26657"
+pprof_laddr = "localhost:6060"
+
+[p2p]
+laddr = "tcp://0.0.0.0:26656"
+```
+
+`priv_validator_laddr` can be left empty unless you plan to use an external signing program such as [tmkms](https://github.com/tendermint/tmkms) or [horcrux](https://github.com/strangelove-ventures/horcrux/releases). If you do use such a program, Tendermint will use this port to communicate with the program. For example, Horcrux uses tcp://0.0.0.0:1234 by default.
+
+```toml
+priv_validator_laddr = ""
+```
+
+`moniker` is the name of your server, used in P2P communications between Tendermint nodes. This is NOT your validator's name, which we will define later.
+
+```toml
+moniker = "yourmoniker"
+```
+
+
+<Admonition type="caution" title="">
+In order to join the network, a node first needs to know a few peers to connect to. 
+</Admonition>
+
+A seed node is a type of node that connects to a large number of peers, and when a new node joins the network, it informs the new node of available peers in the network. Typically the dev team will run at least one seed node. **You can find the seed nodes for Mars below.**
+
+Persistent peers are peers that you want to manually establish & maintain connection with. Typically you should only add a node as a persistent peer if you know & trust the person operates it. From time to time you may be contacted by arbitrageurs and MEV searchers requesting to establish persistent peers. Be very cautious in such cases!
+
+```toml
+[p2p]
+#testnet
+seeds = "91911acca20b84850e3317cd3a0ae1cf31e9ac3c@65.108.142.160:26656"
+
+#mainnet
+seeds = "91911acca20b84850e3317cd3a0ae1cf31e9ac3c@65.108.142.160:26656"
+
+#mainnet
+persistent_peers = ""
+```
+
+### `app.toml`
+
+While Ethereum users discover gas prices by bidding in a fee market, in Cosmos each node defines a fixed "minimum gas prices". Upon receiving a `tx` from its peers, the node will add the `tx` to its mempool if the `tx` pays a fee higher than its minimum gas prices, or discard the `tx` if otherwise.
+
+```toml
+minimum-gas-prices = "0umars"
+```
+
+Enable the REST API, Rosetta, or gRPC endpoint, and the respective ports to use if you do intend to use them, otherwise they can be left disabled.
+
+<Admonition type="info" title="NOTE">
+In order to use --gas auto when sending txs, one of API or gRPC must be enabled. [The tx simulator is disabled if both API and gRPC are disabled.](https://github.com/cosmos/cosmos-sdk/issues/10081#issuecomment-1025668852)
+</Admonition>
+
+```toml
+[api]
+enable = true
+swagger = false
+address = "tcp://0.0.0.0:1317"
+
+[rosetta]
+enabled = false
+address = ":8080"
+
+[grpc]
+enabled = false
+address = "0.0.0.0:9090"
+
+[grpc-web]
+enabled = false
+address = "0.0.0.0:9091"
+```
+
+##  Set up Cosmovisor (Optional)
+
+`cosmovisor` is a small process manager for Cosmos SDK application binaries that monitors the governance module for incoming chain upgrade proposals. If it sees a proposal that gets approved, `cosmovisor` can automatically download the new binary, stop the current binary, switch from the old binary to the new one, and finally restart the node with the new binary.
+
+We recommend that validators monitor the governance module and restart their nodes manually to eliminate third-party exposure. This tutorial will assume a standard set up, but if you'd like to install Cosmovisor you can continue [here](./setting-up-cosmovisor).
+
+## Configure System Service
+
+As a node operator, you probably want your node software to run persistently in the system background. Linux distros each have their own way of managing background services, but most (e.g. Ubuntu and Arch) use the [systemd](https://en.wikipedia.org/wiki/Systemd) software.
+
+To create a system service for `marsd`, create a file as follows (you will need sudo privilege):
+
+```bash
+sudo vim /etc/systemd/system/marsd.service
+```
+
+Enter the following, and save:
+
+```
+[Unit]
+Description=Mars Daemon
+After=network.target
+
+[Service]
+Type=simple
+User=demo-user
+ExecStart=/home/demo-user/.go/bin/marsd start
+Restart=on-failure
+RestartSec=5s
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Replace the `marsd` path in `ExecStart` with the actual path of your `marsd` binary.
+
+Two key points here are:
+- By setting the `Restart` and `RestartSec` params, we instruct `systemd` to automatically restart the `marsd` process in case it fails for some reason;
+- With the `LimitNOFILE` param, we allow marsd to access up to 65,535 files simultaneously. This is necessary because Cosmos nodes do need to access more files than what `systemd` allows by default.
+
+Run the following command to register the system service:
+
+```bash
+sudo systemctl daemon-reload
+```
+
+If you want the node software to start automatically on each server reboot, run the following command to mark it as "enabled":
+
+```bash
+sudo systemctl enable marsd
+```
+
+## Start your Node
+
+Start your node with:
+
+```bash
+sudo systemctl start marsd
+```
+
+The node software starts as a background service. The `--output` cat flag allows for colored log outputs. To view its log:
+
+```bash
+journalctl -f -u marsd --output cat
+```
+
+We need to wait for the node to sync up to the latest block. To check the node's sync status:
+
+```bash
+marsd status 2>&1 | jq
+```
+
+`jq` formats the output into a more readable format. `2>&1` is necessary because of [a bug](https://twitter.com/wholesum/status/1481782663518113792) where Cosmos SDK mistakenly outputs the status to stderr instead or stdout.
+
+The output should include the following data (only fields relevant to this section  here are shown):
+
+```
+{
+  "NodeInfo": {
+    "id": "...",              // derived from node_key.json
+    "moniker": "yourmoniker", // defined in config.toml
+  },
+  "SyncInfo": {
+    "latest_block_height": "4834328",
+    "latest_block_time": "2022-06-21T12:31:40.747935942Z",
+    "catching_up": false // important
+  },
+  "ValidatorInfo": {
+    "Address": "...",    // derived from priv_validator_key.json
+    "PubKey": { ... },   // same as above
+    "VotingPower": "0"   // zero if the node is not a validator
+  }
+}
+```
+
+Your node is synced up if `SyncInfo.catching_up` is `false`.

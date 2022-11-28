@@ -1,0 +1,82 @@
+/* *
+ * CSS files with the .module.css suffix will be treated as CSS modules
+ * and scoped locally.
+ */
+
+/* .heroBanner {
+  padding: 4rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 2rem;
+  }
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+} */
+
+
+/**
+ * CSS files with the .module.css suffix will be treated as CSS modules
+ * and scoped locally.
+ */
+
+.heroBanner {
+  padding: 4rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  left: 0px;
+  right: 0px;
+  background: linear-gradient(180deg, rgba(46, 21, 43, 0) 0%, #101123 100%), url("./../../static/img/home-hero.png");
+  /* background-image:  */
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  min-height: 718px;
+}
+
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 2rem;
+  }
+}
+
+/* .shadow {
+  position: absolute;
+  background-image: url("./../../static/img/hero-shadow.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  overflow: hidden;
+} */
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shadow {
+  background: linear-gradient(180deg, rgba(46, 21, 43, 0) 0%, #101123 100%);
+  position: relative;
+  left: 0px;
+  right: 0px;
+  bottom: -6px;
+  height: 278px;
+}
+
+.arrows {
+  content: url("./../../static/img/arrow.png");
+  position: absolute;
+  height: 48px;
+  left: 48.33%;
+  right: 48.33%;
+  bottom: 34px;
+}

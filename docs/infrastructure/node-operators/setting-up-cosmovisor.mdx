@@ -1,0 +1,144 @@
+---
+sidebar_position: 3
+---
+
+# Setting up Cosmovisor
+
+`cosmovisor` is a small process manager for Cosmos SDK application binaries that monitors the governance module for incoming chain upgrade proposals. If it sees a proposal that gets approved, `cosmovisor` can automatically download the new binary, stop the current binary, switch from the old binary to the new one, and finally restart the node with the new binary.
+
+## Setting up Cosmovisor
+
+To install the latest version of `cosmovisor`, run the following command:
+
+```bash
+go install github.com/cosmos/cosmos-sdk/cosmovisor/cmd/cosmovisor@latest
+```
+
+Set the required environment variables:
+
+```bash
+export DAEMON_NAME=marsd            # binary name
+export DAEMON_HOME=$HOME/.marsapp   # daemon's home directory
+```
+
+Set the optional environment variable to trigger an automatic app restart:
+
+```bash
+export DAEMON_RESTART_AFTER_UPGRADE=true
+```
+
+Create the folder for the genesis binary and copy the marsd binary:
+
+```bash
+mkdir -p $DAEMON_HOME/cosmovisor/genesis/bin
+cp ./build/marsd $DAEMON_HOME/cosmovisor/genesis/bin
+```
+
+To check your work, ensure the version of cosmovisor and marsd are the same:
+
+```bash
+cosmovisor version
+marsd version
+```
+
+These two command should both output 0.0.0
+
+Reset private validator file to genesis state:
+
+```bash
+marsd unsafe-reset-all
+```
+
+## Configure System Service (Cosmovisor)
+
+As a node operator, you probably want your node software to run persistently in the system background. Linux distros each have their own way of managing background services, but most (e.g. Ubuntu and Arch) use the [systemd](https://en.wikipedia.org/wiki/Systemd) software.
+
+To create a system service for cosmovisor, create a file as follows (you will need sudo privilege):
+
+
+```bash
+sudo vim /etc/systemd/system/cosmovisor.service
+```
+
+Enter the following, and save:
+
+```
+[Unit]
+Description=Sim Daemon
+After=network.target
+
+[Service]
+Type=simple
+User=demo-user
+ExecStart=/home/user/.go/bin/cosmovisor start
+Restart=on-failure
+RestartSec=5s
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Replace the `cosmovisor` path in ExecStart with the actual path of your cosmovisor binary.
+
+Two key points here are:
+
+- By setting the `Restart` and `RestartSec` params, we instruct systemd to automatically restart the cosmovisor process in case it fails for some reason;
+- With the `LimitNOFILE` param, we allow `cosmovisor` to access up to 65,535 files simultaneously. This is necessary because Cosmos nodes do need to access more files than what systemd allows by default.
+
+Run the following command to register the system service:
+
+```bash
+sudo systemctl daemon-reload
+```
+
+If you want the node software to start automatically on each server reboot, run the following command to mark it as "enabled":
+
+```bash
+sudo systemctl enable cosmovisor
+```
+
+## Start your Node (Cosmovisor)
+
+Start your node with:
+
+```bash
+sudo systemctl start cosmovisor
+```
+
+The node software starts as a background service. The -`-output cat` flag allows for colored log outputs. To view its log:
+
+```bash
+journalctl -f -u cosmovisor --output cat
+```
+
+We need to wait for the node to sync up to the latest block. To check the node's sync status:
+
+```bash
+cosmovisor status 2>&1 | jq
+```
+
+`jq` formats the output into a more readable format. `2>&1` is necessary because of [a bug](https://twitter.com/wholesum/status/1481782663518113792) where Cosmos SDK mistakenly outputs the status to stderr instead or stdout.
+
+The output should include the following data (only fields relevant to this section  here are shown):
+
+```
+{
+  "NodeInfo": {
+    "id": "e1f44e704271db4a18e48ffd24ae64361d2c51be", // derived from node_key.json
+    "moniker": "yourmoniker",                         // defined in config.toml
+  },
+  "SyncInfo": {
+    "latest_block_height": "4834328",
+    "latest_block_time": "2022-06-21T12:31:40.747935942Z",
+    "catching_up": false // important
+  },
+  "ValidatorInfo": {
+    "Address": "...",    // derived from priv_validator_key.json
+    "PubKey": { ... },   // same as above
+    "VotingPower": "0"   // zero if the node is not a validator
+  }
+}
+```
+
+Your node is synced up if `SyncInfo.catching_up` is `false`.

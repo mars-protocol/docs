@@ -1,0 +1,61 @@
+---
+sidebar_position: 3
+---
+
+# Managing your Validator'
+
+## Delegate Additional MARS to your Validator
+
+You can always use the Marsd CLI to send a delegation transaction.
+
+```bash
+marsd tx staking delegate [validator-addr] [amount] --from $VALIDATOR_KEY_NAME --keyring-backend=file --yes --node=tcp://localhost:26657
+```
+
+## Jailed!
+If your validator goes offline and misses too many blocks, it will be removed from the active set & "jailed". In this state, your delegations will be slowly slashed!! Check whether your validator is jailed using the marsd `query staking validator` command.
+
+If you still have enough delegations to enter the active set, simply run this command to unjail it:
+
+```bash
+marsd tx slashing unjail --from validator
+```
+
+## Edit your Validator's Info
+
+From time to time you may want to rename your validator, change the description, etc. Do this by:
+
+```bash
+marsd tx staking edit-validator \
+  --moniker "the moniker for your validator" \
+  --details "a description of your validator" \
+  --identity "your keybase.io PGP key (block explorers will use your keybase pfp)" \
+  --website "http://homepage.validator.com" \
+  --security-contact "contact@your.email" \
+  --from validator
+```
+
+A flag is only needed if it is to be changed (e.g. if you do not wish to change the security contact email, then it doesn't need to included in the command)
+
+## Withdraw Commissions
+
+Run the following command to claim your commissions:
+
+```bash
+marsd tx distribution withdraw-rewards $(simd keys show validator --bech val --address) \
+  --commission \
+  --from validator
+```
+Note the `--commission` flag.
+
+## Migrating Servers
+
+To migrate your validator to a new server, you first sync up a new node (check the instruction on using snapshot or state sync). Then:
+
+1. Shut down your old node
+2. Copy your `priv_validator_key.json` and `priv_validator_state.json` to the new node
+3. Restart your new node; you should see the "This node is a validator" log message when starting up
+
+NOTE: Step (1) must be done first, or your validator may double-sign!!!
+
+Optional: Copy `node_key.json` to the new server as well. This is not mandatory, but helps your node to establish P2P connections faster.

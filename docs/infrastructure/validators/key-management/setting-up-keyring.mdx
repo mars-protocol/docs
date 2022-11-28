@@ -1,0 +1,86 @@
+---
+sidebar_position: 2
+---
+
+import Admonition from '@theme/Admonition'
+
+# Setting up Keyring
+
+The keyring holds the private/public keypairs used to interact with a node. For instance, a validator key needs to be set up before running the blockchain node, so that blocks can be correctly signed. The private key can be stored in different locations, called "backends", such as a file or the operating system's own key storage.
+
+```bash
+$ marsd keys [subcommands] --keyring-backend [backend type]
+```
+
+## os backend
+
+The os backend relies on operating system-specific defaults to handle key storage securely. Typically, an operating system's credential sub-system handles password prompts, private keys storage, and user sessions according to the user's password policies. 
+
+Here is a list of the most popular operating systems and their respective passwords manager:
+
+- macOS (since Mac OS 8.6): [Keychain](https://support.apple.com/en-gb/guide/keychain-access/welcome/mac)
+- Windows: Credentials Management API
+- GNU/Linux:
+    - [libsecret](https://gitlab.gnome.org/GNOME/libsecret)
+    - [kwallet](https://api.kde.org/frameworks/kwallet/html/index.html)
+
+## file backend
+
+The `file` backend stores the encrypted keys inside the app's configuration directory. This keyring will request a password each time it is accessed, which may occur multiple times in a single command resulting in repeated password prompts.
+
+If using bash scripts to execute commands using the `file` option you may want to utilize the following format for multiple prompts:
+
+```bash
+# assuming that KEYPASSWD is set in the environment
+$ marsd config keyring-backend file                             # use file backend
+$ (echo $KEYPASSWD; echo $KEYPASSWD) | marsd keys add me        # multiple prompts
+$ echo $KEYPASSWD | marsd keys show me                          # single prompt
+```
+
+<Admonition type="info" title="">
+The first time you add a key to an empty keyring, you will be prompted to type the password twice.
+</Admonition>
+
+## pass backend
+
+The `pass` backend uses the [pass](https://www.passwordstore.org/) utility to manage on-disk encryption of keys' sensitive data and metadata. Keys are stored inside `gpg` encrypted files within app-specific directories. `pass` is available for the most popular UNIX operating systems as well as GNU/Linux distributions. Please refer to its manual page for information on how to download and install it.
+
+<Admonition type="info" title="">
+**pass** uses [GnuPG (opens new window)](https://gnupg.org/) for encryption. `gpg` automatically invokes the `gpg-agent` daemon upon execution, which handles the caching of GnuPG credentials. Please refer to `gpg-agent` man page for more information on how to configure cache parameters such as credentials TTL and passphrase expiration.
+</Admonition>
+
+The password store must be set up prior to first use:
+
+```bash
+pass init <GPG_KEY_ID>
+```
+
+Replace `<GPG_KEY_ID>` with your GPG key ID. You can use your personal GPG key or an alternative one you may want to use specifically to encrypt the password store.
+
+## kwallet backend
+
+The `kwallet` backend uses `KDE Wallet Manager`, which comes installed by default on the GNU/Linux distributions that ships KDE as default desktop environment. Please refer to KWallet Handbook (opens new window)for more information.
+
+## Adding keys to the keyring
+
+Applications developed using the Cosmos SDK come with the `keys` subcommand. 
+
+You can use `marsd keys` for help about the keys command and `marsd keys [command] --help` for more information about a particular subcommand.
+
+
+<Admonition type="info" title="">
+You can also enable auto-completion with the `marsd completion` command. For example, at the start of a bash session, run `. <(marsd completion)`, and all marsd subcommands will be auto-completed.
+</Admonition>
+
+To create a new key in the keyring, run the `add` subcommand with a `<key_name>` argument. For the purpose of this tutorial, we will solely use the `test` backend, and call our new key `demo-two`. This key will be used in the next section.
+
+```bash
+$ marsd keys add demo_two --keyring-backend test
+
+# Put the generated address in a variable for later use.
+MY_NODE_ADDRESS=$(marsd keys show demo_two -a --keyring-backend test)
+```
+
+This command generates a new 24-word mnemonic phrase, persists it to the relevant backend, and outputs information about the keypair. If this keypair will be used to hold value-bearing tokens, be sure to write down the mnemonic phrase somewhere safe!
+
+By default, the keyring generates a `secp256k1` keypair. The keyring also supports `ed25519` keys, which may be created by passing the `--algo ed25519` flag. A keyring can of course hold both types of keys simultaneously, and the Cosmos SDK's `x/auth` module (in particular its [middlewares](https://docs.cosmos.network/main/core/baseapp.html#middleware)) supports natively these two public key algorithms.

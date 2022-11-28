@@ -1,0 +1,72 @@
+---
+sidebar_position: 5
+---
+
+import Admonition from '@theme/Admonition'
+
+import RedBankLiquidationsFormulaUrl from '@site/static/img/learn/red-bank/red-bank-liquidations-formula.png';
+
+import RedBankLiquidations1Url from '@site/static/img/learn/red-bank/red-bank-liquidations1.png';
+
+import RedBankLiquidations2Url from '@site/static/img/learn/red-bank/red-bank-liquidations2.png';
+
+# Red Bank Liquidations
+
+In order to avoid insolvencies, the Red Bank offers incentives to liquidators to repay the debt of at-risk positions. Within the Red Bank, the health of a position (the level of collateralisation) is expressed in the health factor (HF) formula. This formula determines if an active account is healthy (overcollateralised) and consequently can be sustained, or at risk (undercollateralised) and consequently needs to be liquidated.
+
+A Liquidation LTV parameter is determined by the Max LTV of an asset. This Max LTV is used to appropriately weight the contribution of each asset as collateral in the account. If a specific account has borrowed more than the adjusted collateral value of all its assets (as determined by their liquidation LTV), then the account will have a HF < 1 and can be liquidated.
+
+Liquidation LTV (LT) = Max LTV + Safety Cushion
+
+The Health Factor formula is a simple ratio of the sum of adjusted assets by their Max LTVs over the amount borrowed in the account.
+
+<img src={RedBankLiquidationsFormulaUrl} />
+
+<Admonition type="warning" title="Bug">
+Equations need to be fixed - latex package needs to be installed.
+</Admonition>
+
+$c_$ = Position size of the $i-th$ asset in the account.
+$$
+
+$p_$ = Price of the $i-th$ asset in the account.
+
+$LT_$ = Liquidation LTV for the $i-th$ asset in the account.
+
+$b_$ = Borrow size of a $k-th$ liability in the account.
+
+$p_$ = Price of a $k-th$ liability in the account.
+
+When the health factor of any position falls below 1, it is deemed undercollateralised and becomes liquidatable. When a position becomes liquidatable, any user can repay the debt of the position (up to a limit called the close factor) to receive a portion of the collateral and a bonus.
+
+Liquidations follow a multi-step process:
+
+1. A third-party liquidator uses on-chain data to identify an account that has a health factor -1.
+2. This liquidator identifies a debt asset they wish to pay back on behalf of an account.
+3. This liquidator also identifies the collateral asset they wish to receive.
+4. The liquidator pays back an arbitrary amount of the user’s debt, up to the close factor (i.e. if the close factor is 50%, the liquidator can only repay up to 50% of the user’s debt in a single liquidation transaction).
+5. The liquidator receives a portion of the user’s collateral equal to the debt repaid and a liquidation bonus (i.e. if the liquidation bonus of the given collateral asset is 10% and the liquidator repaid an equivalent of $100 USD of the user’s debt, the liquidator would receive $110 USD worth of the user’s collateral)
+
+Consider the following liquidation example.
+
+First, a user deposits and borrows from a Red Bank outpost. Over time, the value of their deposit falls. This pushes their health factor below 1 and makes the account eligible for liquidation.
+
+<img src={RedBankLiquidations1Url} alt={"Liquidation flow, Part 1"} />
+
+<p style={{
+    textAlign: 'center', 
+    color: 'rgb(136, 153, 168)', 
+    fontWeight: '700',
+    fontSize: '14px',
+}}>Liquidation flow, Part 1</p>
+
+A liquidator then identifies the account, pays off a portion of the debt, and receives a 5% liquidation bonus. The user retains a portion of their debt plus their original deposit(s) minus the liquidation bonus.
+
+<img src={RedBankLiquidations2Url} alt={"Liquidation flow, Part 2"} />
+
+<p style={{
+    textAlign: 'center', 
+    color: 'rgb(136, 153, 168)', 
+    fontWeight: '700',
+    fontSize: '14px',
+}}>Liquidation flow, Part 2</p>

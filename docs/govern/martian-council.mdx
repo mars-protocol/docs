@@ -1,0 +1,61 @@
+---
+sidebar_position: 1
+---
+
+import Admonition from '@theme/Admonition'
+
+# Martian Council
+
+The Martian Council — a DAO of MARS stakers and delegators — will govern whichever deployed instance of the Mars Protocol smart contract system which is embraced by the community as the canonical “Mars,” and its outposts on other chains.
+
+All governance actions occur on Mars Hub. This includes everything from proposing changes, listing assets on individual outposts, whitelisting DeFi activities in credit accounts, and requesting an allocation of MARS from the community pool. Anyone can create a proposal regardless of whether they’re a validator or staker. Participating voters must have been active validators or delegators at least 1 block before the proposal was created. All voters should approach these decisions thoughtfully as they may have consequences on third parties (users) and, in extreme cases, can lead to Shortfall Events.
+
+Governance decisions that impact Mars Hub are binding. Governance decisions impacting other chains will rely upon signal voting at launch. For Mars Hub to realise the full potential of cross-chain governance, it will need to utilise Cosmos’ Interchain Accounts (ICA). Launched in February 2022, ICA technology in its infancy. Once Cosmos’ cross-chain governance architecture is ready for binding implementations, Mars contributors expect to propose integrating it with the protocol.
+
+<Admonition type="info" title="NOTE">
+Mars is merely software designed to create certain incentives on the part of MARS holders. Governance is ultimately a discretionary process subject to numerous uncertainties, and no specific governance outcomes can be guaranteed.
+
+For example, if the Martian Council authorises a C2C credit line which functions as intended and delivers fees, the Martian Council will be rewarded for this effort through a pro rata share of a portion of the increased fees paid to Mars.
+
+On the other hand, if the Martian Council suffers from a governance failure which causes losses to users, MARS stakers should be incentivised to compensate users in order to maintain Mars’ usage levels and thus preserve the value of their staked MARS. However, there is no guarantee that they will do so.
+</Admonition>
+
+## Delegated Proof of Stake (DPoS)
+
+When staking tokens with a particular validator, users are delegating the voting power of their tokens to that validator. In this sense, delegation allows users to indirectly participate in governance by staking their tokens with (and thereby increasing the voting power of) validators who align with their views. If they choose, delegators can actively vote and/or create proposals with their delegated tokens. If a delegator participates in a vote, it overrides the validator’s vote.
+
+## Voting
+
+Each MARS token staked will represent 1 unit of voting power.
+
+To be eligible to vote on any given proposal, you must have been staking MARS at least 1 block before the proposal was submitted. This ensures only committed stakers are eligible to participate in governance votes.
+
+## Proposals
+
+Only MARS holders can submit proposals. To facilitate this process, we envision the following workflow for proposing and implementing changes. Visit the [Mars Improvement Proposals](./mars-improvement-proposals) section for more information on proposals. 
+
+**1. Submit a Mars Request for Comment (MRC) in the Mars Forums.**
+
+MRCs are an opportunity to present your idea and solicit feedback before submitting it for a formal governance vote. Each MRC should be posted for at least 5 days to gather community feedback. After that time, the proposer should review and incorporate any feedback they believe will strengthen the proposal by editing their original post.
+
+**2. Wait for the 2-day freeze period to elapse.**
+
+After gathering community feedback, the proposer can make any desired edits to their original post. Then, they must leave the full text of the proposal unchanged for at least two days before it can be sent on for a formal governance vote.
+
+**3. Submit a Mars Improvement Proposal (MIP) for an on-chain vote.**
+
+The text of an MRC that’s been frozen for at least two days can be used to submit a formal governance vote or Mars Improvement Proposal (MIP). Proposers must submit an on-chain transaction with the MIP details and a link to the original Mars Request for Comment (MRC).
+
+At the protocol’s inception, the following parameters were set for on-chain governance votes: 100,000 MARS must be submitted with the governance proposal. If the proposal passes, all MARS tokens are returned to the proposer. If the proposal is rejected, the 100,000 MARS tokens will be distributed to xMARS holders. The high MARS requirement is intended to protect the protocol from governance attacks in its nascent stages and it incentivizes proposers to listen very closely to community feedback in the forums before proceeding to an on-chain vote.
+
+To pass, a vote must hit the following targets as defined at launch:
+
+- **Participation:** To be eligible to vote, xMARS holders must have held their xMARS at least 1 block before the MIP was submitted on-chain.
+- **Quorum:** At least 10% of all available voting power (xMARS supply + vesting xMARS) must participate in the vote.
+- **Threshold:** A simple majority (at least 50% + 1 of all cast votes) of participating voters must vote in favor of the proposal.
+
+The voting period will be open for 37028 blocks or approximately 3 days.
+
+**4. Implementation.**
+
+Proposals that successfully pass an on-chain vote are authorized by the Martian Council for implementation by Mars contributors.

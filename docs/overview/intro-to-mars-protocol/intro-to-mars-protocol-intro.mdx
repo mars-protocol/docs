@@ -1,0 +1,26 @@
+# Intro to Mars Protocol 
+
+import IntroToMarsUrl from '@site/static/img/intro-to-mars.png';
+
+Welcome Martians! 🔴
+
+Mars is a credit protocol for the future: decentralised, self-sovereign, inter-chain, non-custodial, open-sourced, transparent, algorithmic, and community-governed. 
+
+Like existing credit protocols, Mars facilitates overcollateralised loans with a two-slope interest rate model (similar to Aave or Compound). In addition, Mars brings outstanding improvements in Contract-to-Contract (C2C) lending, allowing for smart contracts that are whitelisted to borrow assets from Mars liquidity pools without posting collateral. These credit lines power Mars’ credit accounts, giving end users access to leverage when interacting with core DeFi primitives.
+
+To achieve this vision, Mars smart contracts must be deployed on a highly performant, decentralised platform offering a thriving DeFi ecosystem with many potential integrations and demand for leverage. Rather than selecting a single platform, Mars should be present on multiple chains, wherever there’s demand for liquidity. Crucially, Mars should be present on these chains natively since a competitive DeFi experience requires atomic, synchronous composability, which cannot be achieved by cross-chain calls.
+
+This is the rationale that underpins the Mars Hub and Outpost topology illustrated below. Each outpost is an integrated DeFi experience native to a specific chain that connects to the Mars Hub - a Cosmos SDK chain. 
+
+<img src={IntroToMarsUrl} />
+
+Mars Protocol consists of four primary components: 
+
+1. **Mars Hub:** a Cosmos SDK chain that administers activity occuring on its outposts. Specifically, it does not hold liquidity for outposts but rather governs all outpost smart contracts, receives fees from outposts, and distributes fees to participants in Mars' governance. 
+2. **Red Bank:** a fully automated, on-chain credit facility. Specifically, the Red Bank supports two types of lending: collateralised loans directly within the Red Bank and contract-to-contract (C2C) lending to whitelisted smart contracts. C2C lending powers rover credit accounts, which enable users to access leverage.
+3. **Rover:** a new primitive based on Mars v2’s generalised leverage module. Rover credit accounts enable users to trade and farm with leverage across DeFi strategies & protocols all in one account with a single health factor and cross-collateralised assets. Users can draw leverage by borrowing from the Mars Red Bank in their credit account and use it to interact with governance-whitelisted external contracts.
+4. **Vaults:** the container for assets implementing automated strategies. They offer auto-compounded yield generation capabilities on any supported chain. 
+
+A Mars “outpost” consists of two of these components on any supported chain: the Red Bank and Rover credit accounts. Further 3rd-party integrations, like Vaults, can be built on top of outposts. 
+
+The motivation behind Mars is simple: To become the leading DeFi credit protocol; becoming the lender of choice for both consumers and dApps. We aim to seed life on a new planet… one that takes the best of the old world and uses it to build something radically new. 
