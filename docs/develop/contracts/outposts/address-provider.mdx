@@ -2,9 +2,13 @@
 sidebar_position: 1
 ---
 
+import Admonition from '@theme/Admonition'
+
 import AddressProviderSetAddressUrl from '@site/static/img//develop/contracts/address-provider-set-address.png';
 
 # address-provider
+
+## Overview
 
 Holds addresses of the main contracts of the core protocol.
 
@@ -14,7 +18,7 @@ Holds addresses of the main contracts of the core protocol.
 - **Testnet address:** `osmo1vc3u3fe9fseuk60ykzawthwn0p0vg350n5aeh3ypy3k8fldasjxq03xapu`
 - **Contract repo:** https://github.com/mars-protocol/outposts/tree/master/contracts/address-provider
 - **contract.rs:** https://github.com/mars-protocol/outposts/blob/master/contracts/address-provider/src/contract.rs
-- **address_provider.rs (packages):** https://github.com/mars-protocol/outposts/blob/master/packages/outpost/src/address_provider.rs
+- **address_provider.rs:** https://github.com/mars-protocol/outposts/blob/master/packages/outpost/src/address_provider.rs
 - **Tests:** https://github.com/mars-protocol/outposts/tree/master/contracts/address-provider/tests
 - **Audit:** 
 
@@ -47,34 +51,6 @@ pub struct InstantiateMsg {
 }
 ```
 
-```rust contract.rs 
-#[cfg_attr(not(feature = "library"), entry_point)]
-pub fn instantiate(
-    deps: DepsMut,
-    _env: Env,
-    _info: MessageInfo,
-    msg: InstantiateMsg,
-) -> Result<Response, ContractError> {
-    cw2::set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
-
-    assert_valid_addr(deps.api, &msg.owner, &msg.prefix)?;
-
-    CONFIG.save(deps.storage, &msg)?;
-
-    Ok(Response::default())
-}
-```
-
-```rust test
-#[test]
-fn test_proper_initialization() {
-    let deps = th_setup();
-
-    let config: Config = th_query(deps.as_ref(), QueryMsg::Config {});
-    assert_eq!(config.owner, "osmo_owner".to_string());
-}
-```
-
 </CH.Code>
 
 | **Params**      | **Type** | **Description** |
@@ -97,13 +73,7 @@ Set address.
 {
     "set_address": {
         "address_type": {
-            "incentives": "...", 
-            "oracle": "...", 
-            "red_bank": "...", 
-            "rewards_collector": "...", 
-            "protocol_admin": "...", 
-            "fee_collector": "...", 
-            "safety_fund": "..."
+            "incentives": {}
         }, 
         "address": "..."
     }
@@ -122,183 +92,12 @@ pub enum ExecuteMsg {
     },
 }
 ```
-
-```rust contract.rs focus=1:12,16:17
-#[cfg_attr(not(feature = "library"), entry_point)]
-pub fn execute(
-    deps: DepsMut,
-    _env: Env,
-    info: MessageInfo,
-    msg: ExecuteMsg,
-) -> Result<Response, ContractError> {
-    match msg {
-        ExecuteMsg::SetAddress {
-            address_type: contract,
-            address,
-        } => set_address(deps, info.sender, contract, address),
-        ExecuteMsg::TransferOwnership {
-            new_owner,
-        } => transfer_ownership(deps, info.sender, new_owner),
-    }
-} 
-
-pub fn set_address(
-    deps: DepsMut,
-    sender: Addr,
-    address_type: MarsAddressType,
-    address: String,
-) -> Result<Response, ContractError> {
-    let config = CONFIG.load(deps.storage)?;
-
-    assert_owner(&sender, &config.owner)?;
-    assert_valid_addr(deps.api, &address, &config.prefix)?;
-
-    ADDRESSES.save(deps.storage, address_type.into(), &address)?;
-
-    Ok(Response::new()
-        .add_attribute("action", "outposts/address-provider/set_address")
-        .add_attribute("address_type", address_type.to_string())
-        .add_attribute("address", address))
-}
-```
-
-```rust test
-#[test]
-fn test_setting_address_if_unauthorized() {
-    let mut deps = th_setup();
-
-    let msg = ExecuteMsg::SetAddress {
-        address_type: MarsAddressType::RedBank,
-        address: "osmo_red_bank".to_string(),
-    };
-
-    let err =
-        execute(deps.as_mut(), mock_env(), mock_info("osmo_jake", &[]), msg.clone()).unwrap_err();
-    assert_eq!(err, ContractError::Unauthorized);
-
-    // owner can set address
-    execute(deps.as_mut(), mock_env(), mock_info("osmo_owner", &[]), msg).unwrap();
-
-    let address = ADDRESSES.load(deps.as_ref().storage, MarsAddressType::RedBank.into()).unwrap();
-    assert_eq!(address, "osmo_red_bank".to_string());
-}
-
-#[test]
-fn test_setting_address_if_invalid_remote_address() {
-    let mut deps = th_setup();
-
-    let invalid_address = "mars1s4hgh56can3e33e0zqpnjxh0t5wdf7u3ze575".to_string();
-    let msg = ExecuteMsg::SetAddress {
-        address_type: MarsAddressType::SafetyFund,
-        address: invalid_address.clone(),
-    };
-
-    let err = execute(deps.as_mut(), mock_env(), mock_info("osmo_owner", &[]), msg).unwrap_err();
-    assert_eq!(err, ContractError::InvalidAddress(invalid_address));
-}
-
-#[test]
-fn test_setting_address() {
-    let mut deps = th_setup();
-
-    let invalid_address = "mars1s4hgh56can3e33e0zqpnjxh0t5wdf7u3pze575".to_string();
-    let msg = ExecuteMsg::SetAddress {
-        address_type: MarsAddressType::SafetyFund,
-        address: invalid_address,
-    };
-
-    execute(deps.as_mut(), mock_env(), mock_info("osmo_owner", &[]), msg).unwrap();
-
-    let address =
-        ADDRESSES.load(deps.as_ref().storage, MarsAddressType::SafetyFund.into()).unwrap();
-    assert_eq!(address, "mars1s4hgh56can3e33e0zqpnjxh0t5wdf7u3pze575".to_string());
-}
-
-#[test]
-fn test_querying_addresses() {
-    let mut deps = th_setup();
-
-    ADDRESSES
-        .save(deps.as_mut().storage, MarsAddressType::Incentives.into(), &"incentives".to_string())
-        .unwrap();
-    ADDRESSES
-        .save(deps.as_mut().storage, MarsAddressType::Oracle.into(), &"oracle".to_string())
-        .unwrap();
-    ADDRESSES
-        .save(deps.as_mut().storage, MarsAddressType::RedBank.into(), &"red_bank".to_string())
-        .unwrap();
-
-    let res: AddressResponseItem =
-        th_query(deps.as_ref(), QueryMsg::Address(MarsAddressType::Incentives));
-    assert_eq!(
-        res,
-        AddressResponseItem {
-            address_type: MarsAddressType::Incentives,
-            address: "incentives".to_string()
-        }
-    );
-
-    let res: Vec<AddressResponseItem> = th_query(
-        deps.as_ref(),
-        QueryMsg::Addresses(vec![MarsAddressType::Incentives, MarsAddressType::RedBank]),
-    );
-    assert_eq!(
-        res,
-        vec![
-            AddressResponseItem {
-                address_type: MarsAddressType::Incentives,
-                address: "incentives".to_string()
-            },
-            AddressResponseItem {
-                address_type: MarsAddressType::RedBank,
-                address: "red_bank".to_string()
-            }
-        ]
-    );
-
-    let res: Vec<AddressResponseItem> = th_query(
-        deps.as_ref(),
-        QueryMsg::AllAddresses {
-            start_after: None,
-            limit: Some(2),
-        },
-    );
-    assert_eq!(
-        res,
-        vec![
-            AddressResponseItem {
-                address_type: MarsAddressType::Incentives,
-                address: "incentives".to_string()
-            },
-            AddressResponseItem {
-                address_type: MarsAddressType::Oracle,
-                address: "oracle".to_string()
-            }
-        ]
-    );
-
-    let res: Vec<AddressResponseItem> = th_query(
-        deps.as_ref(),
-        QueryMsg::AllAddresses {
-            start_after: Some(MarsAddressType::Oracle),
-            limit: None,
-        },
-    );
-    assert_eq!(
-        res,
-        vec![AddressResponseItem {
-            address_type: MarsAddressType::RedBank,
-            address: "red_bank".to_string()
-        }]
-    );
-}
-```
 </CH.Code>
 
 | **Params**      | **Type** | **Description** |
 | ----------- | ----------- | ----------- |
-| [`address_type`](focus://json#3:11)   | [`MarsAddressType`](#marsaddresstype)        | Mars address type        |
-| [`address`](focus://json#12)   | `String`        |          |
+| [`address_type`](focus://json#3:5)   | [`MarsAddressType`](#marsaddresstype)        | Mars address type        |
+| [`address`](focus://json#6)   | `String`        |          |
 
 </CH.Section>
 
@@ -308,18 +107,6 @@ fn test_querying_addresses() {
 
 <CH.Section>
 <CH.Code>
-
-```json json
-{
-    "incentives": "...", 
-    "oracle": "...", 
-    "red_bank": "...", 
-    "rewards_collector": "...", 
-    "protocol_admin": "...", 
-    "fee_collector": "...", 
-    "safety_fund": "..."
-}
-```
 
 ```rust address_provider.rs 
 #[cw_serde]
@@ -333,53 +120,25 @@ pub enum MarsAddressType {
     FeeCollector,
     SafetyFund,
 }
-
-impl fmt::Display for MarsAddressType {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let s = match self {
-            MarsAddressType::FeeCollector => "fee_collector",
-            MarsAddressType::Incentives => "incentives",
-            MarsAddressType::Oracle => "oracle",
-            MarsAddressType::ProtocolAdmin => "protocol_admin",
-            MarsAddressType::RedBank => "red_bank",
-            MarsAddressType::RewardsCollector => "rewards_collector",
-            MarsAddressType::SafetyFund => "safety_fund",
-        };
-        write!(f, "{}", s)
-    }
-}
-
-impl FromStr for MarsAddressType {
-    type Err = StdError;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "fee_collector" => Ok(MarsAddressType::FeeCollector),
-            "incentives" => Ok(MarsAddressType::Incentives),
-            "oracle" => Ok(MarsAddressType::Oracle),
-            "protocol_admin" => Ok(MarsAddressType::ProtocolAdmin),
-            "red_bank" => Ok(MarsAddressType::RedBank),
-            "rewards_collector" => Ok(MarsAddressType::RewardsCollector),
-            "safety_fund" => Ok(MarsAddressType::SafetyFund),
-            _ => Err(StdError::parse_err(type_name::<Self>(), s)),
-        }
-    }
-}
 ```
 
 </CH.Code>
 
-NOTE: [`protocol_admin`](focus://json#6) [`fee_collector`](focus://json#7) and [`safety_fund`](focus://json#8) are Mars Hub addresses with `mars` bech32 prefixes, which may not be recognizeded by the `api.addr_validate` method.
 
-| **Params**      | **Type** | **Description** |
-| ----------- | ----------- | ----------- |
-| [`incentives`](focus://json#2)   |         | Incentives contract address        |
-| [`oracle`](focus://json#3)   |         | Oracles contract address        |
-| [`red_bank`](focus://json#4)   |         | Red Bank contract address        |
-| [`rewards_collector`](focus://json#5)   |         | Rewards collector contract address        |
-| [`protocol_admin`](focus://json#6)   |         | Protocol admin is an ICS-27 interchain account controlled by Mars Hub's x/gov module. This account will take the owner and admin roles of outpost contracts.        |
-| [`fee_collector`](focus://json#7)   |         | The `fee_collector` module account controlled by Mars Hub's x/distribution module. Funds sent to this account will be distributed as staking rewards.        |
-| [`safety_fund`](focus://json#8)   |         | The module account controlled by the by Mars Hub's x/safety module. Funds sent to this account will be deposited into the safety fund.        |
+<Admonition type="info" title="NOTE">
+`protocol_admin` `fee_collector` and `safety_fund` are Mars Hub addresses with `mars` `bech32` prefixes, which may not be recognizeded by the `api.addr_validate` method.
+</Admonition>
+
+
+| **Variants**      |**Description** |
+| ----------- | ----------- |
+| [`Incentives`](focus://address_provider.rs#4)   |  Incentives contract address        |
+| [`Oracle`](focus://address_provider.rs#5)   | Oracles contract address        |
+| [`RedBank`](focus://address_provider.rs#6)   |Red Bank contract address        |
+| [`RewardsCollector`](focus://address_provider.rs#7)   | Rewards collector contract address        |
+| [`ProtocolAdmin`](focus://address_provider.rs#8)   | Protocol admin is an ICS-27 interchain account controlled by Mars Hub's x/gov module. This account will take the owner and admin roles of outpost contracts.        |
+| [`FeeCollector`](focus://address_provider.rs#9)   | The `fee_collector` module account controlled by Mars Hub's x/distribution module. Funds sent to this account will be distributed as staking rewards.        |
+| [`SafetyFund`](focus://address_provider.rs#10)   | The module account controlled by the by Mars Hub's x/safety module. Funds sent to this account will be deposited into the safety fund.        |
 
 </CH.Section>
 
@@ -412,67 +171,6 @@ pub enum ExecuteMsg {
 }
 ```
 
-```rust contract.rs focus=1:8,13:17,19:36
-#[cfg_attr(not(feature = "library"), entry_point)]
-pub fn execute(
-    deps: DepsMut,
-    _env: Env,
-    info: MessageInfo,
-    msg: ExecuteMsg,
-) -> Result<Response, ContractError> {
-    match msg {
-        ExecuteMsg::SetAddress {
-            address_type: contract,
-            address,
-        } => set_address(deps, info.sender, contract, address),
-        ExecuteMsg::TransferOwnership {
-            new_owner,
-        } => transfer_ownership(deps, info.sender, new_owner),
-    }
-} 
-
-pub fn transfer_ownership(
-    deps: DepsMut,
-    sender: Addr,
-    new_owner: String,
-) -> Result<Response, ContractError> {
-    let mut config = CONFIG.load(deps.storage)?;
-
-    assert_owner(&sender, &config.owner)?;
-    assert_valid_addr(deps.api, &new_owner, &config.prefix)?;
-
-    config.owner = new_owner.clone();
-    CONFIG.save(deps.storage, &config)?;
-
-    Ok(Response::new()
-        .add_attribute("action", "outposts/address-provider/transfer_ownership")
-        .add_attribute("previous_owner", sender)
-        .add_attribute("new_owner", new_owner))
-}
-```
-
-```rust test
-#[test]
-fn test_transferring_ownership() {
-    let mut deps = th_setup();
-
-    let msg = ExecuteMsg::TransferOwnership {
-        new_owner: "osmo_larry".to_string(),
-    };
-
-    // non-owner cannot transfer ownership
-    let err =
-        execute(deps.as_mut(), mock_env(), mock_info("osmo_jake", &[]), msg.clone()).unwrap_err();
-    assert_eq!(err, ContractError::Unauthorized);
-
-    // owner can transfer ownership
-    execute(deps.as_mut(), mock_env(), mock_info("osmo_owner", &[]), msg).unwrap();
-
-    let config = CONFIG.load(deps.as_ref().storage).unwrap();
-    assert_eq!(config.owner, "osmo_larry".to_string());
-}
-```
-
 </CH.Code>
 
 | **Params**      | **Type** | **Description** |
@@ -489,7 +187,7 @@ fn test_transferring_ownership() {
 
 ### `config`
 
-Get config.
+Queries contract config.
 
 <CH.Section>
 <CH.Code>
@@ -515,25 +213,6 @@ pub enum QueryMsg {
         start_after: Option<MarsAddressType>,
         limit: Option<u32>,
     },
-}
-```
-
-```rust contract.rs focus=1:4,11:12,14:16
-#[cfg_attr(not(feature = "library"), entry_point)]
-pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
-    match msg {
-        QueryMsg::Config {} => to_binary(&query_config(deps)?),
-        QueryMsg::Address(address_type) => to_binary(&query_address(deps, address_type)?),
-        QueryMsg::Addresses(address_types) => to_binary(&query_addresses(deps, address_types)?),
-        QueryMsg::AllAddresses {
-            start_after,
-            limit,
-        } => to_binary(&query_all_addresses(deps, start_after, limit)?),
-    }
-}
-
-fn query_config(deps: Deps) -> StdResult<Config> {
-    CONFIG.load(deps.storage)
 }
 ```
 
@@ -573,27 +252,20 @@ pub struct InstantiateMsg {
 </CH.Section>
 
 
-
-
-
-
-
 ### `address`
 
-Get a single address.
+Queries a single address.
 
 <CH.Section>
 <CH.Code>
 
 ```json json
 {
-    "address": {
-
-    }
+    "address": "incentives"
 }
 ```
 
-```rust address_provider.rs 
+```rust address_provider.rs focus=1:3,6:7,15
 #[cw_serde]
 #[derive(QueryResponses)]
 pub enum QueryMsg {
@@ -611,43 +283,62 @@ pub enum QueryMsg {
 }
 ```
 
-```rust contract.rs 
-#[cfg_attr(not(feature = "library"), entry_point)]
-pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
-    match msg {
-        QueryMsg::Config {} => to_binary(&query_config(deps)?),
-        QueryMsg::Address(address_type) => to_binary(&query_address(deps, address_type)?),
-        QueryMsg::Addresses(address_types) => to_binary(&query_addresses(deps, address_types)?),
-        QueryMsg::AllAddresses {
-            start_after,
-            limit,
-        } => to_binary(&query_all_addresses(deps, start_after, limit)?),
-    }
-}
-
-fn query_address(deps: Deps, address_type: MarsAddressType) -> StdResult<AddressResponseItem> {
-    Ok(AddressResponseItem {
-        address_type,
-        address: ADDRESSES.load(deps.storage, address_type.into())?,
-    })
-}
-```
-
 </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`address`](focus://json#2)   | [`MarsAddressType`](#marsaddresstype)        | Address to return        |
+
 </CH.Section>
 
-### `addresses`
-
-Get a list of addresses.
-
+#### `AddressResponseItem`
 
 <CH.Section>
 <CH.Code>
 
 ```json json
+{
+    "address_type": "incentive", 
+    "address": "..."
+}
 ```
 
-```rust address_provider.rs 
+```rust address_provider.rs
+#[cw_serde]
+pub struct AddressResponseItem {
+    pub address_type: MarsAddressType,
+    pub address: String,
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`address_type`](focus://json#2)   | [`MarsAddressType`](#marsaddresstype)        | The type of address        |
+| [`address`](focus://json#3)   | `String`        | Address value        |
+
+</CH.Section>
+
+
+### `addresses`
+
+Queries a list of addresses.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "addresses": [
+        "incentives", 
+        "red_bank",
+        "oracle"
+    ]
+}
+```
+
+```rust address_provider.rs focus=1:3,8:9,15
 #[cw_serde]
 #[derive(QueryResponses)]
 pub enum QueryMsg {
@@ -665,49 +356,34 @@ pub enum QueryMsg {
 }
 ```
 
-```rust contract.rs 
-#[cfg_attr(not(feature = "library"), entry_point)]
-pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
-    match msg {
-        QueryMsg::Config {} => to_binary(&query_config(deps)?),
-        QueryMsg::Address(address_type) => to_binary(&query_address(deps, address_type)?),
-        QueryMsg::Addresses(address_types) => to_binary(&query_addresses(deps, address_types)?),
-        QueryMsg::AllAddresses {
-            start_after,
-            limit,
-        } => to_binary(&query_all_addresses(deps, start_after, limit)?),
-    }
-}
-
-fn query_addresses(
-    deps: Deps,
-    address_types: Vec<MarsAddressType>,
-) -> StdResult<Vec<AddressResponseItem>> {
-    address_types
-        .into_iter()
-        .map(|address_type| query_address(deps, address_type))
-        .collect::<StdResult<Vec<_>>>()
-}
-```
-
 </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`addresses`](focus://json#2:6)   | [`Vec<MarsAddressType>`](#marsaddresstype)        | Addresses to return        |
+
 </CH.Section>
 
-
+Returns a vector that contains objects of type [`AddressResponseItem`](#addressresponseitem).
 
 
 ### `all_addresses`
 
 Query all stored addresses with pagination.
 
-
 <CH.Section>
 <CH.Code>
 
 ```json json
+{
+    "all_addresses": {
+        "start_after": "incentives", 
+        "limit": 5
+    }
+}
 ```
 
-```rust address_provider.rs 
+```rust address_provider.rs focus=1:3,10:15
 #[cw_serde]
 #[derive(QueryResponses)]
 pub enum QueryMsg {
@@ -725,48 +401,14 @@ pub enum QueryMsg {
 }
 ```
 
-```rust contract.rs 
-#[cfg_attr(not(feature = "library"), entry_point)]
-pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
-    match msg {
-        QueryMsg::Config {} => to_binary(&query_config(deps)?),
-        QueryMsg::Address(address_type) => to_binary(&query_address(deps, address_type)?),
-        QueryMsg::Addresses(address_types) => to_binary(&query_addresses(deps, address_types)?),
-        QueryMsg::AllAddresses {
-            start_after,
-            limit,
-        } => to_binary(&query_all_addresses(deps, start_after, limit)?),
-    }
-}
-
-fn query_all_addresses(
-    deps: Deps,
-    start_after: Option<MarsAddressType>,
-    limit: Option<u32>,
-) -> StdResult<Vec<AddressResponseItem>> {
-    let start = start_after.map(MarsAddressTypeKey::from).map(Bound::exclusive);
-    let limit = limit.unwrap_or(DEFAULT_LIMIT).min(MAX_LIMIT) as usize;
-
-    ADDRESSES
-        .range(deps.storage, start, None, Order::Ascending)
-        .take(limit)
-        .map(|item| {
-            let (k, v) = item?;
-            Ok(AddressResponseItem {
-                address_type: k.try_into()?,
-                address: v,
-            })
-        })
-        .collect()
-}
-```
-
 </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`start_after`](focus://json#3)   | [`Option<MarsAddressType>`](#marsaddresstype)        | Address to start list with        |
+| [`limit`](focus://json#4)   | `Option<u32>`        | Amount of addresses to list        |
+
+
 </CH.Section>
 
-
-
-
-
-
-
+Returns a vector that contains objects of type [`AddressResponseItem`](#addressresponseitem).

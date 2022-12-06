@@ -2,4 +2,513 @@
 sidebar_position: 1
 ---
 
+import Admonition from '@theme/Admonition'
+
 # base
+
+## Overview
+
+Chain-agnostic logics for the Oracle contract. 
+
+## Links
+
+- **Contract address:** 
+- **Testnet address:** 
+- **Contract repo:** https://github.com/mars-protocol/outposts/tree/master/contracts/oracle/base
+- **contract.rs:** https://github.com/mars-protocol/outposts/blob/master/contracts/oracle/base/src/contract.rs
+- **oracle.rs:** https://github.com/mars-protocol/outposts/blob/master/packages/outpost/src/oracle.rs
+- **Tests:** 
+- **Audit:** 
+
+## InstantiateMsg
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "owner": "...", 
+            "base_denom": "..."
+        }
+        ```
+
+        ```rust oracle.rs
+        pub type InstantiateMsg = Config<String>;
+
+        #[cw_serde]
+        pub struct Config<T> {
+        pub owner: T,
+        pub base_denom: String,
+        }
+        ```
+
+    </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`owner`](focus://json#2)   | `T`        | The contract's owner, who can update config and price sources        |
+| [`base_denom`](focus://json#3)   | `String`        | The asset in which prices are denominated in        |
+
+</CH.Section>
+
+## ExecuteMsg
+
+### `update_config`
+
+Updates the contract's config.
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "update_config": {
+                "owner": "..."
+            }
+        }
+        ```
+
+        ```rust oracle.rs focus=1:5,13
+        #[cw_serde]
+        pub enum ExecuteMsg<T> {
+            UpdateConfig {
+                owner: String,
+            },
+            SetPriceSource {
+                denom: String,
+                price_source: T,
+            },
+            RemovePriceSource {
+                denom: String,
+            },
+        }
+        ```
+
+    </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`owner`](focus://json#3)   | `String`        | The contract's owner, who can update config and price sources        |
+
+
+</CH.Section>
+
+### `set_price_source`
+
+Specifies the price source to be used for a coin.
+
+<Admonition type="info" title="NOTE">
+The input parameters for method are chain-specific.
+</Admonition>
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "set_price_source": {
+                "denom": "...", 
+                "price_source": {
+                    // PriceSource (chain-specific)
+                }
+            }
+        }
+        ```
+
+        ```rust oracle.rs focus=1:2,6:9,13
+        #[cw_serde]
+        pub enum ExecuteMsg<T> {
+            UpdateConfig {
+                owner: String,
+            },
+            SetPriceSource {
+                denom: String,
+                price_source: T,
+            },
+            RemovePriceSource {
+                denom: String,
+            },
+        }
+        ```
+
+    </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom`](focus://json#3)   | `String`        | Denom of the asset        |
+| [`price_source`](focus://json#4:6)   | `T`        | Coin's price source. See [`OsmosisPriceSource`](./osmosis#osmosispricesource) for an example of a chain specific integration.       |
+
+</CH.Section>
+
+### `remove_price_source`
+
+Removes price source for a coin.
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "remove_price_source": {
+                "denom": "..."
+            }
+        }
+        ```
+
+        ```rust oracle.rs focus=1:2,10:13
+        #[cw_serde]
+        pub enum ExecuteMsg<T> {
+            UpdateConfig {
+                owner: String,
+            },
+            SetPriceSource {
+                denom: String,
+                price_source: T,
+            },
+            RemovePriceSource {
+                denom: String,
+            },
+        }
+        ```
+
+    </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom`](focus://json#3)   | `String`        | Denom of the asset        |
+
+</CH.Section>
+
+
+## QueryMsg
+
+### `config`
+
+Queries contract config.
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "config": {}
+        }
+        ```
+
+        ```rust oracle.rs focus=1:5,24
+        #[cw_serde]
+        #[derive(QueryResponses)]
+        pub enum QueryMsg {
+            #[returns(Config<String>)]
+            Config {},
+            #[returns(PriceSourceResponse<String>)]
+            PriceSource {
+                denom: String,
+            },
+            #[returns(Vec<PriceSourceResponse<String>>)]
+            PriceSources {
+                start_after: Option<String>,
+                limit: Option<u32>,
+            },
+            #[returns(PriceResponse)]
+            Price {
+                denom: String,
+            },
+            #[returns(Vec<PriceResponse>)]
+            Prices {
+                start_after: Option<String>,
+                limit: Option<u32>,
+            },
+        }
+        ```
+
+    </CH.Code>
+</CH.Section>
+
+Returns a [`Config<String>`](#instantiatemsg) response.
+
+### `price_source`
+
+Queries a coin's price source.
+
+<Admonition type="info" title="NOTE">
+The response type of this query is chain-specific.
+</Admonition>
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "price_source": {
+                "denom": "..."
+            }
+        }
+        ```
+
+        ```rust oracle.rs focus=1:3,6:9,24
+        #[cw_serde]
+        #[derive(QueryResponses)]
+        pub enum QueryMsg {
+            #[returns(Config<String>)]
+            Config {},
+            #[returns(PriceSourceResponse<String>)]
+            PriceSource {
+                denom: String,
+            },
+            #[returns(Vec<PriceSourceResponse<String>>)]
+            PriceSources {
+                start_after: Option<String>,
+                limit: Option<u32>,
+            },
+            #[returns(PriceResponse)]
+            Price {
+                denom: String,
+            },
+            #[returns(Vec<PriceResponse>)]
+            Prices {
+                start_after: Option<String>,
+                limit: Option<u32>,
+            },
+        }
+        ```
+
+    </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom`](focus://json#3)   | `String`        | Denom of the asset        |
+
+</CH.Section>
+
+#### `PriceSourceResponse<String>`
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "denom": "...", 
+            "price_source": {
+                // PriceSource (chain-specific)
+            }
+        }
+        ```
+
+        ```rust oracle.rs
+        #[cw_serde]
+        pub struct PriceSourceResponse<T> {
+            pub denom: String,
+            pub price_source: T,
+        }
+        ```
+
+    </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom`](focus://json#2)   | `String`        | Denom of the asset        |
+| [`price_source`](focus://json#3:5)   | `T`        | Coin's price source. See [`OsmosisPriceSource`](./osmosis#osmosispricesource) for an example of a chain specific integration.        |
+
+</CH.Section>
+
+### `price_sources`
+
+Enumerates all coins' price sources.
+
+<Admonition type="info" title="NOTE">
+The response type of this query is chain-specific.
+</Admonition>
+
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "price_sources": {
+                "start_after": "...", 
+                "limit": 5
+            }
+        }
+        ```
+
+        ```rust oracle.rs focus=1:3,10:14,24
+        #[cw_serde]
+        #[derive(QueryResponses)]
+        pub enum QueryMsg {
+            #[returns(Config<String>)]
+            Config {},
+            #[returns(PriceSourceResponse<String>)]
+            PriceSource {
+                denom: String,
+            },
+            #[returns(Vec<PriceSourceResponse<String>>)]
+            PriceSources {
+                start_after: Option<String>,
+                limit: Option<u32>,
+            },
+            #[returns(PriceResponse)]
+            Price {
+                denom: String,
+            },
+            #[returns(Vec<PriceResponse>)]
+            Prices {
+                start_after: Option<String>,
+                limit: Option<u32>,
+            },
+        }
+        ```
+
+    </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`start_after`](focus://json#3)   | `Option<String>`        | Denom to start after.         |
+| [`limit`](focus://json#4)   | `Option<u32>`        | Amount of price sources to list.       |
+
+</CH.Section>
+
+Returns a vector that contains objects of type [`PriceSourceResponse<String>`](#pricesourceresponsestring).
+
+### `price`
+
+Queries a coin's price.
+
+<Admonition type="info" title="NOTE">
+This query may be dependent on block time (e.g. if the price source is TWAP), so may not work properly with time travel queries on archive nodes.
+</Admonition>
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "price": {
+                "denom": "..."
+            }
+        }
+        ```
+
+        ```rust oracle.rs focus=1:3,15:18,24
+        #[cw_serde]
+        #[derive(QueryResponses)]
+        pub enum QueryMsg {
+            #[returns(Config<String>)]
+            Config {},
+            #[returns(PriceSourceResponse<String>)]
+            PriceSource {
+                denom: String,
+            },
+            #[returns(Vec<PriceSourceResponse<String>>)]
+            PriceSources {
+                start_after: Option<String>,
+                limit: Option<u32>,
+            },
+            #[returns(PriceResponse)]
+            Price {
+                denom: String,
+            },
+            #[returns(Vec<PriceResponse>)]
+            Prices {
+                start_after: Option<String>,
+                limit: Option<u32>,
+            },
+        }
+        ```
+
+    </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom`](focus://json#3)   | `String`        | Denom of the asset        |
+
+</CH.Section>
+
+#### `PriceResponse`
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "denom": "...", 
+            "price": "1.27"
+        }
+        ```
+
+        ```rust oracle.rs
+        #[cw_serde]
+        pub struct PriceResponse {
+            pub denom: String,
+            pub price: Decimal,
+        }
+        ```
+
+    </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom`](focus://json#2)   | `String`        | Denom of the asset        |
+| [`price`](focus://json#3)   | `Decimal`        | Price of the asset        |
+
+</CH.Section>
+
+
+### `prices`
+
+Enumerates all coins' prices.
+
+<Admonition type="info" title="NOTE">
+This query may be dependent on block time (e.g. if the price source is TWAP), so may not work properly with time travel queries on archive nodes.
+</Admonition>
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "prices": {
+                "start_after": "...", 
+                "limit": 5
+            }
+        }
+        ```
+
+        ```rust oracle.rs focus=1:3,19:24
+        #[cw_serde]
+        #[derive(QueryResponses)]
+        pub enum QueryMsg {
+            #[returns(Config<String>)]
+            Config {},
+            #[returns(PriceSourceResponse<String>)]
+            PriceSource {
+                denom: String,
+            },
+            #[returns(Vec<PriceSourceResponse<String>>)]
+            PriceSources {
+                start_after: Option<String>,
+                limit: Option<u32>,
+            },
+            #[returns(PriceResponse)]
+            Price {
+                denom: String,
+            },
+            #[returns(Vec<PriceResponse>)]
+            Prices {
+                start_after: Option<String>,
+                limit: Option<u32>,
+            },
+        }
+        ```
+
+    </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`start_after`](focus://json#3)   | `Option<String>`        | Price to start after.         |
+| [`limit`](focus://json#4)   | `Option<u32>`        | Amount of prices to list.       |
+
+</CH.Section>
+
+Returns a vector that contains objects of type [`PriceResponse`](#priceresponse).

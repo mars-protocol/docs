@@ -2,6 +2,7 @@
     "label": "rewards-collector",
     "position": 5,
     "link": {
-      "type": "generated-index"
+      "type": "generated-index",
+      "description": "Receives protocol revenue in various coins from the Red Bank; swaps them into MARS or other specified assets through a DEX (for example Osmosis); forwards the assets to Mars Hub via IBC to be distributed as staking rewards or be deposited into the safety fund."
     }
 }

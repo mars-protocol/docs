@@ -41,3 +41,7 @@
 
   --ifm-font-family-base: 'Inter';
 }
+
+.table-of-contents__link code {
+  all: unset
+}

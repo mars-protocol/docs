@@ -146,7 +146,7 @@ const config = {
         beforeDefaultRemarkPlugins: [
           [remarkCodeHike, { 
             showCopyButton: true,
-            // lineNumbers: true,
+            lineNumbers: true,
             theme }],
         ],
         id: 'develop',
