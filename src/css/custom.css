@@ -24,8 +24,45 @@
   --ifm-color-primary-lightest: #e03e4d;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --ifm-background-color: #101123;
+  /* --ifm-navbar-background-color: #101123;  */
+  --ifm-navbar-background-color: rgba(0, 0, 0, 0.3);
+  --ifm-navbar-link-color: rgba(255,255,255,0.6);
+  --ifm-navbar-link-hover-color: rgba(255,255,255,1);
 
+  /* --ifm-footer-link-color: rgba(255,255,255,0.6); */
+  /* --ifm-footer-link-color: rgba(255,255,255,0.6); */
+  --ifm-footer-link-hover-color: rgba(255,255,255,1);
+
+  /* --ifm-footer-title-color: white; */
+
+  /* --ifm-navbar-link-hover: rgba(255,255,255,1) !important; */
   --ifm-font-family-base: 'Inter';
+  --ifm-heading-color: white;
+  --ifm-font-color-base: rgba(255,255,255,0.6);
+
+  --ifm-link-color: white;
+
+  --ifm-breadcrumb-separator-filter: invert(100%) sepia(94%) saturate(17%) hue-rotate(223deg) brightness(104%) contrast(98%);
+  --ifm-menu-link-sublist-icon-filter: invert(100%) sepia(94%) saturate(17%) hue-rotate(223deg) brightness(104%) contrast(98%);
+
+  --ifm-toc-border-color: rgba(255, 255, 255, 0.0);
+
+  --ifm-toc-link-color: rgba(255,255,255,0.6);
+
+  --ifm-code-background: rgba(255,255,255,0.1);
+
+  --ifm-menu-color: rgba(255,255,255,0.6);
+  --ifm-menu-color-active: rgba(255,255,255,1);
+  --ifm-menu-color-background-active: rgba(0,0,0,0.2);
+
+  --ifm-card-background-color: rgba(255, 255, 255, 0.05);
+  --ifm-card-border-radius: 8px;
+
+  /* --ifm-menu-color-background-active: linear-gradient(-26.5deg, rgba(233, 151, 75, 0.16) 0, rgba(138, 67, 105, 0.16), 1); */
+  /* --ifm-menu-color-background-active: rgba(255,255,255,0.2); */
+
+
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -42,6 +79,237 @@
   --ifm-font-family-base: 'Inter';
 }
 
+
+.navbar-sidebar--show {
+  backdrop-filter: none !important;
+}
+
+.navbar__brand {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.footer__link-item {
+  color: rgba(255,255,255,0.6);
+}
+
+div.footer__title {
+  color: rgba(255,255,255,0.9);
+}
+
 .table-of-contents__link code {
   all: unset
+}
+
+.navbar--fixed-top {
+  backdrop-filter: blur(5px);
+}
+
+.footer {
+  background-color: rgba(0,0,0,0.2);
+}
+
+/* .hero__title {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 48.71px;
+  line-height: 72px;
+  text-align: center;
+  text-transform: uppercase;
+  padding-bottom: 1rem;
+} */
+
+.hero__subtitle {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18.9844px;
+  line-height: 28px;
+  text-align: center;
+  /* text-transform: uppercase; */
+}
+
+a.button.button--secondary.button--lg {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 8px 8px 8px 16px;
+  gap: 12px;
+  width: 694px;
+  height: 56px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(15px);
+  border-radius: 8px;
+  flex: none;
+  order: 2;
+  align-self: stretch;
+  flex-grow: 0;
+  color: rgba(255,255,255,0.4);
+}
+
+h1, h2, h3, h4, h5, h6  {
+  font-style: normal;
+  font-weight: 400;
+}
+
+.text_src-components-ContentBlocks-styles-module {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 38.5003px;
+  line-height: 40px;
+  text-align: center;
+}
+
+.heroBanner_src-pages-index-module {
+  display: absolute;
+  top: 0px;
+  right: 0px;
+  left: 0px;
+}
+
+.navbar__title {
+  color: rgba(255,255,255,0.6); 
+  font-weight: var(--ifm-font-size-base);
+  margin-left: 86px;
+}
+
+.navbar__title:hover {
+  color: rgba(255,255,255,1); 
+  transition: color var(--ifm-transition-fast) var(--ifm-transition-timing-default);
+}
+
+.navbar__title:active {
+  color: rgba(255, 255, 255,1);
+}
+
+.navbar__brand {
+  margin-right: 0.75rem;
+}
+
+b.navbar__title.text--truncate:active {
+  color: rgba(255,255,255,1); 
+}
+
+div.navbar__items.navbar__items--right{
+  margin-right: 86px;
+}
+
+div.navbar-sidebar {
+  background-color: #101123;
+  /* opacity: 0.2; */
+}
+
+/* button.navbar__toggle.clean-btn {
+  display: none;
+} */
+
+nav.navbar.navbar--fixed-top.navbar-sidebar--show {
+  /* display: none; */
+  background-color: transparent;
+}
+
+/* .breadcrumbs__item--active .breadcrumbs__link {
+  color: rgba(255, 255, 255, 1);
+  background: rgba(255, 255, 255, 0.05);
+ }
+
+.breadcrumbs__link {
+  color: rgba(255, 255, 255, 0.6);
+ }
+
+ .breadcrumbs__link:hover {
+  color: rgba(255, 255, 255, 1);
+ } */
+
+/* li.breadcrumbs__item {
+  display: list-item !important;
+} */
+
+a.breadcrumbs__link {
+  color: rgba(255,255,255,0.6);
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 20px;
+}
+
+span.breadcrumbs__link {
+  color: rgba(255,255,255,1) !important;
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 20px;
+}
+
+/* .breadcrumbs__item--active .breadcrumbs__link {
+  color: rgba(255, 255, 255, 1);
+  background: rgba(255, 255, 255, 0.05);
+} */
+
+.breadcrumbs__link:hover {
+  color: rgba(255, 255, 255, 1);
+}
+
+header.hero.hero--primary.heroBanner_src-pages-index-module {
+  z-index: -100;
+}
+
+/* .theme-doc-sidebar-container {
+  color: rgb(255, 255, 255);
+  border-right: 1px solid var(--ifm-toc-border-color) !important;
+} */
+
+.theme-doc-sidebar-menu {
+  padding: 8px;
+  background-color: rgba(28, 29, 46, 1);
+  backdrop-filter: blur(10.5px);
+  border-radius: 8px;
+  height: fit-content;
+}
+
+/* div.theme-doc-markdown.markdown {
+  margin-bottom: 200px !important;
+} */
+
+nav.theme-doc-breadcrumbs {
+  height: 30px;
+  width: 1200px;
+  margin-bottom: 45px;
+}
+
+div.col.col--3 {
+  margin-top: 165px;
+  /* padding-left: 100px; */
+}
+/* 
+table {
+  width: 1000px;
+} */
+
+.table-of-contents__link:hover, .table-of-contents__link:hover code, .table-of-contents__link--active, .table-of-contents__link--active code {
+  color: rgba(255,255,255,1);
+  text-decoration: none;
+}
+
+.pagination-nav__link {
+  /* width: 439px; */
+  /* background-color: linear-gradient(red, purple); */
+  /* z-index: 30; */
+  /* border: none; */
+  /* border-color: linear-gradient(90.83deg, #E9974B 16%, #8A4369 16%); */
+  border-width: 7px;
+  height: 112px;
+  opacity: 0.9;
+  border-radius: 8px;
+  stroke: linear-gradient(40.83deg, #E9974B 16%, #8A4369 16%);
+  /* left: 472px; */
+  /* top: 0px; */
+}
+
+a.card {
+  border: none;
+}
+
+section.row {
+  /* margin-top: 50px; */
 }

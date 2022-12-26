@@ -16,8 +16,8 @@ const katex = require('rehype-katex');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Mars Protocol Docs',
-  tagline: 'Build the future of Mars',
+  title: 'Home',
+  // tagline: 'Build the future of Mars',
   url: 'https://your-docusaurus-test-site.com',
   baseUrl: '/',
   onBrokenLinks: 'throw',
@@ -156,6 +156,7 @@ const config = {
         editUrl: 'https://github.com/mars-protocol/docs/blob/master',
       }, 
     ],
+
     [
       '@docusaurus/plugin-content-docs',
       {
@@ -165,13 +166,32 @@ const config = {
             // lineNumbers: true,
             theme }],
         ],
-        id: 'infrastructure',
-        path: 'docs/infrastructure',
-        routeBasePath: 'docs/infrastructure',
+        id: 'join-the-network',
+        path: 'docs/join-the-network',
+        routeBasePath: 'docs/join-the-network',
         sidebarPath: require.resolve('./sidebars.js'),
         editUrl: 'https://github.com/mars-protocol/docs/blob/master',
       }, 
     ],
+
+
+    // [
+    //   '@docusaurus/plugin-content-docs',
+    //   {
+    //     beforeDefaultRemarkPlugins: [
+    //       [remarkCodeHike, { 
+    //         showCopyButton: true,
+    //         // lineNumbers: true,
+    //         theme }],
+    //     ],
+    //     id: 'infrastructure',
+    //     path: 'docs/infrastructure',
+    //     routeBasePath: 'docs/infrastructure',
+    //     sidebarPath: require.resolve('./sidebars.js'),
+    //     editUrl: 'https://github.com/mars-protocol/docs/blob/master',
+    //   }, 
+    // ],
+
   ],
 
   themes: ["mdx-v2"],
@@ -180,13 +200,13 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'Mars Protocol',
-        logo: {
-          alt: 'My Site Logo',
-          src: 'img/logo.svg',
-          width: 30,
-          height: 24,
-        },
+        title: 'Home',
+        // logo: {
+        //   alt: 'My Site Logo',
+        //   src: 'img/logo.svg',
+        //   width: 30,
+        //   height: 24,
+        // },
         items: [
           {
             to: '/docs/overview/intro-to-mars-protocol/intro-to-mars-protocol-intro',    // ./docs-api/intro.md
@@ -219,11 +239,17 @@ const config = {
             position: 'left',
             activeBaseRegex: `/develop/`,
           },
+          // {
+          //   to: '/docs/infrastructure/category/node-operators',    // ./docs-api/intro.md
+          //   label: 'Infrastructure',
+          //   position: 'left',
+          //   activeBaseRegex: `/infrastructure/`,
+          // },
           {
-            to: '/docs/infrastructure/category/node-operators',    // ./docs-api/intro.md
-            label: 'Infrastructure',
+            to: '/docs/join-the-network/category/node-operators',    // ./docs-api/intro.md
+            label: 'Join the Network',
             position: 'left',
-            activeBaseRegex: `/infrastructure/`,
+            activeBaseRegex: `/join-the-network/`,
           },
           // {to: '/blog', label: 'Blog', position: 'left'},
           {
@@ -234,17 +260,17 @@ const config = {
         ],
 
         // style: 'primary',
-        // hideOnScroll: true,
+        hideOnScroll: false,
 
       },
 
-      colorMode: {
-        disableSwitch: true,
-      },
+      // colorMode: {
+      //   disableSwitch: true,
+      // },
 
       docs: {
         sidebar: {
-          hideable: true,
+          hideable: false,
           autoCollapseCategories: true,
         }
       },
@@ -306,8 +332,6 @@ const config = {
       // prism: {
       //   darkTheme: darkCodeTheme,
       // },
-
-
 
     }),
 };

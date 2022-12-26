@@ -31,12 +31,12 @@
 .heroBanner {
   padding: 4rem 0;
   text-align: center;
-  position: relative;
-  overflow: hidden;
-  left: 0px;
+  position: absolute;
+  top: 0px;
   right: 0px;
+  left: 0px;
+  overflow: hidden;
   background: linear-gradient(180deg, rgba(46, 21, 43, 0) 0%, #101123 100%), url("./../../static/img/home-hero.png");
-  /* background-image:  */
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -73,10 +73,69 @@
 }
 
 .arrows {
+  /* margin-top: 20rem; */
+  margin-top: 10rem;
   content: url("./../../static/img/arrow.png");
   position: absolute;
   height: 48px;
   left: 48.33%;
   right: 48.33%;
-  bottom: 34px;
+}
+
+.figs {
+  /* padding: 4rem 0; */
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.pepe {
+  /* padding: 4rem 0; */
+  /* width: 400px;
+  height: 400px; */
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 
+.heroBanner_src-pages-index-module {
+  display: absolute;
+} */
+
+/* .layout {
+  position: relative;
+  left: 0px;
+  right: 0px;
+  background: linear-gradient(180deg, rgba(46, 21, 43, 0) 0%, #101123 100%), url("./../../static/img/home-hero.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  overflow: hidden;
+  background-position-x: center;
+  min-height: 718px;
+} */
+
+
+/* .heroBanner {
+  padding: 4rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  left: 0px;
+  right: 0px;
+  background: linear-gradient(180deg, rgba(46, 21, 43, 0) 0%, #101123 100%), url("./../../static/img/home-hero.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  min-height: 718px;
+} */
+
+.hero__title {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 48.71px;
+  line-height: 72px;
+  text-align: center;
+  text-transform: uppercase;
+  padding-bottom: 1rem;
 }

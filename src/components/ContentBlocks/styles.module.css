@@ -1,0 +1,45 @@
+.title {
+    text-align: center;
+    font-size: 40px;
+    font-family: 'Inter';
+}
+
+.text {
+    /* width: 50%; */
+    padding-left: 25%;
+    padding-right: 25%;
+    text-align: center;
+    font-size: 18px;
+    color: #FFFFFF;
+    opacity: 0.6;
+    font-family: 'Inter';
+    
+}
+
+.figs {
+    padding-top: 10rem;
+    padding-bottom: 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.banner {
+    /* padding: 4rem 0; */
+    padding-top: 50rem;
+    padding-bottom: 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.footer {
+    padding: 10rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.footerSpacing {
+    margin-bottom: 8rem;
+}

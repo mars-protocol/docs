@@ -1,0 +1,35 @@
+.docPage {
+  display: flex;
+  width: 100%;
+  margin-top: 35px;
+}
+
+.docsWrapper {
+  display: flex;
+}
+
+.banner {
+  background: url("../../../../static/img/docspage-banners/hero-banner.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  display: contain;
+  position: absolute;
+  width: 100%;
+  height: 342px;
+  left: 0px;
+  top: 0px;
+  z-index: -100;
+}
+
+.container {
+  display: flex;
+}
+
+.sidebar {
+  height: auto;
+}
+
+/* .sub {
+  opacity: 1;
+} */
