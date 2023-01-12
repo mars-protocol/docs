@@ -654,6 +654,44 @@ export default function Box(props) {
     );
   } 
 
+  else if (props.list == 'Workstation') {
+    return (
+      <div className={styles.box}>
+
+        <div className={styles.titleBanner}>
+          <p className={styles.title}>{props.title}</p>
+        </div>
+  
+        <div className={styles.boxContainer}> 
+        <div className={styles.fig}>
+          <img src={props.image} />
+        </div>
+  
+        <div className={styles.text}>
+          <p className={styles.subtext}>{props.description}</p>
+          <ul className={styles.list}>
+
+            <li>
+              <a className={styles.links} href="../../../../docs/learn/category/basics">Basics</a>
+            </li>
+
+            <li>
+              <a className={styles.links} href="../../../../docs/learn/category/governance">Governance</a>
+            </li>
+
+
+            <li>
+              <a className={styles.links} href="../../../../docs/learn/category/red-bank-1">Red Bank</a>
+            </li>
+
+          </ul>
+        </div>
+        </div>
+  
+      </div>
+    );
+  } 
+
 
 
 

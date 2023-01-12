@@ -49,6 +49,12 @@ const boxProps = {
       description: "Learn essential insights on the container for assets implementing automated strategies.", 
       image: DiamondUrl, 
       list: "Vaults"
+    }, 
+    workstation: {
+      title: "Workstation", 
+      description: "Beginner guides to Mars Protocol with astronaut-approved step-by-step screenshots.", 
+      image: AstronautUrl, 
+      list: "Workstation"
     }
   },
   govern: {
@@ -95,7 +101,7 @@ const boxProps = {
     nodeOperators: {
       title: "Node Operators", 
       description: "Set up a Martian node.", 
-      image: AstronautUrl,
+      image: Rocket1Url,
       list:"Node Operators"
     }, 
     validators: {
@@ -161,6 +167,15 @@ export default function ContentBox(props) {
         description={boxProps.learn.vaults.description}
         image={boxProps.learn.vaults.image}
         list={boxProps.learn.vaults.list}
+        />
+        </a>
+
+        <a className={styles.links} href="../../../docs/learn/category/workstation">
+        <Box 
+        title={boxProps.learn.workstation.title}
+        description={boxProps.learn.workstation.description}
+        image={boxProps.learn.workstation.image}
+        list={boxProps.learn.workstation.list}
         />
         </a>
         
