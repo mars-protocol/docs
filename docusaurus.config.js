@@ -166,9 +166,9 @@ const config = {
             // lineNumbers: true,
             theme }],
         ],
-        id: 'join-the-network',
-        path: 'docs/join-the-network',
-        routeBasePath: 'docs/join-the-network',
+        id: 'validate',
+        path: 'docs/validate',
+        routeBasePath: 'docs/validate',
         sidebarPath: require.resolve('./sidebars.js'),
         editUrl: 'https://github.com/mars-protocol/docs/blob/master',
       }, 
@@ -246,10 +246,10 @@ const config = {
           //   activeBaseRegex: `/infrastructure/`,
           // },
           {
-            to: '/docs/join-the-network/category/node-operators',    // ./docs-api/intro.md
-            label: 'Join the Network',
+            to: '/docs/validate/category/node-operators',    // ./docs-api/intro.md
+            label: 'Validate',
             position: 'left',
-            activeBaseRegex: `/join-the-network/`,
+            activeBaseRegex: `/validate/`,
           },
           // {to: '/blog', label: 'Blog', position: 'left'},
           {

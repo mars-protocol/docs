@@ -81,7 +81,7 @@ const contentBlockProps = {
   infrastructure: {
     banner: false,
     image: InfrastructureFigUrl,
-    title: 'Join the Network',
+    title: 'Validate',
     text: 'Understand how to become a node operator, relayer, or validator on Mars Hub.',
     footer: true
   }
