@@ -61,28 +61,28 @@ const contentBlockProps = {
     banner: true,
     image: LearnFigUrl,
     title: 'Learn',
-    text: 'Today, the doors of Astroport’s governing body, the Astral Assembly, open. And that means all astronauts can enter to help shape the future of Terra 2.0’s most popular swap protocol.',
+    text: 'Get ready to explore the vast fields & outposts of Mars. Discover ways to deepen your understanding, whether you are a DeFi enthusiast, a validator, or a seasoned trader looking to expand your proficiency.',
     footer: false
   },
   govern: {
     banner: false,
     image: GovernFigUrl,
     title: 'Govern',
-    text: 'Today, the doors of Astroport’s governing body, the Astral Assembly, open. And that means all astronauts can enter to help shape the future of Terra 2.0’s most popular swap protocol.',
+    text: 'Discover how to propose contributions as an active community member to the Mars Protocol governing body, the Martian Council.',
     footer: false
   }, 
   develop: {
     banner: false,
     image: DevelopFigUrl,
     title: 'Develop',
-    text: 'Today, the doors of Astroport’s governing body, the Astral Assembly, open. And that means all astronauts can enter to help shape the future of Terra 2.0’s most popular swap protocol.',
+    text: "Expand your developer skills and explore the exciting realm of Mars Protocol's code base with detailed explanations and tutorials.",
     footer: false
   },
   infrastructure: {
     banner: false,
     image: InfrastructureFigUrl,
     title: 'Join the Network',
-    text: 'Today, the doors of Astroport’s governing body, the Astral Assembly, open. And that means all astronauts can enter to help shape the future of Terra 2.0’s most popular swap protocol.',
+    text: 'Understand how to become a node operator, relayer, or validator on Mars Hub.',
     footer: true
   }
 }

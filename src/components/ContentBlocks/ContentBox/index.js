@@ -3,13 +3,24 @@ import clsx from 'clsx';
 import styles from './styles.module.css';
 import Box from './Box';
 
-import Icon1Url from '../../../../static/img/homepage-icons/icon-1.png';
-import Icon2Url from '../../../../static/img/homepage-icons/icon-2.png';
-import Icon3Url from '../../../../static/img/homepage-icons/icon-3.png';
-import Icon4Url from '../../../../static/img/homepage-icons/icon-4.png';
-import Icon5Url from '../../../../static/img/homepage-icons/icon-5.png';
-import Icon6Url from '../../../../static/img/homepage-icons/icon-6.png';
-import Icon7Url from '../../../../static/img/homepage-icons/icon-7.png';
+import AstronautUrl from '../../../../static/img/icons/astronaut.png';
+import BalanceUrl from '../../../../static/img/icons/balance.png';
+import BuildingUrl from '../../../../static/img/icons/building.png';
+import DiamondUrl from '../../../../static/img/icons/diamond.png';
+import ErrorUrl from '../../../../static/img/icons/error.png';
+import Globe1Url from '../../../../static/img/icons/globe-1.png';
+import Globe2Url from '../../../../static/img/icons/globe-2.png';
+import HubUrl from '../../../../static/img/icons/hub.png';
+import MarsUrl from '../../../../static/img/icons/mars.png';
+import Mushroom1Url from '../../../../static/img/icons/mushroom-1.png';
+import Mushroom2Url from '../../../../static/img/icons/mushroom-2.png';
+import PioneerUrl from '../../../../static/img/icons/pioneer.png';
+import Rocket1Url from '../../../../static/img/icons/rocket-1.png';
+import Rocket2Url from '../../../../static/img/icons/rocket-2.png';
+import Rover1Url from '../../../../static/img/icons/rover-1.png';
+import Rover2Url from '../../../../static/img/icons/rover-2.png';
+import SatelliteUrl from '../../../../static/img/icons/satellite.png';
+import SpaceshipUrl from '../../../../static/img/icons/spaceship.png';
 
 // import LaunchUrl from '../../../static/img/launch.png';
 
@@ -17,86 +28,86 @@ const boxProps = {
   learn: {
     marsHub: {
       title: "Mars Hub", 
-      description: "Today, the doors of Astroport’s governing body, the Astral Assembly, open.", 
-      image: Icon1Url, 
+      description: "Deep dive into the Martian chain that administers activity on its Outposts.", 
+      image: HubUrl, 
       list: "Mars Hub"
     }, 
     redBank: {
       title: "Red Bank", 
-      description: "Today, the doors of Astroport’s governing body, the Astral Assembly, open.", 
-      image: Icon7Url, 
+      description: "Enter the decentralized & fully automated, on-chain credit facility.", 
+      image: Globe2Url, 
       list: "Red Bank"
     }, 
     rover: {
       title: "Rover", 
-      description: "Today, the doors of Astroport’s governing body, the Astral Assembly, open.", 
-      image: Icon6Url, 
+      description: "Ride the new primitive based on Mars's generalized leverage module called Rover.", 
+      image: Rover1Url, 
       list: "Rover"
     }, 
     vaults: {
       title: "Vaults", 
-      description: "Today, the doors of Astroport’s governing body, the Astral Assembly, open.", 
-      image: Icon3Url, 
+      description: "Learn essential insights on the container for assets implementing automated strategies.", 
+      image: DiamondUrl, 
       list: "Vaults"
     }
   },
   govern: {
     marsImprovementProposals: {
       title: "Mars Improvement Proposals", 
-      description: "Today, the doors of Astroport’s governing body, the Astral Assembly, open.", 
-      image: Icon2Url, 
+      description: "The framework that empowers Council participants for on-chain governance proposals.", 
+      image: BalanceUrl, 
       list: "Mars Improvement Proposals"
     }, 
     marsRiskFramework: {
       title: "Mars Risk Framework", 
-      description: "Today, the doors of Astroport’s governing body, the Astral Assembly, open.", 
-      image: Icon4Url, 
+      description: "A framework to determine the risk parameters of protocols and assets for Mars.", 
+      image: ErrorUrl, 
       list: "Mars Risk Framework"
     }
   }, 
   develop: {
     marsCLI: {
       title: "Mars CLI", 
-      description: "Today, the doors of Astroport’s governing body, the Astral Assembly, open.", 
-      image: Icon7Url, 
+      description: "Interact with Mars'endpoints.", 
+      image: BuildingUrl, 
       list: "Mars CLI"
     }, 
     contracts: {
       title: "Contracts", 
-      description: "Today, the doors of Astroport’s governing body, the Astral Assembly, open.", 
-      image: Icon6Url, 
+      description: "Overview of all Martian contracts.", 
+      image: Globe1Url, 
       list: "Contracts"
     }, 
     modules: {
       title: "Modules", 
-      description: "Today, the doors of Astroport’s governing body, the Astral Assembly, open.", 
-      image: Icon3Url, 
+      description: "Core and third-party modules that make up Mars Hub.", 
+      image: MarsUrl, 
       list: "Modules"
     }, 
     backend: {
       title: "Backend", 
-      description: "Today, the doors of Astroport’s governing body, the Astral Assembly, open.", 
-      image: Icon5Url, 
+      description: "Insights and detailed information on the red backend.", 
+      image: SatelliteUrl, 
       list: "Backend"
     }
   }, 
   infrastructure: {
     nodeOperators: {
       title: "Node Operators", 
-      description: "Today, the doors of Astroport’s governing body, the Astral Assembly, open.", 
-      image: Icon2Url,
+      description: "Set up a Martian node.", 
+      image: AstronautUrl,
       list:"Node Operators"
     }, 
     validators: {
       title: "Validators", 
-      description: "Today, the doors of Astroport’s governing body, the Astral Assembly, open.", 
-      image: Icon1Url,
+      description: "Learn how to become a Validator for Mars Hub.", 
+      image: PioneerUrl,
       list:"Validators"
     }, 
     relayers: {
       title: "IBC Relayers", 
-      description: "Today, the doors of Astroport’s governing body, the Astral Assembly, open.", 
-      image: Icon4Url,
+      description: "Getting started with IBC Relayers.", 
+      image: SpaceshipUrl,
       list:"IBC Relayers"
     }
   }
