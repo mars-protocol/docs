@@ -216,7 +216,7 @@ const config = {
           },
           {
             // to: '/docs/learn/astro-pools/constant-product-pools',   
-            to: '/docs/learn/category/mars-hub',
+            to: '/docs/learn/overview',
             // to: '/docs/learn/astro-pools/intro',  
             // to: '/docs/learn/index',   
             label: 'Learn',
@@ -227,14 +227,14 @@ const config = {
           // {to: '/blog', label: 'Blog', position: 'left'},
 
           {
-            to: '/docs/govern/martian-council',    // ./docs-api/intro.md
+            to: '/docs/govern/overview',    // ./docs-api/intro.md
             label: 'Govern',
             position: 'left',
             activeBaseRegex: `/govern/`,
           },
           {
             // to: '/docs/develop/smart-contracts/astroport-contract-addresses',   
-            to: '/docs/develop/category/mars-cli',   
+            to: '/docs/develop/overview',   
             label: 'Develop',
             position: 'left',
             activeBaseRegex: `/develop/`,
@@ -246,7 +246,7 @@ const config = {
           //   activeBaseRegex: `/infrastructure/`,
           // },
           {
-            to: '/docs/validate/category/node-operators',    // ./docs-api/intro.md
+            to: '/docs/validate/overview',    // ./docs-api/intro.md
             label: 'Validate',
             position: 'left',
             activeBaseRegex: `/validate/`,

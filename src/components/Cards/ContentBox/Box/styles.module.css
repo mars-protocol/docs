@@ -1,0 +1,165 @@
+.box {
+    display: flex;
+    flex-direction: column;
+
+    width: 355px;
+    height: 136px;
+
+    left: 157px;
+    top: 1005px;
+
+    background: rgba(255, 255, 255, 0.02);
+
+    backdrop-filter: blur(10.5px);
+
+    border-radius: 16px;
+    margin: 12px;
+}
+
+.box:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: all var(--ifm-transition-fast) ease;
+}
+
+.box:hover .title {
+    color: rgba(255, 255, 255, 1);
+    /* font-weight: bold; */
+}
+
+
+.box:hover .subtext {
+    color: rgba(255, 255, 255, .9);
+    /* font-weight: bold; */
+}
+
+
+
+.box:hover ul.list li:before {
+    border-right:2px solid rgba(255, 255, 255, .9);
+    border-bottom:2px solid rgba(255, 255, 255, .9);
+    /* font-weight: bold; */
+}
+
+.box:hover .fig {
+    opacity: 1; 
+    filter: none;
+}
+
+
+
+
+.links {
+    color: rgba(255, 255, 255, 0.4);
+}
+ 
+.box:hover .links {
+    color: rgba(255, 255, 255, .9); 
+}
+
+ul.list li:hover {
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+/* remove later - just to test home screen */
+.box:hover .list {
+    color: rgba(255, 255, 255, .9);
+}
+
+
+/* .links:hover {
+    color: rgba(255, 255, 255, 1); 
+} */
+
+
+.title {
+    color: rgba(255, 255, 255, 1);
+    /* font-size: 16.875px; */
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 13.3333px;
+    line-height: 16px;
+    font-style: normal;
+    position: absolute;
+    left: 16px;
+    top: 10px;
+}
+
+.titleBanner {
+    width: 100%;
+    height: 35px;
+    border-radius: 16px 16px 0px 0px;
+    background: linear-gradient(79.83deg, #141839 0%, #221039 100%);
+    opacity: 0.7;
+}
+
+.box:hover .titleBanner {
+    opacity: 1;
+}
+
+
+
+
+.boxContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+
+
+
+
+.fig {
+    margin-top: 8%;
+    margin-left: 4%;
+    opacity: 0.4;
+    width: 76px; 
+    height: 76px;
+
+    filter: grayscale();
+}
+
+.text {
+    margin-top: 4%;
+    margin-left: 4%;
+}
+
+.subtext {
+    /* margin-top: -4%; */
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 13.3333px;
+    padding-right: 4%;
+    
+
+
+}
+
+.list {
+    color: rgba(255, 255, 255, 0.4); 
+    font-size: 15px; 
+}
+
+
+ul.list li {
+  position: relative;
+  padding-bottom: 10px;
+}
+
+ul.list {
+  list-style: none;
+}
+
+ul.list li:before{
+   content: '';
+   position: absolute;
+   border-right:2px solid rgba(255, 255, 255, 0.4);
+   border-bottom:2px solid rgba(255, 255, 255, 0.4);
+   width:5px;
+   height:5px;
+   top: calc(50% - 4px);
+   left: -30px;
+   transform: translateY(-50%) rotate(-45deg);
+}
+
+
