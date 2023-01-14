@@ -1,9 +1,6 @@
 {
     "label": "oracle",
     "position": 3,
-    "link": {
-        "type": "generated-index",
-        "description": "Provides prices in uusd for assets used in the protocol."
-      }
+    "link": { "type": "doc", "id": "oracle-intro" }
 }
 

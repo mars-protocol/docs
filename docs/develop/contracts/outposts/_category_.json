@@ -1,7 +1,5 @@
 {
     "label": "Outposts",
     "position": 2,
-    "link": {
-      "type": "generated-index"
-    }
+    "link": { "type": "doc", "id": "outposts-intro" }
 }

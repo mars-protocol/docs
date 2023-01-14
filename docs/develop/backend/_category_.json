@@ -1,7 +1,5 @@
 {
     "label": "Backend",
     "position": 5,
-    "link": {
-      "type": "generated-index"
-    }
+    "link": { "type": "doc", "id": "backend-intro" }
 }

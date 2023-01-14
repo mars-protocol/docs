@@ -1,7 +1,5 @@
 {
     "label": "Cosmos SDK Modules",
     "position": 3,
-    "link": {
-      "type": "generated-index"
-    }
+    "link": { "type": "doc", "id": "cosmos-sdk-modules-intro" }
 }
