@@ -253,11 +253,11 @@ export default function Box(props) {
             <p className={styles.subtext}>{props.description}</p>
             <ul className={styles.list}>
               <li>
-                <a className={styles.links} href="../../../../docs/join-the-network/node-operators/setting-up-a-node">Setting up a Node</a>
+                <a className={styles.links} href="../../../../docs/validate/node-operators/setting-up-a-node">Setting up a Node</a>
               </li>
 
               <li>
-                <a className={styles.links} href="../../../../docs/join-the-network/node-operators/interacting-with-your-node">Interacting with your Node</a>
+                <a className={styles.links} href="../../../../docs/validate/node-operators/interacting-with-your-node">Interacting with your Node</a>
               </li>
             </ul>
           </div>
@@ -283,15 +283,15 @@ export default function Box(props) {
             <ul className={styles.list}>
 
               <li>
-                <a className={styles.links} href="../../../../docs/join-the-network/validators/becoming-a-validator">Becoming a Validator</a>
+                <a className={styles.links} href="../../../../docs/validate/validators/becoming-a-validator">Becoming a Validator</a>
               </li>
 
               <li>
-                <a className={styles.links} href="../../../../docs/join-the-network/validators/managing-your-validator">Managing your Validator</a>
+                <a className={styles.links} href="../../../../docs/validate/validators/managing-your-validator">Managing your Validator</a>
               </li>
 
               <li>
-                <a className={styles.links} href="../../../../docs/join-the-network/validators/validators-faq">Validators FAQ</a>
+                <a className={styles.links} href="../../../../docs/validate/validators/validators-faq">Validators FAQ</a>
               </li>
 
             </ul>
@@ -320,11 +320,11 @@ export default function Box(props) {
             <ul className={styles.list}>
 
               <li>
-                <a className={styles.links} href="../../../../docs/join-the-network/ibc-relayers/channels-for-mars">Channels for Mars</a>
+                <a className={styles.links} href="../../../../docs/validate/ibc-relayers/channels-for-mars">Channels for Mars</a>
               </li>
 
               <li>
-                <a className={styles.links} href="../../../../docs/join-the-network/ibc-relayers/relayers-guide">Relayers Guide</a>
+                <a className={styles.links} href="../../../../docs/validate/ibc-relayers/relayers-guide">Relayers Guide</a>
               </li>
 
             </ul>
@@ -386,11 +386,11 @@ export default function Box(props) {
             <ul className={styles.list}>
 
               <li>
-                <a className={styles.links} href="../../../../docs/develop/category/mars-hub">Mars Hub</a>
+                <a className={styles.links} href="../../../../docs/develop/contracts/mars-hub/mars-hub-intro">Mars Hub</a>
               </li>
 
               <li>
-                <a className={styles.links} href="../../../../docs/develop/category/outposts">Outposts</a>
+                <a className={styles.links} href="../../../../docs/develop/contracts/outposts/outposts-intro">Outposts</a>
               </li>
 
             </ul>
@@ -421,11 +421,15 @@ export default function Box(props) {
               </li> */}
 
               <li>
-                <a className={styles.links} href="../../../../docs/develop/category/custom-modules">Custom Modules</a>
+                <a className={styles.links} href="../../../../docs/develop/modules/module-accounts">Module Accounts</a>
               </li>
 
               <li>
-                <a className={styles.links} href="../../../../docs/develop/category/cosmos-sdk-modules">Cosmos SDK Modules</a>
+                <a className={styles.links} href="../../../../docs/develop/modules/custom-modules/custom-modules-intro">Custom Modules</a>
+              </li>
+
+              <li>
+                <a className={styles.links} href="../../../../docs/develop/modules/cosmos-sdk-modules/cosmos-sdk-modules-intro">Cosmos SDK Modules</a>
               </li>
 
             </ul>
@@ -550,7 +554,7 @@ export default function Box(props) {
               </li>
 
               <li>
-                <a className={styles.links} href="../../../../docs/learn/category/tokenomics">Tokenomics</a>
+                <a className={styles.links} href="../../../../docs/learn/mars-hub/tokenomics/tokenomics-intro">Tokenomics</a>
               </li>
 
             </ul>
@@ -616,7 +620,7 @@ export default function Box(props) {
               </li>
 
               <li>
-                <a className={styles.links} href="../../../../docs/learn/category/trading">Trading</a>
+                <a className={styles.links} href="../../../../docs/learn/rover/trading/trading-intro">Trading</a>
               </li>
 
             </ul>
@@ -672,16 +676,16 @@ export default function Box(props) {
           <ul className={styles.list}>
 
             <li>
-              <a className={styles.links} href="../../../../docs/learn/category/basics">Basics</a>
+              <a className={styles.links} href="../../../../docs/learn/workstation/basics/basics-intro">Basics</a>
             </li>
 
             <li>
-              <a className={styles.links} href="../../../../docs/learn/category/governance">Governance</a>
+              <a className={styles.links} href="../../../../docs/learn/workstation/governance/governance-intro">Governance</a>
             </li>
 
 
             <li>
-              <a className={styles.links} href="../../../../docs/learn/category/red-bank-1">Red Bank</a>
+              <a className={styles.links} href="../../../../docs/learn/workstation/red-bank/red-bank-intro">Red Bank</a>
             </li>
 
           </ul>
@@ -692,7 +696,34 @@ export default function Box(props) {
     );
   } 
 
+  else if (props.list == 'Martian Council') {
+    return (
+      <div className={styles.box}>
 
+        <div className={styles.titleBanner}>
+          <p className={styles.title}>{props.title}</p>
+        </div>
+  
+        <div className={styles.boxContainer}> 
+        <div className={styles.fig}>
+          <img src={props.image} />
+        </div>
+  
+        <div className={styles.text}>
+          <p className={styles.subtext}>{props.description}</p>
+          <ul className={styles.list}>
+
+            <li>
+              <a className={styles.links} href="../../../../docs/govern/martian-council">Overview</a>
+            </li>
+
+          </ul>
+        </div>
+        </div>
+  
+      </div>
+    );
+  } 
 
 
 }

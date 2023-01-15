@@ -58,10 +58,16 @@ const boxProps = {
     }
   },
   govern: {
+    martianCouncil: {
+      title: "Martian Council", 
+      description: "Enter the doors of Mars' governing body, the Martian Council.", 
+      image: BalanceUrl, 
+      list: "Martian Council"
+    },
     marsImprovementProposals: {
       title: "Mars Improvement Proposals", 
       description: "The framework that empowers Council participants for on-chain governance proposals.", 
-      image: BalanceUrl, 
+      image: Rocket2Url, 
       list: "Mars Improvement Proposals"
     }, 
     marsRiskFramework: {
@@ -134,7 +140,7 @@ export default function ContentBox(props) {
     return (
       <div className={styles.box}>
 
-        <a className={styles.links} href="../../../docs/learn/category/mars-hub"> 
+        <a className={styles.links} href="../../../docs/learn/mars-hub/mars-hub-intro"> 
         <Box 
         title={boxProps.learn.marsHub.title}
         description={boxProps.learn.marsHub.description}
@@ -143,7 +149,7 @@ export default function ContentBox(props) {
         />
         </a>
 
-        <a className={styles.links} href="../../../docs/learn/category/red-bank">
+        <a className={styles.links} href="../../../docs/learn/red-bank/red-bank-intro">
         <Box 
         title={boxProps.learn.redBank.title}
         description={boxProps.learn.redBank.description}
@@ -152,7 +158,7 @@ export default function ContentBox(props) {
         /> 
         </a>
 
-        <a className={styles.links} href="../../../docs/learn/category/rover">
+        <a className={styles.links} href="../../../docs/learn/rover/rover-intro">
         <Box 
         title={boxProps.learn.rover.title}
         description={boxProps.learn.rover.description}
@@ -161,7 +167,7 @@ export default function ContentBox(props) {
         />
         </a>
 
-        <a className={styles.links} href="../../../docs/learn/category/vaults">
+        <a className={styles.links} href="../../../docs/learn/vaults/vaults-intro">
         <Box 
         title={boxProps.learn.vaults.title}
         description={boxProps.learn.vaults.description}
@@ -170,7 +176,7 @@ export default function ContentBox(props) {
         />
         </a>
 
-        <a className={styles.links} href="../../../docs/learn/category/workstation">
+        <a className={styles.links} href="../../../docs/learn/workstation/workstation-intro">
         <Box 
         title={boxProps.learn.workstation.title}
         description={boxProps.learn.workstation.description}
@@ -184,6 +190,15 @@ export default function ContentBox(props) {
   } else if (props.title == 'Govern') {
     return (
       <div className={styles.box}>
+
+        <a className={styles.links} href="../../../docs/govern/martian-council">
+          <Box 
+            title={boxProps.govern.martianCouncil.title}
+            description={boxProps.govern.martianCouncil.description}
+            image={boxProps.govern.martianCouncil.image}
+            list={boxProps.govern.martianCouncil.list}
+          />
+        </a>
 
         <a className={styles.links} href="../../../docs/govern/mars-improvement-proposals">
           <Box 
@@ -209,7 +224,7 @@ export default function ContentBox(props) {
     return (
       <div className={styles.box}>
 
-        <a className={styles.links} href="../../../docs/develop/category/mars-cli">
+        <a className={styles.links} href="../../../docs/develop/mars-cli/mars-cli-intro">
           <Box 
             title={boxProps.develop.marsCLI.title}
             description={boxProps.develop.marsCLI.description}
@@ -227,7 +242,7 @@ export default function ContentBox(props) {
           />
         </a>
 
-        <a className={styles.links} href="../../../docs/develop/category/modules">
+        <a className={styles.links} href="../../../docs/develop/modules/modules-intro">
           <Box 
             title={boxProps.develop.modules.title}
             description={boxProps.develop.modules.description}
@@ -236,7 +251,7 @@ export default function ContentBox(props) {
           />
         </a>
 
-        <a className={styles.links} href="../../../docs/develop/category/modules">
+        <a className={styles.links} href="../../../docs/develop/backend/backend-intro">
           <Box 
             title={boxProps.develop.backend.title}
             description={boxProps.develop.backend.description}
@@ -251,7 +266,7 @@ export default function ContentBox(props) {
     return (
       <div className={styles.box}>
 
-        <a className={styles.links} href="../../../docs/join-the-network/category/node-operators">
+        <a className={styles.links} href="../../../docs/validate/node-operators/node-operators-intro">
           <Box 
             title={boxProps.infrastructure.nodeOperators.title}
             description={boxProps.infrastructure.nodeOperators.description}
@@ -260,7 +275,7 @@ export default function ContentBox(props) {
           />
         </a>
 
-        <a className={styles.links} href="../../../docs/join-the-network/category/validators">
+        <a className={styles.links} href="../../../docs/validate/validators/validators-intro">
           <Box 
             title={boxProps.infrastructure.validators.title}
             description={boxProps.infrastructure.validators.description}
@@ -269,7 +284,7 @@ export default function ContentBox(props) {
           />
         </a>
 
-        <a className={styles.links} href="../../../docs/join-the-network/category/ibc-relayers">
+        <a className={styles.links} href="../../../docs/validate/ibc-relayers/ibc-relayers-intro">
           <Box 
             title={boxProps.infrastructure.relayers.title}
             description={boxProps.infrastructure.relayers.description}

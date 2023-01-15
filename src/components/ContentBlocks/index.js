@@ -23,10 +23,10 @@ export default function ContentBlocks(props) {
 
   if (props.banner == true) {
     return (
-      <div>
-        <div className={styles.banner}>
+      <div className={styles.blocks}>
+        {/* <div className={styles.banner}>
           <img src={props.image}/>
-        </div>
+        </div> */}
         <h2 className={styles.title}>{props.title}</h2>
         <p className={styles.text}>{props.text}</p>
         <ContentBox title={contentBoxProps.learn.title} />
@@ -34,10 +34,10 @@ export default function ContentBlocks(props) {
     );
   } else if (props.title == 'Learn') {
     return (
-      <div>
-        <div className={styles.figs}>
+      <div className={styles.blocks}>
+        {/* <div className={styles.figs}>
           <img src={props.image}/>
-        </div>
+        </div> */}
         <h2 className={styles.title}>{props.title}</h2>
         <p className={styles.text}>{props.text}</p>
         <ContentBox title={contentBoxProps.learn.title} />
@@ -45,10 +45,10 @@ export default function ContentBlocks(props) {
     );
   } else if (props.title == 'Govern') {
     return (
-      <div>
-        <div className={styles.figs}>
+      <div className={styles.blocks}>
+        {/* <div className={styles.figs}>
           <img src={props.image}/>
-        </div>
+        </div> */}
         <h2 className={styles.title}>{props.title}</h2>
         <p className={styles.text}>{props.text}</p>
         <ContentBox title={contentBoxProps.govern.title} />
@@ -56,10 +56,10 @@ export default function ContentBlocks(props) {
     );
   } else if (props.title == 'Develop') {
     return (
-      <div>
-        <div className={styles.figs}>
+      <div className={styles.blocks}>
+        {/* <div className={styles.figs}>
           <img src={props.image}/>
-        </div>
+        </div> */}
         <h2 className={styles.title}>{props.title}</h2>
         <p className={styles.text}>{props.text}</p>
         <ContentBox title={contentBoxProps.develop.title} />
@@ -68,9 +68,9 @@ export default function ContentBlocks(props) {
   } else if (props.footer == true) {
     return (
       <div className={styles.footerSpacing}>
-        <div className={styles.figs}>
+        {/* <div className={styles.figs}>
           <img src={props.image}/>
-        </div>
+        </div> */}
         <h2 className={styles.title}>{props.title}</h2>
         <p className={styles.text}>{props.text}</p>
         <ContentBox title={contentBoxProps.infrastructure.title} />

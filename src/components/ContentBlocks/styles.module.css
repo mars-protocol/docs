@@ -1,7 +1,10 @@
+
 .title {
     text-align: center;
     font-size: 40px;
     font-family: 'Inter';
+    text-transform: uppercase;
+    font-weight: 400;
 }
 
 .text {
@@ -41,5 +44,9 @@
 }
 
 .footerSpacing {
-    margin-bottom: 8rem;
+    margin-bottom: 12rem;
+}
+
+.blocks {
+    margin-bottom: 6rem;
 }

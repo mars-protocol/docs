@@ -28,6 +28,11 @@
  * and scoped locally.
  */
 
+ .ContentBlocks {
+  margin-top: 600px;
+ }
+
+
 .heroBanner {
   padding: 4rem 0;
   text-align: center;
@@ -74,12 +79,13 @@
 
 .arrows {
   /* margin-top: 20rem; */
-  margin-top: 10rem;
+  /* margin-top: 10rem; */
   content: url("./../../static/img/arrow.png");
   position: absolute;
   height: 48px;
   left: 48.33%;
   right: 48.33%;
+  /* margin-bottom: 10rem; */
 }
 
 .figs {

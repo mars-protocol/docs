@@ -26,13 +26,6 @@ function HomepageHeader() {
       <div className="container">
         <h1 className={styles.hero__title}>Mars Protocol Docs</h1>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
-        <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="/docs/overview/intro-to-mars-protocol/intro-to-mars-protocol-intro">
-            Search Docs
-          </Link>
-        </div>
         <div className={clsx(styles.arrows)}></div>
       </div>
     </header>
@@ -98,6 +91,8 @@ export default function Home() {
       
         <HomepageHeader />
 
+        <div className={styles.ContentBlocks}> 
+
         <ContentBlocks 
           banner={contentBlockProps.learn.banner}
           image={contentBlockProps.learn.image}
@@ -130,6 +125,8 @@ export default function Home() {
           footer={contentBlockProps.infrastructure.footer}
         />
       
+      </div>
+
       <main>
       </main>
 
