@@ -17,6 +17,7 @@
     border-bottom: solid 0.1px rgba(255, 255, 255, 0.15);
     z-index: 1000;
     /* margin-bottom: 3px; */
+    text-transform: uppercase;
   }
 
 .marsLogo {
@@ -73,6 +74,8 @@
     /* font-size: var(--ifm-font-size-base); */
     font-size: 13.3333px;
     cursor: pointer;
+
+    text-transform: uppercase;
   }
   
   .launchButton:hover {
