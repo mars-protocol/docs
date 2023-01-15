@@ -580,3 +580,15 @@ section:not(.ch-scrollycoding) .ch-editor-frame {
 section:not(.ch-scrollycoding) .ch-editor-frame > :nth-child(even) {
   min-height: auto !important;
 }
+
+footer.footer--dark {
+  display: flex !important;
+}
+
+/* div.container.container-fluid {
+  max-width: 400px;
+} */
+
+div.row.footer__links {
+  flex-wrap: wrap;
+}
