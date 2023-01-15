@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Fonts */
 
 @font-face {
@@ -85,6 +89,9 @@
   zoom: 85%;
 } */
 
+/* a.links_src-components-Cards-ContentBox-styles-module {
+  width: 420px !important;
+} */
 
 div.row {
   /* min-width: 95% !important; */

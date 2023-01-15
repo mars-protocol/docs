@@ -1,19 +1,23 @@
+
+
 .box {
     display: flex;
-    flex-direction: column;
+    /* flex-direction: column; */
+    flex-wrap: wrap;
 
-    width: 355px;
+
+    /* width: 355px; */
     height: 136px;
 
-    left: 157px;
-    top: 1005px;
+    /* left: 157px;
+    top: 1005px; */
 
     background: rgba(255, 255, 255, 0.02);
 
     backdrop-filter: blur(10.5px);
 
     border-radius: 16px;
-    margin: 12px;
+    /* margin: 12px; */
 }
 
 .box:hover {
@@ -23,6 +27,7 @@
 
 .box:hover .title {
     color: rgba(255, 255, 255, 1);
+    font-weight: bold;
     /* font-weight: bold; */
 }
 
@@ -48,9 +53,6 @@
 
 
 
-.links {
-    color: rgba(255, 255, 255, 0.4);
-}
  
 .box:hover .links {
     color: rgba(255, 255, 255, .9); 
@@ -106,13 +108,15 @@ ul.list li:hover {
     flex-direction: row;
 }
 
-
-
-
+a.links_src-components-Cards-ContentBox-styles-module {
+    max-width: 200px !important;
+}
 
 .fig {
-    margin-top: 8%;
+    margin-top: 4%;
     margin-left: 4%;
+    align-items: center;
+    margin-bottom: 15%;
     opacity: 0.4;
     width: 76px; 
     height: 76px;
@@ -151,7 +155,7 @@ ul.list {
 }
 
 ul.list li:before{
-   content: '';
+   content: "";
    position: absolute;
    border-right:2px solid rgba(255, 255, 255, 0.4);
    border-bottom:2px solid rgba(255, 255, 255, 0.4);
@@ -163,3 +167,11 @@ ul.list li:before{
 }
 
 
+.links {
+    color: rgba(255, 255, 255, 0.4);
+    /* width: 420px !important; */
+}
+
+.links a {
+    /* width: 420px !important; */
+}

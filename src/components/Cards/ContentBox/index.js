@@ -759,7 +759,7 @@ export default function ContentBox(props) {
 
   if (props.title == 'Getting Started') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
         <Box />
         <Box />
         <Box />
@@ -768,7 +768,7 @@ export default function ContentBox(props) {
     );
   } else if (props.title == "Learn") {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
         
 
         <a className={styles.links} href="../../../docs/learn/mars-hub/mars-hub-intro"> 
@@ -815,7 +815,7 @@ export default function ContentBox(props) {
     );
   } else if (props.title == 'Govern') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../docs/govern/martian-council">
           <Box 
@@ -845,7 +845,7 @@ export default function ContentBox(props) {
     );
   } else if (props.title == 'Develop') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../docs/develop/mars-cli/mars-cli-intro">
           <Box 
@@ -883,7 +883,7 @@ export default function ContentBox(props) {
     );
   } else if (props.title == 'Validate') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../docs/validate/node-operators/node-operators-intro">
           <Box 
@@ -915,7 +915,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Security') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../docs/overview/security/audits">
           <Box 
@@ -940,7 +940,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Legal') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../docs/overview/legal/disclaimers-and-disclosures">
           <Box 
@@ -981,7 +981,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Mars Hub') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../docs/learn/mars-hub/mars-hub-architecture">
           <Box 
@@ -1021,7 +1021,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Tokenomics') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../learn/mars-hub/tokenomics/mars-token-and-distribution">
           <Box 
@@ -1053,7 +1053,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Red Bank') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../docs/learn/red-bank/red-bank-architecture">
           <Box 
@@ -1101,7 +1101,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Rover') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../docs/learn/rover/rover-architecture">
           <Box 
@@ -1141,7 +1141,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Trading') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../learn/rover/trading/spot">
           <Box 
@@ -1165,7 +1165,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Vaults') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../docs/learn/vaults/vaults-architecture">
           <Box 
@@ -1197,7 +1197,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Workstation') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../docs/learn/workstation/basics/basics-intro">
           <Box 
@@ -1253,7 +1253,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Basics') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../learn/workstation/basics/installing-a-wallet/installing-a-wallet-intro">
           <Box 
@@ -1285,7 +1285,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Installing a Wallet') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../workstation/basics/installing-a-wallet/keplr">
           <Box 
@@ -1325,7 +1325,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Governance') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../learn/workstation/governance/staking">
           <Box 
@@ -1357,7 +1357,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Red Bank 2') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../learn/workstation/red-bank/lending">
           <Box 
@@ -1389,7 +1389,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Rover 2') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../learn/workstation/rover/creating-a-credit-account">
           <Box 
@@ -1421,7 +1421,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Trading 2') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../workstation/rover/trading/spot">
           <Box 
@@ -1445,7 +1445,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Vaults 2') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../learn/workstation/vaults/fields-of-mars">
           <Box 
@@ -1461,7 +1461,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Mars CLI') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../docs/develop/mars-cli/public-endpoints">
           <Box 
@@ -1493,7 +1493,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Contracts') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../docs/develop/contracts/mars-hub/mars-hub-intro">
           <Box 
@@ -1517,7 +1517,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Mars Hub 2') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../develop/contracts/mars-hub/airdrop">
           <Box 
@@ -1549,7 +1549,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Outposts') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../develop/contracts/outposts/address-provider">
           <Box 
@@ -1597,7 +1597,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Oracle') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../contracts/outposts/oracle/base">
           <Box 
@@ -1621,7 +1621,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Rewards Collector') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../contracts/outposts/rewards-collector/base">
           <Box 
@@ -1646,7 +1646,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Modules') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../docs/develop/modules/module-accounts">
           <Box 
@@ -1695,7 +1695,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Custom Modules') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../develop/modules/custom-modules/gov">
           <Box 
@@ -1727,7 +1727,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Cosmos SDK Modules') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../develop/modules/cosmos-sdk-modules/auth">
           <Box 
@@ -1863,7 +1863,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'CosmWasm Module') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../develop/modules/cosmwasm-module/wasm">
           <Box 
@@ -1879,7 +1879,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'IBC Modules') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../develop/modules/ibc-modules/interchain-accounts">
           <Box 
@@ -1903,7 +1903,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Backend') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../docs/develop/category/liquidation-bots">
           <Box 
@@ -1920,7 +1920,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Node Operators') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../docs/validate/node-operators/setting-up-a-node">
           <Box 
@@ -1953,7 +1953,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Validators') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../docs/validate/validators/becoming-a-validator">
           <Box 
@@ -2001,7 +2001,7 @@ export default function ContentBox(props) {
 
   else if (props.title == 'Key Management') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../validate/validators/key-management/basics">
           <Box 
@@ -2049,7 +2049,7 @@ export default function ContentBox(props) {
   
   else if (props.title == 'IBC Relayers') {
     return (
-      <div className={styles.box}>
+      <div className="grid md:grid-cols-2 gap-3">
 
         <a className={styles.links} href="../../../docs/validate/ibc-relayers/channels-for-mars">
           <Box 

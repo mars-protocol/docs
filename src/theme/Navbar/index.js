@@ -9,7 +9,8 @@ export default function NavbarWrapper(props) {
   return (
     <>
       <div className={styles.topNav}>
-        <Link href="/" className="h-[32px] mr-auto">
+        {/* <Link href="/" className="h-[32px] mr-auto"> */}
+        <Link href="/">
           <img src={MarsLogoPngUrl} alt="logo" className={styles.marsLogo}/>
         </Link>
 

@@ -16,7 +16,7 @@
     will-change: width;
     transition: width var(--ifm-transition-fast) ease;
     clip-path: inset(0);
-    padding-right: 350px;
+    padding-right: 315px;
     padding-top: 60px;
   }
 

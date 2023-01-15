@@ -10,3 +10,25 @@
 .links:hover {
   all: unset;
 }
+
+
+
+/* .links {
+  text-decoration: none !important;
+} */
+
+
+/* 
+
+.links {
+  color: rgba(255, 255, 255, 0.4);
+  width: 420px !important;
+}
+
+.links a {
+  width: 420px !important;
+}
+
+.box:hover .links {
+  color: rgba(255, 255, 255, .9); 
+} */
