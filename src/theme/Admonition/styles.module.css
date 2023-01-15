@@ -1,0 +1,51 @@
+.admonition {
+  margin-bottom: 1em;
+  border-color: rgba(233, 151, 75, 0.7);
+  background: rgba(28, 29, 46, 1);
+  backdrop-filter: blur(6px);
+  color: var(--ifm-font-color-base);
+}
+
+.admonitionHeading {
+  font: var(--ifm-heading-font-weight) var(--ifm-h5-font-size) /
+    var(--ifm-heading-line-height) var(--ifm-heading-font-family);
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+}
+
+.admonitionHeading code {
+  text-transform: none;
+}
+
+.admonitionIcon {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.4em;
+}
+
+.admonitionIcon svg {
+  display: inline-block;
+  height: 1.6em;
+  width: 1.6em;
+  fill: var(--ifm-alert-foreground-color);
+}
+
+.admonitionContent > :last-child {
+  margin-bottom: 0;
+}
+
+
+.admonition a {
+  color: rgba(233, 151, 75, 0.7);
+  text-decoration: underline;
+  /* color: rgb(184, 175, 255); */
+}
+
+.admonition a:hover {
+  color: white;
+  transition: all var(--ifm-transition-fast) ease;
+}
+
+.admonition li {
+  color: var(--ifm-font-color-base);
+}
