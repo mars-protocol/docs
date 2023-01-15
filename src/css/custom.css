@@ -592,3 +592,15 @@ footer.footer--dark {
 div.row.footer__links {
   flex-wrap: wrap;
 }
+
+b.navbar__title.text--truncate {
+
+}
+
+
+@media (max-width: 997px) {
+  b.navbar__title.text--truncate {
+    display: none;
+  }
+}
+
