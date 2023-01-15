@@ -569,3 +569,14 @@ table tr {
   color: rgba(255,255,255,0.8);
   text-decoration: underline;
 }
+
+/* extend and collapse code block based on content height */
+
+section:not(.ch-scrollycoding) .ch-editor-frame {
+  height: 100% !important;
+  max-height: max-content !important;
+}
+
+section:not(.ch-scrollycoding) .ch-editor-frame > :nth-child(even) {
+  min-height: auto !important;
+}
