@@ -1,6 +1,7 @@
 .admonition {
   margin-bottom: 1em;
-  border-color: rgba(233, 151, 75, 0.7);
+  /* border-color: rgba(233, 151, 75, 0.7); */
+  border-color: #14a693;
   background: rgba(28, 29, 46, 1);
   backdrop-filter: blur(6px);
   color: var(--ifm-font-color-base);
@@ -36,7 +37,8 @@
 
 
 .admonition a {
-  color: rgba(233, 151, 75, 0.7);
+  /* color: rgba(233, 151, 75, 0.7); */
+  color: #14a693;
   text-decoration: underline;
   /* color: rgb(184, 175, 255); */
 }
