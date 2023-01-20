@@ -276,9 +276,9 @@ const config = {
 
       },
 
-      // colorMode: {
-      //   disableSwitch: true,
-      // },
+      colorMode: {
+        disableSwitch: true,
+      },
 
       docs: {
         sidebar: {

@@ -1,11 +1,18 @@
 
 .title {
-    text-align: center;
+    /* text-align: center;
     font-size: 40px;
     font-family: 'Inter';
     text-transform: uppercase;
     font-weight: 400;
-    letter-spacing: 8px;
+    letter-spacing: 8px; */
+
+    font-weight: 600;
+    text-align: center;
+    font-size: 2.566rem;
+    line-height: 3.7333333333rem;
+    text-transform: uppercase;
+    letter-spacing: .6rem;
 }
 
 .text {
@@ -17,16 +24,18 @@
     color: #FFFFFF;
     opacity: 0.6;
     font-family: 'Inter';
-    
 }
 
 .figs {
-    padding-top: 10rem;
-    padding-bottom: 4rem;
+    padding-bottom: .5333333333rem;
     text-align: center;
+    align-items: center;
     position: relative;
     overflow: hidden;
+    justify-content: center;
 }
+
+
 
 .banner {
     /* padding: 4rem 0; */
@@ -45,7 +54,7 @@
 }
 
 .footerSpacing {
-    margin-bottom: 12rem;
+    margin-bottom: 6rem;
 }
 
 .blocks {

@@ -11,11 +11,16 @@ import HomepageFeatures from '@site/src/components/HomepageFeatures';
 import SearchBar  from '@theme/SearchBar';
 import ContentBlocks from '../components/ContentBlocks';
 
-import LearnFigUrl from '@site/static/img/homepage-figs/learn.png';
-import GovernFigUrl from '@site/static/img/homepage-figs/govern.png';
-import DevelopFigUrl from '@site/static/img/homepage-figs/develop.png';
-import InfrastructureFigUrl from '@site/static/img/homepage-figs/infrastructure.png';
+// import LearnFigUrl from '@site/static/img/homepage-figs/learn.png';
+// import GovernFigUrl from '@site/static/img/homepage-figs/govern.png';
+// import DevelopFigUrl from '@site/static/img/homepage-figs/develop.png';
+// import InfrastructureFigUrl from '@site/static/img/homepage-figs/infrastructure.png';
 
+import BannerFigUrl from '@site/static/img/icons/mars.png';
+import LearnFigUrl from '@site/static/img/icons/hub.png';
+import GovernFigUrl from '@site/static/img/icons/balance.png';
+import DevelopFigUrl from '@site/static/img/icons/pioneer.png';
+import InfrastructureFigUrl from '@site/static/img/icons/satellite.png';
 
 import styles from './index.module.css';
 
@@ -24,8 +29,15 @@ function HomepageHeader() {
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">
+        {/* <div className={styles.bannerFig}>
+          <img src={BannerFigUrl} />
+        </div>  */}
         <h1 className={styles.hero__title}>Mars Protocol Docs</h1>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
+        {/* <p className="hero__subtitle">{siteConfig.tagline}</p> */}
+        <p className={styles.subtext}>Discover the autonomous credit protocol of the Cosmos universe</p>
+        {/* <p>You've arrived at the Mars Codex, the central information station for Mars Protocol.   or discover more below </p> <a href="../docs/overview/intro-to-mars-protocol/intro-to-mars-protocol-intro">Read more about MARS</a> */}
+
+        
         <div className={clsx(styles.arrows)}></div>
       </div>
     </header>
@@ -51,7 +63,7 @@ function HomepageHeader() {
 
 const contentBlockProps = {
   learn: {
-    banner: true,
+    banner: false,
     image: LearnFigUrl,
     title: 'Learn',
     text: 'Get ready to explore the vast fields & outposts of Mars. Discover ways to deepen your understanding, whether you are a DeFi enthusiast, a validator, or a seasoned trader looking to expand your proficiency.',

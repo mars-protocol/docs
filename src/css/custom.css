@@ -208,6 +208,9 @@ div.footer__title {
 } */
 
 
+.hero__title_src-pages-index-module {
+  margin-bottom: 0px;
+}
 
 
 
@@ -265,7 +268,7 @@ h1, h2, h3, h4, h5, h6  {
   font-style: normal;
   font-weight: 400;
   font-size: 38.5003px;
-  line-height: 40px;
+  line-height: 30px;
   text-align: center;
 }
 
@@ -604,3 +607,8 @@ b.navbar__title.text--truncate {
   }
 }
 
+
+
+/* .hero.hero--primary.heroBanner_src-pages-index-module {
+  padding-bottom: -10px;
+} */

@@ -29,12 +29,12 @@
  */
 
  .ContentBlocks {
-  margin-top: 600px;
+  margin-top: 500px;
  }
 
 
 .heroBanner {
-  padding: 4rem 0;
+  /* padding: 2rem 0; */
   text-align: center;
   position: absolute;
   top: 0px;
@@ -78,7 +78,7 @@
 }
 
 .arrows {
-  /* margin-top: 20rem; */
+  margin-top: 2rem;
   /* margin-top: 10rem; */
   content: url("./../../static/img/arrow.png");
   position: absolute;
@@ -94,6 +94,14 @@
   position: relative;
   overflow: hidden;
 }
+
+/* .bannerFig {
+  padding-bottom: 2rem;
+  text-align: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+} */
 
 .pepe {
   /* padding: 4rem 0; */
@@ -137,12 +145,32 @@
 } */
 
 .hero__title {
-  font-style: normal;
+  /* font-style: normal;
   font-weight: 400;
   font-size: 48.71px;
   line-height: 72px;
   text-align: center;
   text-transform: uppercase;
   padding-bottom: 1rem;
-  letter-spacing: 16px;
+  letter-spacing: 16px; */
+
+  font-weight: 600;
+  text-align: center;
+  font-size: 2.566rem;
+  line-height: 3.7333333333rem;
+  text-transform: uppercase;
+  letter-spacing: .6rem;
 }
+
+.subtext {
+  margin: 0.5333333333rem 0 0;
+  font-size: 1.2653333333rem;
+  line-height: 1.8666666667rem;
+  letter-spacing: .3333333333rem;
+  text-transform: uppercase;
+  font-weight: 300;
+  text-align: center;
+  opacity: .89;
+}
+
+

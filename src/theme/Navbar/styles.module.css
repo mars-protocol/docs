@@ -76,9 +76,16 @@
     cursor: pointer;
 
     text-transform: uppercase;
+
+    border: none;
+    appearance: none;
+    color: #FFF
   }
   
   .launchButton:hover {
-    color: rgba(255,255,255,1);
-    transition: color var(--ifm-transition-fast) var(--ifm-transition-timing-default);
+    background-color: #15BFA9;
+    /* color: rgba(255,255,255,1); */
+    /* transition: color var(--ifm-transition-fast) var(--ifm-transition-timing-default); */
+    transition: all var(--ifm-transition-fast) ease;
+
   }
