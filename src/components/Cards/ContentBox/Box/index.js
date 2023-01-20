@@ -55,9 +55,9 @@ export default function Box(props) {
     </div>
 
     <div className={styles.boxContainer}> 
-      <div className={styles.fig}>
+      {/* <div className={styles.fig}>
         <img src={props.image} />
-      </div>
+      </div> */}
 
       <div className={styles.text}>
         <p className={styles.subtext}>{props.description}</p>
