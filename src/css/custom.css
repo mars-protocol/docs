@@ -259,10 +259,32 @@ a.button.button--secondary.button--lg {
   color: rgba(255,255,255,0.4);
 }
 
-h1, h2, h3, h4, h5, h6  {
-  font-style: normal;
+h1  {
+  /* font-style: normal;
   font-weight: 400;
+  text-transform: uppercase; */
+  font-style: normal;
+  font-weight: 600;
+  font-size: 2.566rem;
+  line-height: 3.7333333333rem;
+  text-transform: uppercase;
+  letter-spacing: .6rem;
 }
+
+h2 {
+  font-style: normal;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .2rem;
+}
+
+h3, h4, h5, h6  {
+  font-style: normal;
+  font-weight: 600;
+  /* letter-spacing: .2rem; */
+}
+
+
 
 .text_src-components-ContentBlocks-styles-module {
   font-style: normal;
@@ -377,6 +399,7 @@ header.hero.hero--primary.heroBanner_src-pages-index-module {
   backdrop-filter: blur(10.5px);
   border-radius: 8px;
   height: fit-content;
+  text-transform: uppercase;
 }
 
 /* div.theme-doc-markdown.markdown {
