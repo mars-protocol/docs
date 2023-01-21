@@ -637,3 +637,8 @@ b.navbar__title.text--truncate {
   padding-bottom: -10px;
 } */
 
+@media (max-width: 1130px) {
+  div.col.col--3 {
+    display: none;
+  }
+}
