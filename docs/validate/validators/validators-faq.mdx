@@ -6,39 +6,63 @@ import Admonition from '@theme/Admonition'
 
 # Validators FAQ
 
-### What is the minimum amount of validators needed for mainnet? Is there a cap?
+### Is Mars Hub’s validator set permissionless?
 
-<Admonition type="info" title="">
-100 validators are needed for mainnet. Any validator who falls outside of the top 100 in delegated MARS will stop producing blocks and earning rewards.
+<Admonition type="info" title="Answer:">
+Yes, any validator will be able to participate, provided they meet the technical requirements/constraints of Mars Hub.
 </Admonition>
 
 ### Is there a minimum required to stake and become a validator?
 
-<Admonition type="info" title="">
+<Admonition type="info" title="Answer:">
 No
+</Admonition>
+
+### What is the minimum amount of validators needed for mainnet? Is there a cap?
+
+<Admonition type="info" title="Answer:">
+50 validators are needed for mainnet. Any validator who falls outside of the top 50 in delegated MARS will stop producing blocks and earning rewards.
+</Admonition>
+
+### Will there be incentives for staking?
+
+<Admonition type="info" title="Answer:">
+Staking incentive parameters will not be established immediately on the day Mars Hub launches. However, [Delphi Labs](https://twitter.com/delphi_labs) intends to construct a proposal to incentivise staking. This proposal will be submitted to the Mars Forum for community review and approval. 
+
+The proposal would seek to obtain 750,000 MARS from the community pool to fund these staking rewards per month (9M for the whole 12 month period).
+
+Of course, these incentives are not guaranteed and are dependent on the community approving this proposal. Keep in mind that stakes and incentives would be denominated in MARS, so fiat-denominated returns may differ based on market prices over the staking period.
+</Admonition>
+
+### Will there be a delegation to Genesis Validators?
+
+<Admonition type="info" title="Answer:">
+There will not immediately be a delegation to Genesis Validators. [Delphi Labs](https://twitter.com/delphi_labs) intends to construct a proposal which will request 50M MARS from the community fund to be temporarily delegated to Genesis Validators. If successfully approved by the community, the 50M MARS will be transferred to a [delegator](../../develop/contracts/mars-hub/delegator) contract. This delegator contract will then equally distribute the 50M MARS among all the genesis validators for 1 month. After one month, delegated tokens will then be returned to the community pool, along with all staking rewards associated with this delegation. 
+
+Of course this delegation is not guaranteed and is dependent on the Mars community approving this proposal.
+</Admonition>
+
+### Will there be a public Mars Hub testnet?
+
+<Admonition type="info" title="Answer:">
+Yes. There is a public Mars Hub testnet. It is available for validators to participate in this chain.
 </Admonition>
 
 ### How long is the unbonding period (the length of time to return staking amount after unstaking)?
 
-<Admonition type="info" title="">
+<Admonition type="info" title="Answer:">
 28 days
-</Admonition>
-
-### How many rewards can a validator earn?
-
-<Admonition type="info" title="">
-Validators earn rewards through...
 </Admonition>
 
 ### Is there slashing on the network?
 
-<Admonition type="info" title="">
+<Admonition type="info" title="Answer:">
 Yes, poorly performing validator nodes (i.e. those that are offline or have weak network connections) will be penalized and earn fewer rewards.
 </Admonition>
 
 ### Is it required to use sentry nodes as a security measure?
 
-<Admonition type="caution" title="">
+<Admonition type="info" title="Answer:">
 Although not required, validators should consider using sentry nodes as a security measure.
 
 To learn more about sentry node architecture, see [here](./sentry-node-architecture). 
@@ -46,8 +70,20 @@ To learn more about sentry node architecture, see [here](./sentry-node-architect
 
 ### Should I host my validator through a cloud provider or a "bare metal" server?
 
-<Admonition type="info" title="">
+<Admonition type="info" title="Answer:">
 When you use a cloud provider to host your validator, you are likely using a shared SSD, which is generally pretty slow. You will likely miss some blocks, which will effect your total up-time.
 
 Bare metal servers generally offer better performance than cloud providers. There are some bare metal hosting services that allow for remote access to dedicated servers.
 </Admonition>
+
+### How can I get started now?
+
+<Admonition type="info" title="Answer:">
+Get started by:
+- downloading and compiling the marsd software, which is open source at: https://github.com/mars-protocol/hub
+- sign a gentx (genesis transaction) and submit it to https://github.com/mars-protocol/networks
+- once each genesis validator has submitted their gentx, the final genesis file can be created
+-Genesis validators can then download this genesis file and turn their server on ahead of the genesis time
+</Admonition>
+
+

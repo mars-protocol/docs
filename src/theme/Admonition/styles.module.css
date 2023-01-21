@@ -39,12 +39,13 @@
 .admonition a {
   /* color: rgba(233, 151, 75, 0.7); */
   color: #14a693;
-  text-decoration: underline;
+  text-decoration: none;
   /* color: rgb(184, 175, 255); */
 }
 
 .admonition a:hover {
-  color: rgba(255,255,255,0.8);
+  /* color: rgba(255,255,255,0.8); */
+  text-decoration: underline;
   transition: all var(--ifm-transition-fast) ease;
 }
 
