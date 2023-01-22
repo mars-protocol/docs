@@ -30,6 +30,12 @@
 
  .ContentBlocks {
   margin-top: 500px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  width: auto; 
+  margin-left: 16px;
+  margin-right: 16px;
  }
 
 
@@ -46,6 +52,10 @@
   background-size: cover;
   background-position: center;
   min-height: 718px;
+}
+
+.bannerText {
+  padding-top: 20rem;
 }
 
 @media screen and (max-width: 996px) {
@@ -81,18 +91,32 @@
   margin-top: 2rem;
   /* margin-top: 10rem; */
   content: url("./../../static/img/arrow.png");
-  position: absolute;
+  position: relative;
   height: 48px;
-  left: 48.33%;
-  right: 48.33%;
+  align-items: center;
+  margin-left: 48.33%;
+  margin-right: 48.33%;
+  /* right: 48.33%; */
+  /* right: 50%; */
   /* margin-bottom: 10rem; */
+  /* text-align: center; */
 }
+
+.arrowDiv {
+  position: relative;
+  text-align: center;
+  position: center;
+
+
+}
+
 
 .figs {
   /* padding: 4rem 0; */
   text-align: center;
   position: relative;
   overflow: hidden;
+  margin-bottom: 0.5333333333rem;
 }
 
 /* .bannerFig {
@@ -173,4 +197,31 @@
   opacity: .89;
 }
 
+.title {
+  text-align: center;
+  /* font-size: 40px; */
+  margin-bottom: 12px;
+}
 
+@media only screen and (max-width: 996px) {
+  .topNav {
+    display: none;
+  }
+
+  .bannerText {
+    padding-top: 8rem;
+  }
+
+  .ContentBlocks {
+    margin-top: 550px;
+   }
+
+}
+
+
+
+@media only screen and (max-width: 500px) {
+   .arrows {
+    display: none;
+   }
+}
