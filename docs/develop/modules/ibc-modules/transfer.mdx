@@ -3,3 +3,171 @@ sidebar_position: 2
 ---
 
 # transfer
+
+The `transfer` module is responsible for the implementation of the ICS-20 protocol, which enables cross-chain fungible token transfers.
+
+For more information, visit: https://ibc.cosmos.network/main/apps/transfer/overview.html
+
+## Message Types
+
+`Msg` defines the ibc/transfer Msg service.
+
+```go tx.proto
+service Msg {
+  // Transfer defines a rpc handler method for MsgTransfer.
+  rpc Transfer(MsgTransfer) returns (MsgTransferResponse);
+}
+```
+
+### `MsgTransfer`
+
+`MsgTransfer` defines a msg to transfer fungible tokens (i.e Coins) between ICS20 enabled chains. 
+
+See ICS Spec here: https://github.com/cosmos/ibc/tree/master/spec/app/ics-020-fungible-token-transfer#data-structures
+
+```go tx.proto
+message MsgTransfer {
+  option (gogoproto.equal)           = false;
+  option (gogoproto.goproto_getters) = false;
+
+  // the port on which the packet will be sent
+  string source_port = 1 [(gogoproto.moretags) = "yaml:\"source_port\""];
+  // the channel by which the packet will be sent
+  string source_channel = 2 [(gogoproto.moretags) = "yaml:\"source_channel\""];
+  // the tokens to be transferred
+  cosmos.base.v1beta1.Coin token = 3 [(gogoproto.nullable) = false];
+  // the sender address
+  string sender = 4;
+  // the recipient address on the destination chain
+  string receiver = 5;
+  // Timeout height relative to the current block height.
+  // The timeout is disabled when set to 0.
+  ibc.core.client.v1.Height timeout_height = 6
+      [(gogoproto.moretags) = "yaml:\"timeout_height\"", (gogoproto.nullable) = false];
+  // Timeout timestamp in absolute nanoseconds since unix epoch.
+  // The timeout is disabled when set to 0.
+  uint64 timeout_timestamp = 7 [(gogoproto.moretags) = "yaml:\"timeout_timestamp\""];
+}
+```
+
+#### `MsgTransferResponse`
+`MsgTransferResponse` defines the `Msg/Transfer` response type.
+
+```go tx.proto
+message MsgTransferResponse {}
+```
+
+## Queries
+
+`Query` provides defines the gRPC querier service.
+
+```go query.proto
+service Query {
+  // DenomTrace queries a denomination trace information.
+  rpc DenomTrace(QueryDenomTraceRequest) returns (QueryDenomTraceResponse) {
+    option (google.api.http).get = "/ibc/apps/transfer/v1/denom_traces/{hash}";
+  }
+
+  // DenomTraces queries all denomination traces.
+  rpc DenomTraces(QueryDenomTracesRequest) returns (QueryDenomTracesResponse) {
+    option (google.api.http).get = "/ibc/apps/transfer/v1/denom_traces";
+  }
+
+  // Params queries all parameters of the ibc-transfer module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/ibc/apps/transfer/v1/params";
+  }
+
+  // DenomHash queries a denomination hash information.
+  rpc DenomHash(QueryDenomHashRequest) returns (QueryDenomHashResponse) {
+    option (google.api.http).get = "/ibc/apps/transfer/v1/denom_hashes/{trace}";
+  }
+}
+```
+
+### `QueryDenomTraceRequest`
+
+`QueryDenomTraceRequest` is the request type for the `Query/DenomTrace` RPC method.
+
+```go query.proto
+message QueryDenomTraceRequest {
+  // hash (in hex format) of the denomination trace information.
+  string hash = 1;
+}
+```
+
+#### `QueryDenomTraceResponse`
+
+`QueryDenomTraceResponse` is the response type for the `Query/DenomTrace` RPC method.
+
+```go query.proto
+message QueryDenomTraceResponse {
+  // denom_trace returns the requested denomination trace information.
+  DenomTrace denom_trace = 1;
+}
+```
+
+### `QueryDenomTracesRequest`
+
+`QueryDenomTracesRequest` is the request type for the `Query/DenomTraces` RPC method.
+
+```go query.proto
+message QueryDenomTracesRequest {
+  // pagination defines an optional pagination for the request.
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+```
+
+#### `QueryDenomTracesResponse`
+
+`QueryDenomTracesResponse` is the response type for the `Query/DenomTraces` RPC method.
+
+```go query.proto
+message QueryDenomTracesResponse {
+  // denom_traces returns all denominations trace information.
+  repeated DenomTrace denom_traces = 1 [(gogoproto.castrepeated) = "Traces", (gogoproto.nullable) = false];
+  // pagination defines the pagination in the response.
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+```
+
+### `QueryParamsRequest`
+
+`QueryParamsRequest` is the request type for the `Query/Params` RPC method.
+
+```go query.proto
+message QueryParamsRequest {}
+```
+
+#### `QueryParamsResponse`
+
+`QueryParamsResponse` is the response type for the `Query/Params` RPC method.
+
+```go query.proto
+message QueryParamsResponse {
+  // params defines the parameters of the module.
+  Params params = 1;
+}
+```
+
+### `QueryDenomHashRequest`
+
+`QueryDenomHashRequest` is the request type for the `Query/DenomHash` RPC method.
+
+```go query.proto
+message QueryDenomHashRequest {
+  // The denomination trace ([port_id]/[channel_id])+/[denom]
+  string trace = 1;
+}
+```
+
+#### `QueryDenomHashResponse`
+
+`QueryDenomHashResponse` is the response type for the `Query/DenomHash` RPC method.
+
+```go query.proto
+message QueryDenomHashResponse {
+  // hash (in hex format) of the denomination trace information.
+  string hash = 1;
+}
+```

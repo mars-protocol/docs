@@ -3,3 +3,43 @@ sidebar_position: 5
 ---
 
 # crisis
+
+The `crisis` module is responsible for halting the blockchain under certain circumstances (e.g. if an invariant is broken). Invariants can be registered with the application during the application initialization process.
+
+For more information, visit https://docs.cosmos.network/main/modules/crisis/
+
+## Message Types
+
+`Msg` defines the bank Msg service.
+
+```go tx.proto
+service Msg {
+  // VerifyInvariant defines a method to verify a particular invariance.
+  rpc VerifyInvariant(MsgVerifyInvariant) returns (MsgVerifyInvariantResponse);
+}
+```
+
+### `MsgVerifyInvariant`
+
+`MsgVerifyInvariant` represents a message to verify a particular invariance.
+
+```go tx.proto
+message MsgVerifyInvariant {
+  option (cosmos.msg.v1.signer) = "sender";
+
+  option (gogoproto.equal)           = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string sender                = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string invariant_module_name = 2;
+  string invariant_route       = 3;
+}
+```
+
+#### `MsgVerifyInvariantResponse`
+
+`MsgVerifyInvariantResponse` defines the `Msg/VerifyInvariant` response type.
+
+```go tx.proto
+message MsgVerifyInvariantResponse {}
+```

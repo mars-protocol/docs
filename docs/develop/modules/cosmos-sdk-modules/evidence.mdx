@@ -3,3 +3,111 @@ sidebar_position: 7
 ---
 
 # evidence
+
+The `evidence` module is responsible for the submission and handling of arbitrary evidence of misbehavior such as equivocation and counterfactual signing.
+
+For more information, visit https://docs.cosmos.network/main/modules/evidence
+
+## Message Types
+
+`Msg` defines the evidence Msg service.
+
+```go tx.proto
+service Msg {
+  // SubmitEvidence submits an arbitrary Evidence of misbehavior such as equivocation or
+  // counterfactual signing.
+  rpc SubmitEvidence(MsgSubmitEvidence) returns (MsgSubmitEvidenceResponse);
+}
+```
+
+### `MsgSubmitEvidence`
+
+`MsgSubmitEvidence` represents a message that supports submitting arbitrary Evidence of misbehavior such as equivocation or counterfactual signing.
+
+```go tx.proto
+message MsgSubmitEvidence {
+  option (cosmos.msg.v1.signer) = "submitter";
+
+  option (gogoproto.equal)           = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string              submitter = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  google.protobuf.Any evidence  = 2 [(cosmos_proto.accepts_interface) = "Evidence"];
+}
+```
+
+#### `MsgSubmitEvidenceResponse`
+
+`MsgSubmitEvidenceResponse` defines the `Msg/SubmitEvidence` response type.
+
+```go tx.proto
+message MsgSubmitEvidenceResponse {
+  // hash defines the hash of the evidence.
+  bytes hash = 4;
+}
+```
+
+## Queries
+
+`Query` defines the gRPC querier service.
+
+```go query.proto
+service Query {
+  // Evidence queries evidence based on evidence hash.
+  rpc Evidence(QueryEvidenceRequest) returns (QueryEvidenceResponse) {
+    option (google.api.http).get = "/cosmos/evidence/v1beta1/evidence/{evidence_hash}";
+  }
+
+  // AllEvidence queries all evidence.
+  rpc AllEvidence(QueryAllEvidenceRequest) returns (QueryAllEvidenceResponse) {
+    option (google.api.http).get = "/cosmos/evidence/v1beta1/evidence";
+  }
+}
+```
+
+### `QueryEvidenceRequest`
+
+`QueryEvidenceRequest` is the request type for the `Query/Evidence` RPC method.
+
+```go query.proto
+message QueryEvidenceRequest {
+  // evidence_hash defines the hash of the requested evidence.
+  bytes evidence_hash = 1 [(gogoproto.casttype) = "github.com/tendermint/tendermint/libs/bytes.HexBytes"];
+}
+```
+
+#### `QueryEvidenceResponse`
+
+`QueryEvidenceResponse` is the response type for the `Query/Evidence` RPC method.
+
+```go query.proto
+message QueryEvidenceResponse {
+  // evidence returns the requested evidence.
+  google.protobuf.Any evidence = 1;
+}
+```
+
+### `QueryEvidenceRequest`
+
+`QueryEvidenceRequest` is the request type for the `Query/AllEvidence` RPC
+
+```go query.proto
+message QueryAllEvidenceRequest {
+  // pagination defines an optional pagination for the request.
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+```
+
+#### `QueryAllEvidenceResponse`
+
+`QueryAllEvidenceResponse` is the response type for the `Query/AllEvidence` RPC method.
+
+```go query.proto
+message QueryAllEvidenceResponse {
+  // evidence returns all evidences.
+  repeated google.protobuf.Any evidence = 1;
+
+  // pagination defines the pagination in the response.
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+```

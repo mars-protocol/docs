@@ -3,3 +3,240 @@ sidebar_position: 11
 ---
 
 # nft
+
+The `nft` module is responsible for creating NFT classifications, creating NFTs, transferring NFTs, updating NFTs, and supporting various queries. It is fully compatible with the ERC721 specification.
+
+For more information, visit https://docs.cosmos.network/main/modules/nft/
+
+## Message Types
+
+`Msg` defines the nft Msg service.
+
+```go tx.proto
+service Msg {
+  // Send defines a method to send a nft from one account to another account.
+  rpc Send(MsgSend) returns (MsgSendResponse);
+}
+```
+
+### `MsgSend`
+
+`MsgSend` represents a message to send a nft from one account to another account.
+
+```go tx.proto
+message MsgSend {
+  option (cosmos.msg.v1.signer) = "sender";
+
+  // class_id defines the unique identifier of the nft classification, similar to the contract address of ERC721
+  string class_id = 1;
+
+  // id defines the unique identification of nft
+  string id = 2;
+
+  // sender is the address of the owner of nft
+  string sender = 3;
+
+  // receiver is the receiver address of nft
+  string receiver = 4;
+}
+```
+
+#### `MsgSendResponse`
+
+`MsgSendResponse` defines the `Msg/Send` response type.
+
+```go tx.proto
+message MsgSendResponse {}
+```
+
+## Queries
+
+`Query` defines the gRPC querier service.
+
+```go query.proto
+service Query {
+  // Balance queries the number of NFTs of a given class owned by the owner, same as balanceOf in ERC721
+  rpc Balance(QueryBalanceRequest) returns (QueryBalanceResponse) {
+    option (google.api.http).get = "/cosmos/nft/v1beta1/balance/{owner}/{class_id}";
+  }
+
+  // Owner queries the owner of the NFT based on its class and id, same as ownerOf in ERC721
+  rpc Owner(QueryOwnerRequest) returns (QueryOwnerResponse) {
+    option (google.api.http).get = "/cosmos/nft/v1beta1/owner/{class_id}/{id}";
+  }
+
+  // Supply queries the number of NFTs from the given class, same as totalSupply of ERC721.
+  rpc Supply(QuerySupplyRequest) returns (QuerySupplyResponse) {
+    option (google.api.http).get = "/cosmos/nft/v1beta1/supply/{class_id}";
+  }
+
+  // NFTs queries all NFTs of a given class or owner,choose at least one of the two, similar to tokenByIndex in
+  // ERC721Enumerable
+  rpc NFTs(QueryNFTsRequest) returns (QueryNFTsResponse) {
+    option (google.api.http).get = "/cosmos/nft/v1beta1/nfts";
+  }
+
+  // NFT queries an NFT based on its class and id.
+  rpc NFT(QueryNFTRequest) returns (QueryNFTResponse) {
+    option (google.api.http).get = "/cosmos/nft/v1beta1/nfts/{class_id}/{id}";
+  }
+
+  // Class queries an NFT class based on its id
+  rpc Class(QueryClassRequest) returns (QueryClassResponse) {
+    option (google.api.http).get = "/cosmos/nft/v1beta1/classes/{class_id}";
+  }
+
+  // Classes queries all NFT classes
+  rpc Classes(QueryClassesRequest) returns (QueryClassesResponse) {
+    option (google.api.http).get = "/cosmos/nft/v1beta1/classes";
+  }
+}
+```
+
+### `QueryBalanceRequest`
+
+`QueryBalanceRequest` is the request type for the `Query/Balance` RPC method
+
+```go query.proto
+message QueryBalanceRequest {
+  string class_id = 1;
+  string owner    = 2;
+}
+```
+
+#### `QueryBalanceResponse`
+
+`QueryBalanceResponse` is the response type for the `Query/Balance` RPC method
+
+```go query.proto
+message QueryBalanceResponse {
+  uint64 amount = 1;
+}
+```
+
+### `QueryOwnerRequest`
+
+`QueryOwnerRequest` is the request type for the `Query/Owner` RPC method
+
+```go query.proto
+message QueryOwnerRequest {
+  string class_id = 1;
+  string id       = 2;
+}
+```
+
+#### `QueryOwnerResponse`
+
+`QueryOwnerResponse` is the response type for the `Query/Owner` RPC method
+
+```go query.proto
+message QueryOwnerResponse {
+  string owner = 1;
+}
+```
+
+### `QuerySupplyRequest`
+
+`QuerySupplyRequest` is the request type for the `Query/Supply` RPC method
+
+```go query.proto
+message QuerySupplyRequest {
+  string class_id = 1;
+}
+```
+
+#### `QuerySupplyResponse`
+
+`QuerySupplyResponse` is the response type for the `Query/Supply` RPC method
+
+```go query.proto
+message QuerySupplyResponse {
+  uint64 amount = 1;
+}
+```
+
+### `QueryNFTstRequest`
+
+`QueryNFTstRequest` is the request type for the `Query/NFTs` RPC method
+
+```go query.proto
+message QueryNFTsRequest {
+  string                                class_id   = 1;
+  string                                owner      = 2;
+  cosmos.base.query.v1beta1.PageRequest pagination = 3;
+}
+```
+
+#### `QueryNFTsResponse`
+
+`QueryNFTsResponse` is the response type for the `Query/NFTs` RPC methods
+
+```go query.proto
+message QueryNFTsResponse {
+  repeated cosmos.nft.v1beta1.NFT        nfts       = 1;
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+```
+
+### `QueryNFTRequest`
+
+`QueryNFTRequest` is the request type for the `Query/NFT` RPC method.
+
+```go query.proto
+message QueryNFTRequest {
+  string class_id = 1;
+  string id       = 2;
+}
+```
+
+#### `QueryNFTResponse`
+
+`QueryNFTResponse` is the response type for the `Query/NFT` RPC method.
+
+```go query.proto
+message QueryNFTResponse {
+  cosmos.nft.v1beta1.NFT nft = 1;
+}
+```
+
+### `QueryClassRequest`
+
+`QueryClassRequest` is the request type for the `Query/Class` RPC method.
+
+```go query.proto
+message QueryClassRequest {
+  string class_id = 1;
+}
+```
+
+#### `QueryClassResponse`
+
+`QueryClassResponse` is the response type for the `Query/Class` RPC method.
+
+```go query.proto
+message QueryClassResponse {
+  cosmos.nft.v1beta1.Class class = 1;
+}
+```
+
+### `QueryClassesRequest`
+
+`QueryClassesRequest` is the request type for the `Query/Classes` RPC method.
+
+```go query.proto
+message QueryClassesRequest {
+  // pagination defines an optional pagination for the request.
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+```
+
+#### `QueryClassesResponse`
+
+`QueryClassesResponse` is the response type for the `Query/Classes` RPC method.
+
+```go query.proto
+message QueryClassesResponse {
+  repeated cosmos.nft.v1beta1.Class      classes    = 1;
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+```
