@@ -18,8 +18,8 @@ const learnContent = [
         },
 
         {
-          href: "../../../../docs/learn/mars-hub/tokenomics/tokenomics-intro",
-          label: "Tokenomics",
+          href: "../../../../docs/learn/mars-hub/mars-token/mars-token-intro",
+          label: "Mars Token",
         },
       ],
     },

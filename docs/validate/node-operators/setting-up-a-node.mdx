@@ -20,34 +20,37 @@ A production-ready server typically requires:
 - **4 TB NVME SSD.** Hard drive I/O speed is crucial! Nodes that run on HDD or SATA SSD often find themselves missing blocks. Requirements on disk space depends on the chain and your pruning settings but generally at least 2 TB is recommended. 
 - **Linux operating system.**
 
-## [Compile the Mars App Daemon](../../develop/mars-cli/marsd)
+## Setting Up 
 
+Install Go 1.19+. On Ubuntu this can be done by:
 
-## Generate Operator Key
-
-Each node needs three private keys: `operator key`, `consensus key` and `node key`. Let's first generate the `operator key`.
-
-Run these commands to create a new private key named `demo-user`:
-
-```shell
-# to generate a new seed phrase
-marsd keys add demo-user --coin-type 118
-
-# to use an existing seed phrase
-marsd keys add demo-user --recover --coin-type 118
-
-mards keys show demo-user
+```bash
+wget -q -O - https://go.dev/dl/go1.19.5.linux-amd64.tar.gz | sudo tar xvzf - -C /usr/local
 ```
 
-`--coin-type` is a parameter used when generating private keys from seed phrases, as defined in [SLIP-0044](https://github.com/satoshilabs/slips/blob/master/slip-0044.md). Most Cosmos chains use `118`. For the sake of a better interchain UX, we recommend everyone use `118`.
+Configure relevant environment variables:
 
-<Admonition type="warning" title="WARNING">
-It is important that you keep the mnemonic phrase secure, as there is no way to recover it. 
-</Admonition>
+```bash
+cat <<EOT >> $HOME/.bashrc
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/.go
+export GOBIN=$GOPATH/bin
+export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
+EOT
+```
 
-## Initialise Mars Node
+## Compiling Mars App Daemon
 
-Running this command creates your consensus key, node key, as well as some config files for your node:
+Download Mars Hub daemon source code and compile. This will generate a marsd executable under your $GOBIN directory:
+
+```bash
+git clone https://github.com/mars-protocol/hub.git
+cd hub
+git checkout v1.0.0
+make install
+```
+
+Initialize your node. This will generate your validator signing key at ~/.mars/priv_validator_key.json; make sure to backup this file:
 
 ```bash
 marsd init yourmoniker --chain-id mars-1
@@ -55,8 +58,8 @@ marsd init yourmoniker --chain-id mars-1
 
 Replace `yourmoniker` with any string you'd like. This is a name to identify your server. For prospective validators, this is NOT your validator's moniker. It may be a good practice to not include any personally identifying info in this moniker for security reasons.
 
-<Admonition type="info" title="">
-For testnet, the chain-id is ares-1. 
+<Admonition type="info" title="Note">
+To set up a genesis transaction for your validator, visit [Becoming a Validator](../validators/becoming-a-validator#generate-operator-key). 
 </Admonition>
 
 This command will generate a .mars folder under your home directory:

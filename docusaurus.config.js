@@ -292,10 +292,10 @@ const config = {
           {
             title: 'Docs',
             items: [
-              {
-                label: 'Terms of Service',
-                to: '/docs/overview/legal/terms-of-service',
-              },
+              // {
+              //   label: 'Terms of Service',
+              //   to: '/docs/overview/legal/terms-of-service',
+              // },
               {
                 label: 'Privacy Policy',
                 to: '/docs/overview/legal/privacy-policy',

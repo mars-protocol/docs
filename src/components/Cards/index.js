@@ -26,8 +26,8 @@ const contentBoxProps = {
   marsHub: {
     title: 'Mars Hub'
   }, 
-  tokenomics: {
-    title: 'Tokenomics'
+  marsToken: {
+    title: 'Mars Token'
   }, 
   redBank: {
     title: 'Red Bank'
@@ -187,10 +187,10 @@ export default function Cards(props) {
         <ContentBox title={contentBoxProps.marsHub.title} />
       </div>
     );
-  } else if (props.title == 'Tokenomics') {
+  } else if (props.title == 'Mars Token') {
     return (
       <div>
-        <ContentBox title={contentBoxProps.tokenomics.title} />
+        <ContentBox title={contentBoxProps.marsToken.title} />
       </div>
     );
   } else if (props.title == 'Red Bank') {

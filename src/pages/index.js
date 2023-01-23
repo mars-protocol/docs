@@ -167,7 +167,7 @@ export default function Home() {
 
             <h2 className={styles.title}>Develop</h2>
             <p className={subheaderClasses}>
-            Expand your developer skills and explore the exciting realm of Mars Protocol's open-sourced code base.
+            Expand your developer skills and explore the exciting realm of Mars Protocol's code base with detailed explanations and tutorials.
             </p>
             <ContentBox title="Develop" />
           </div>

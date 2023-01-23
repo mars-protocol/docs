@@ -12,17 +12,20 @@ Overview of all Martian contracts.
 
 **Mars Hub**
 
-- [**Airdrop:**](./mars-hub/airdrop) Distributes the MARS token airdrop on Mars Hub.
+{/* - [**Airdrop:**](./mars-hub/airdrop) Distributes the MARS token airdrop on Mars Hub. */}
 - [**Delegator:**](./mars-hub/delegator) Bootstraps the security of Mars Hub blockchain.
 - [**Vesting:**](./mars-hub/vesting) Distributes the MARS token to Mars contributors.
 
-**Outposts** 
+**Red Bank** 
 
+Coming soon!
+{/* 
 - [**Address Provider:**](./outposts/address-provider) Holds addresses of the main contracts of the core protocol.
 - [**Incentives:**](./outposts/incentives) Manage MARS incentives for depositors.
 - [**Oracle:**](../../develop/contracts/outposts/oracle/oracle-intro) Provides prices in uusd for assets used in the protocol.
 - [**Red Bank:**](./outposts/red-bank)  Exposes all interactions that are done between the user and the money market. Holds all protocol liquidity.
-- [**Reward Collector:**](../../develop/contracts/outposts/rewards-collector/rewards-collector-intro) Receives protocol revenue; swaps various coins into MARS or other specified assets; forwards assets to Mars Hub via IBC to be distributed as staking rewards or be deposited into the safety fund. 
+- [**Reward Collector:**](../../develop/contracts/outposts/rewards-collector/rewards-collector-intro) Receives protocol revenue; swaps various coins into MARS or other specified assets; forwards assets to Mars Hub via IBC to be distributed as staking rewards or be deposited into the safety fund.  */}
+
 
 ## Contract Addresses
 
@@ -33,16 +36,8 @@ Overview of all Martian contracts.
 ```json
 {
     // mars hub
-    "airdrop": "...", 
     "delegator": "...", 
     "vesting": "...",
-    
-    // outpost
-    "addressProvider": "osmo1vc3u3fe9fseuk60ykzawthwn0p0vg350n5aeh3ypy3k8fldasjxq03xapu",
-    "incentives": "osmo1rkx9t4y72xxynl2dglnl3zrgpdynzjj2f0nyshckfu4u5s0zssjqcyduva",
-    "oracle": "osmo1zluryavg9l4jzu22d5kfc8cr0hgacahwfzsrtveh3v6lq0amyzaqcgn69j",
-    "redBank": "osmo18af4kd6pe34tnkm3vr7qlu872s0vpft83n69pvrtxy66e2cemnksxcdzxe",
-    "rewardsCollector": "osmo1fdxh4tsws9gamgacg7wk9nnu4z8sxdkmsjyg82pmhj62yln8zezs7spulv"
 }
 ```
 

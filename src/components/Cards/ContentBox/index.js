@@ -28,22 +28,22 @@ const boxProps = {
   learn: {
     marsHub: {
       title: "Mars Hub", 
-      description: "Deep dive into the Martian chain that administers activity on its Outposts.", 
+      description: "Deep dive into the Cosmos-SDK appchain that administers activity on Mars’ intergalactic outposts.", 
       image: HubUrl
     }, 
     redBank: {
       title: "Red Bank", 
-      description: "Enter the decentralized & fully automated, on-chain credit facility.", 
+      description: "Enter the decentralized & fully automated, on-chain credit facility that can be deployed throughout the Cosmos.", 
       image: Globe2Url
     }, 
     rover: {
       title: "Rover", 
-      description: "Ride the new primitive based on Mars' generalized leverage module called Rover.", 
+      description: "Abandon centralized exchanges and ride Mars’  new generalised credit primitive called Rover.", 
       image: Rover1Url
     }, 
     vaults: {
       title: "Vaults", 
-      description: "Learn essential insights on the container for assets implementing automated strategies.", 
+      description: "Learn how Mars implements automated strategies in a firewalled container.", 
       image: DiamondUrl
     }, 
     workstation: {
@@ -55,17 +55,17 @@ const boxProps = {
   govern: {
     martianCouncil: {
       title: "Martian Council", 
-      description: "Enter the doors of Mars' governing body, the Martian Council.", 
+      description: "Mars Protocol’s governing body.", 
       image: BalanceUrl
     },
     marsImprovementProposals: {
       title: "Mars Improvement Proposals", 
-      description: "The framework that empowers Council participants for on-chain governance proposals.", 
+      description: "The framework that empowers Council participants to submit and approve on-chain governance proposals.", 
       image: Rocket2Url
     }, 
     marsRiskFramework: {
       title: "Mars Risk Framework", 
-      description: "A framework to determine the risk parameters of protocols and assets for Mars.", 
+      description: "A framework for determining the risk parameters associated with assets and credit lines on Mars.", 
       image: ErrorUrl
     }, 
     onChainSubmission: {
@@ -77,22 +77,22 @@ const boxProps = {
   develop: {
     marsCLI: {
       title: "Mars CLI", 
-      description: "Interact with Mars' endpoints.", 
+      description: "Interact with Mars' function via the terminal.", 
       image: BuildingUrl
     }, 
     contracts: {
       title: "Contracts", 
-      description: "Overview of all Martian contracts.", 
+      description: "Overview of all Martian smart contracts.", 
       image: Globe1Url
     }, 
     modules: {
       title: "Modules", 
-      description: "Core and third-party modules that make up Mars Hub.", 
+      description: "Enter the realm of CosmosSDK, CosmWasm, and IBC modules.", 
       image: MarsUrl
     }, 
     backend: {
       title: "Backend", 
-      description: "Insights and detailed information on the red backend.", 
+      description: "Insights and details on the red backend", 
       image: SatelliteUrl
     }
   }, 
@@ -104,24 +104,24 @@ const boxProps = {
     }, 
     validators: {
       title: "Validators", 
-      description: "Learn how to become a Validator for Mars Hub.", 
+      description: "Spin up a Martian validator.", 
       image: PioneerUrl
     }, 
     relayers: {
       title: "IBC Relayers", 
-      description: "Getting started with IBC Relayers.", 
+      description: "Get started with IBC Relayers.", 
       image: SpaceshipUrl
     }
   }, 
   security: {
     audits: {
       title: "Audits", 
-      description: "Get the latest audits and reports on Mars Hub and Mars smart contracts.", 
+      description: "Review the audit reports on Mars Hub and outpost infrastructure.", 
       image: ErrorUrl
     },
     bugBountyProgram: {
       title: "Bug Bounty", 
-      description: "Join the taskforce and search for bugs through Mars' codebase.", 
+      description: "Join the Rug Defense Force and search for bugs in Mars' codebase.", 
       image: Mushroom1Url
     }
   }, 
@@ -133,56 +133,56 @@ const boxProps = {
     }, 
     termsOfService: {
       title: "Terms of Service", 
-      description: "Mars Protocol Terms of Service.", 
+      description: "Review the Terms of Service associated with Marsprotocol.io.", 
       image: BalanceUrl
     }, 
     privacyPolicy: {
       title: "Privacy Policy", 
-      description: "Information about Mars' privacy policy and how it is used on the Mars Web App",
+      description: "Review the Privacy Policy associated with Marsprotocol.io.",
       image: DiamondUrl
     }, 
     cookiePolicy: {
       title: "Cookie Policy", 
-      description: "Information about cookies and how they are used on the Mars Web App", 
+      description: "Review the Cookie Policy associated with Marsprotocol.io.", 
       image: MarsUrl
     }
   }, 
   marsHub: {
     marsHubArchitecture: {
       title: "Mars Hub Architecture", 
-      description: "Learn more about the hub/outpost topology that powers Mars Hub.", 
+      description: "Learn more about the hub-outpost topology that underpins  Mars Protocol.", 
       image: HubUrl
     }, 
     martianCouncil: {
       title: "Martian Council", 
-      description: "Enter the doors of Mars' governing body, the Martian Council.", 
+      description: "Enter the chamber of Mars Protocol's governing body, the Martian Council.", 
       image: BalanceUrl
     }, 
     safetyFund: {
       title: "Safety Fund", 
-      description: "Information about cookies and how they are used on the Mars Web App", 
+      description: "Learn how the Mars Safety Fund helps secure the protocol.", 
       image: ErrorUrl
     }, 
-    tokenomics: {
-      title: "Tokenomics", 
-      description: "Learn key insights about the fuel that powers the Red Bank and Rovers: MARS", 
+    marsToken: {
+      title: "Mars Token", 
+      description: "Learn more about the role of the MARS token in the Mars ecosystem.", 
       image: MarsUrl
     }
   }, 
-  tokenomics: {
+  marsToken: {
     marsTokenAndDistribution: {
-      title: "MARS Token & Distribution", 
-      description: "Learn about how MARS helps and coordinates incentives for the different stakeholders involved in the ecosystem.", 
+      title: "Distribution", 
+      description: "Learn how MARS accrues value and is distributed between its  critical stakeholders.", 
       image: MarsUrl
     }, 
     staking: {
       title: "Staking", 
-      description: "Discover how to stake MARS, secure the Mars Hub network, govern outpost, and earn protocol fees.", 
+      description: "Discover how to stake MARS, secure Mars Hub, govern outposts, and earn protocol fees.", 
       image: PioneerUrl
     }, 
     feesAndValueFlows: {
       title: "Fees & Value Flows", 
-      description: "Dive into the distribution of fees across in the Mars ecosystem", 
+      description: "Dive into the distribution of fees across the Mars Protocol.", 
       image: BuildingUrl
     }
   }, 
@@ -194,51 +194,56 @@ const boxProps = {
     }, 
     collateralisedBorrowing: {
       title: "Collateralised Borrowing", 
-      description: "Learn about borrowing assets listed on the Red Bank using original deposits as collateral.", 
+      description: "Learn how to borrow assets listed on the Red Bank using your deposits as collateral.", 
       image: Globe1Url
     }, 
     c2cLending: {
       title: "Contract-to-Contract Lending", 
-      description: "Dive into Mars' C2C loans which power Mars credit accounts and enable leveraged positions.", 
+      description: "Dive into the C2C loans that empower applications to utilise  Mars’ credit.", 
       image: Rover1Url
     }, 
     twoSlopeInterestRateModel: {
-      title: "Two Slope Interest Rate Model", 
-      description: "Learn about the Red Bank's two-slope interest rate model.", 
+      title: "Interest Rates", 
+      description: "Learn how the Red Bank's two-slope interest rate model works", 
       image: BuildingUrl
     }, 
     redBankLiquidations: {
       title: "Red Bank Liquidations", 
-      description: "Understand how liquidations are handled by the Red Bank.", 
+      description: "Understand how the Red Bank handles liquidations", 
       image: SpaceshipUrl
+    }, 
+    differencesFromTradFiCreditAgreements: {
+      title: "Differences from TradFi", 
+      description: "Understand how the Red Bank's functionality differs from traditional credit arrangements.", 
+      image: PioneerUrl
     }
   }, 
   rover: {
     roverArchitecture: {
       title: "Rover Architecture", 
-      description: "Discover the components that make up Mars' new primitive: Rovers.", 
+      description: "Discover the components that make up Mars' new primitive: Rover.", 
       image: Rover1Url
     }, 
     nftCreditAccounts: {
       title: "NFT Credit Accounts", 
-      description: "Learn about Mars' new credit accounts as NFTs.", 
+      description: "Learn about Mars' new NFT-based credit accounts.", 
       image: Rover2Url
     }, 
     trading: {
       title: "Trading", 
-      description: "Use Rover credit accounts to trade on outposts with levarage.", 
+      description: "Use Rover credit accounts to trade on outposts with leverage.", 
       image: PioneerUrl
     }, 
     roverLiquidations: {
       title: "Rover Liquidations", 
-      description: "Understand how liquidations are handled by Rover credit accounts.", 
+      description: "Explore how Rover credit accounts handle liquidations.", 
       image: SpaceshipUrl
     }
   }, 
   trading: {
     spot: {
       title: "Spot", 
-      description: "Simple (non-leveraged) trades within a credit account.", 
+      description: "Simple (non-leveraged) spot trades within a credit account.", 
       image: Rocket1Url
     }, 
     margin: {
@@ -260,14 +265,14 @@ const boxProps = {
     }, 
     vaultsLiquidations: {
       title: "Vaults Liquidations", 
-      description: "Understand how liquidations are handled by Mars vaults.", 
+      description: "Explore how Mars vaults handle liquidations.", 
       image: SpaceshipUrl
     }
   }, 
   workstation: {
     basics: {
       title: "Basics", 
-      description: "Everything about Cosmos wallets and connecting to the Mars web app.", 
+      description: "Explore Cosmos wallets and learn how to connect to the Mars web-app.", 
       image: AstronautUrl
     }, 
     airdrop: {
@@ -277,22 +282,22 @@ const boxProps = {
     }, 
     governance: {
       title: "Governance", 
-      description: "Participate in Mars' governing body, the Martian Council.", 
+      description: "Participate in Mars Protocol’s decision making and be  part of  the Martian Council.", 
       image: BalanceUrl
     }, 
     redBank: {
       title: "Red Bank", 
-      description: "Uncover the decentralized & fully automated, on-chain credit facility.", 
+      description: "Enter the decentralized & fully automated, on-chain credit facility that can be deployed throughout the Cosmos.", 
       image: Globe2Url
     }, 
     rover: {
       title: "Rover", 
-      description: "Uncover Mars' new primitive based on a generalized leverage module called Rover.", 
+      description: "Abandon centralized exchanges and ride Mars’ new generalised credit primitive called Rover.", 
       image: Rover1Url
     }, 
     vaults: {
       title: "Vaults", 
-      description: "Learn essential insights on the container for assets implementing automated strategies.", 
+      description: "Learn how Mars implements automated strategies in a firewalled container.", 
       image: DiamondUrl
     }
   }, 
@@ -304,7 +309,7 @@ const boxProps = {
     }, 
     fundingAWallet: {
       title: "Funding a Wallet", 
-      description: "Getting started with funding your new wallet.", 
+      description: "Get started by funding your new wallet.", 
       image: MarsUrl
     }, 
     connectingAWallet: {
@@ -343,29 +348,29 @@ const boxProps = {
     }, 
     voting: {
       title: "Voting", 
-      description: "Take part in the governance process of the Martian Council.", 
+      description: "Take part in the Martian Council’s governance process.", 
       image: PioneerUrl
     }, 
     submittingAProposal: {
       title: "Submitting a Proposal", 
-      description: "Learn how to submit on-chain proposals.", 
+      description: "Learn to submit on-chain governance proposals.", 
       image: BalanceUrl
     }
   }, 
   redBank2: {
     lending: {
       title: "Lending", 
-      description: "Learn how to submit on-chain proposals.", 
+      description: "Learn how to lend assets in the Red Bank. ", 
       image: MarsUrl
     }, 
     borrowing: {
       title: "Borrowing", 
-      description: "Learn how to submit on-chain proposals.", 
+      description: "Learn how to borrow assets from the Red Bank.", 
       image: PioneerUrl
     }, 
     managingPositions: {
       title: "Managing Positions", 
-      description: "Learn how to submit on-chain proposals.", 
+      description: "Learn how to modify and maintain your Red Bank assets.", 
       image: BalanceUrl
     }
   }, 
@@ -377,19 +382,19 @@ const boxProps = {
     }, 
     managingCreditAccounts: {
       title: "Managing Credit Accounts", 
-      description: "Discover how to manage your credit accounts such as repaying loans, switching between credit accounts, and more.", 
+      description: "Discover how to repay loans, switch between credit accounts and more.", 
       image: Rover2Url
     }, 
     trading: {
       title: "Trading", 
-      description: "Use Rover credit accounts to trade on outposts with levarage.", 
+      description: "Use Rover credit accounts to trade on outposts with leverage.", 
       image: PioneerUrl
     }
   }, 
   trading2: {
     spot: {
       title: "Spot", 
-      description: "Simple (non-leveraged) trades within a credit account.", 
+      description: "Simple (non-leveraged) spot trades within a credit account.", 
       image: Rocket1Url
     }, 
     margin: {
@@ -411,41 +416,41 @@ const boxProps = {
   marsCLI: {
     publicEndpoints: {
       title: "Public Endpoints", 
-      description: "Connect to Mars' public endpoints.", 
+      description: "Utilise Mars Protocol’s' public endpoints.", 
       image: SatelliteUrl
     }, 
     marsd: {
       title: "Marsd", 
-      description: "A command-line interface tool for interacting with nodes on Mars Hub.", 
+      description: "A command-line interface tool for interacting with Mars Hub.", 
       image: Globe1Url
     }, 
     generatingSigningAndBroadcastingTransactions: {
-      title: "Generating Transactions", 
-      description: "Learn how to generate, broadcast, and sign transactions using the Mars CLI.", 
+      title: "Transact", 
+      description: "Learn how to Transact using the Mars CLI.", 
       image: PioneerUrl
     }
   }, 
   contracts: {
     marsHub2: {
       title: "Mars Hub", 
-      description: "Deep dive into the Martian chain that administers activity on its Outposts.", 
+      description: "Deep dive into the Cosmos-SDK based appchain that underpins activity on Mars Protocol.", 
       image: HubUrl
     }, 
     outposts: {
-      title: "Outposts", 
-      description: "Enter the decentralized & fully automated, on-chain credit facility.", 
+      title: "Red Bank", 
+      description: "Learn more about the bundle of smart contracts that comprise an outpost.", 
       image: Globe2Url
     }
   }, 
   marsHub2: {
     airdrop: {
       title: "airdrop", 
-      description: "Distributes the MARS token airdrop on Mars Hub.", 
+      description: "Distributes the MARS token airdrop to holders of Mars Protocol on Terra.", 
       image: SpaceshipUrl
     }, 
     delegator: {
       title: "delegator", 
-      description: "Bootstraps the security of the Mars Hub blockchain.", 
+      description: "Distributes the MARS token airdrop to holders of Mars Protocol on Terra.", 
       image: PioneerUrl
     }, 
     vesting: {
@@ -535,12 +540,12 @@ const boxProps = {
   customModules: {
     gov: {
       title: "gov", 
-      description: "A wrapper module around the vanilla governance module that comes within the Cosmos SDK", 
+      description: "A wrapper module around the vanilla governance module within the Cosmos SDK.", 
       image: BalanceUrl
     }, 
     incentives: {
       title: "incentives", 
-      description: "Facilitates the incentivisation of staking on Mars Hub.", 
+      description: "Facilitates staking rewards on Mars Hub.", 
       image: MarsUrl
     }, 
     safety: {
@@ -677,7 +682,7 @@ const boxProps = {
     },
     settingUpCosmovisor: {
       title: "Setting Up Cosmovisor", 
-      description: "Set up Cosmovisor to monitor incoming chain upgrade proposals.", 
+      description: "Set up Cosmovisor to monitor incoming chain upgrade proposals. ", 
       image: Globe1Url
     }
   }, 
@@ -689,7 +694,7 @@ const boxProps = {
     }, 
     managingYourValidator: {
       title: "Managing your Validator", 
-      description: "Learn how to manage your your valadator.", 
+      description: "Learn how to manage your validator.", 
       image: BalanceUrl
     }, 
     sentryNodeArchitecture: {
@@ -711,7 +716,7 @@ const boxProps = {
   keyManagement: {
     basics: {
       title: "Basics", 
-      description: "Create, import, export and delete keys using the CLI keyring.", 
+      description: "Create, import, export and delete keys using the CLI.", 
       image: AstronautUrl
     }, 
     settingUpKeyring: {
@@ -743,7 +748,7 @@ const boxProps = {
     }, 
     relayersGuide: {
       title: "Relayers Guide", 
-      description: "Activacte inter-stellar communication between the Cosmos.", 
+      description: "Activacte interstellar communication between the Cosmos.", 
       image: PioneerUrl
     }
   }, 
@@ -1028,11 +1033,11 @@ export default function ContentBox(props) {
           />
         </a>
 
-        <a className={styles.links} href="../../../docs/learn/mars-hub/tokenomics/tokenomics-intro">
+        <a className={styles.links} href="../../../docs/learn/mars-hub/mars-token/mars-token-intro">
           <Box 
-            title={boxProps.marsHub.tokenomics.title}
-            description={boxProps.marsHub.tokenomics.description}
-            image={boxProps.marsHub.tokenomics.image}
+            title={boxProps.marsHub.marsToken.title}
+            description={boxProps.marsHub.marsToken.description}
+            image={boxProps.marsHub.marsToken.image}
           />
         </a>
 
@@ -1040,31 +1045,31 @@ export default function ContentBox(props) {
     );
   }
 
-  else if (props.title == 'Tokenomics') {
+  else if (props.title == 'Mars Token') {
     return (
       <div className="grid md:grid-cols-2 gap-3">
 
-        <a className={styles.links} href="../../../learn/mars-hub/tokenomics/mars-token-and-distribution">
+        <a className={styles.links} href="../../../learn/mars-hub/mars-token/mars-token-and-distribution">
           <Box 
-            title={boxProps.tokenomics.marsTokenAndDistribution.title}
-            description={boxProps.tokenomics.marsTokenAndDistribution.description}
-            image={boxProps.tokenomics.marsTokenAndDistribution.image}
+            title={boxProps.marsToken.marsTokenAndDistribution.title}
+            description={boxProps.marsToken.marsTokenAndDistribution.description}
+            image={boxProps.marsToken.marsTokenAndDistribution.image}
           />
         </a>
 
-        <a className={styles.links} href="../../../learn/mars-hub/tokenomics/staking">
+        <a className={styles.links} href="../../../learn/mars-hub/mars-token/staking">
           <Box 
-            title={boxProps.tokenomics.staking.title}
-            description={boxProps.tokenomics.staking.description}
-            image={boxProps.tokenomics.staking.image}
+            title={boxProps.marsToken.staking.title}
+            description={boxProps.marsToken.staking.description}
+            image={boxProps.marsToken.staking.image}
           />
         </a>
 
-        <a className={styles.links} href="../../../learn/mars-hub/tokenomics/fees-and-value-flows">
+        <a className={styles.links} href="../../../learn/mars-hub/mars-token/fees-and-value-flows">
           <Box 
-            title={boxProps.tokenomics.feesAndValueFlows.title}
-            description={boxProps.tokenomics.feesAndValueFlows.description}
-            image={boxProps.tokenomics.feesAndValueFlows.image}
+            title={boxProps.marsToken.feesAndValueFlows.title}
+            description={boxProps.marsToken.feesAndValueFlows.description}
+            image={boxProps.marsToken.feesAndValueFlows.image}
           />
         </a>
 
@@ -1113,6 +1118,14 @@ export default function ContentBox(props) {
             title={boxProps.redBank.redBankLiquidations.title}
             description={boxProps.redBank.redBankLiquidations.description}
             image={boxProps.redBank.redBankLiquidations.image}
+          />
+        </a>
+
+        <a className={styles.links} href="../../../docs/learn/red-bank/differences-from-tradfi-credit-agreements">
+          <Box 
+            title={boxProps.redBank.differencesFromTradFiCreditAgreements.title}
+            description={boxProps.redBank.differencesFromTradFiCreditAgreements.description}
+            image={boxProps.redBank.differencesFromTradFiCreditAgreements.image}
           />
         </a>
 
@@ -1540,13 +1553,13 @@ export default function ContentBox(props) {
     return (
       <div className="grid md:grid-cols-2 gap-3">
 
-        <a className={styles.links} href="../../../develop/contracts/mars-hub/airdrop">
+        {/* <a className={styles.links} href="../../../develop/contracts/mars-hub/airdrop">
           <Box 
             title={boxProps.marsHub2.airdrop.title}
             description={boxProps.marsHub2.airdrop.description}
             image={boxProps.marsHub2.airdrop.image}
           />
-        </a>
+        </a> */}
 
         <a className={styles.links} href="../../../develop/contracts/mars-hub/delegator">
           <Box 

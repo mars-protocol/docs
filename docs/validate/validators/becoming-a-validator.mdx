@@ -2,6 +2,8 @@
 sidebar_position: 2
 ---
 
+import Admonition from '@theme/Admonition'
+
 # Becoming a Validator
 
 ## Links
@@ -16,6 +18,60 @@ A production-ready server typically requires:
 - **64 GB RAM.** Cosmos apps typically use less than 32 GB under normal conditions, but during events such as chain upgrades, up to 64 GB is usually needed.
 - **4 TB NVME SSD.** Hard drive I/O speed is crucial! Nodes that run on HDD or SATA SSD often find themselves missing blocks. Requirements on disk space depends on the chain and your pruning settings but generally at least 2 TB is recommended. 
 - **Linux operating system.**
+
+## [Spin up a Node](../node-operators/setting-up-a-node)
+
+## Generate Operator Key
+
+Each node needs three private keys: `operator key`, `consensus key` and `node key`. Let's first generate the `operator key`.
+
+Run these commands to create a new private key named `demo-user`:
+
+```bash
+# to generate a new seed phrase
+marsd keys add demo-user --coin-type 118
+
+# to use an existing seed phrase
+marsd keys add demo-user --recover --coin-type 118
+
+mards keys show demo-user
+```
+
+`--coin-type` is a parameter used when generating private keys from seed phrases, as defined in [SLIP-0044](https://github.com/satoshilabs/slips/blob/master/slip-0044.md). Most Cosmos chains use `118`. For the sake of a better interchain UX, we recommend everyone use `118`.
+
+<Admonition type="info" title="WARNING">
+It is important that you keep the mnemonic phrase secure, as there is no way to recover it. 
+</Admonition>
+
+Create your validator operator key:
+
+```bash
+marsd keys add validator
+```
+
+Add your operator key to the genesis state:
+
+```bash
+marsd genesis add-account validator 1000000umars
+```
+
+Note that the chain id is mars-1 and set the self-bond amount to 1000000umars:
+
+```bash
+marsd genesis gentx validator 1000000umars \
+  --pubkey "$(marsd tendermint show-validator)" \
+  --chain-id mars-1 \
+  --commission-rate "..." \
+  --commission-max-rate "..." \
+  --commission-max-change-rate "..." \
+  --moniker "..." \
+  --identity "..." \
+  --details "..." \
+  --website "..." \
+  --security-contact "..."
+```
+
+The gentx can be found in `~/.mars/config/gentx/gentx-<hash>.json`. Add the file to this repository under the `mars-1/gentxs` folder by making a PR.
 
 ## Register your Node as a Validator
 

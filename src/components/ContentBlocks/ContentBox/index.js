@@ -28,25 +28,25 @@ const boxProps = {
   learn: {
     marsHub: {
       title: "Mars Hub", 
-      description: "Deep dive into the Martian chain that administers activity on its Outposts.", 
+      description: "Deep dive into the Cosmos-SDK appchain that administers activity on Mars’ intergalactic outposts.", 
       image: HubUrl, 
       list: "Mars Hub"
     }, 
     redBank: {
       title: "Red Bank", 
-      description: "Enter the decentralized & fully automated, on-chain credit facility.", 
+      description: "Enter the decentralized & fully automated, on-chain credit facility that can be deployed throughout the Cosmos.", 
       image: Globe2Url, 
       list: "Red Bank"
     }, 
     rover: {
       title: "Rover", 
-      description: "Ride the new primitive based on Mars's generalized leverage module called Rover.", 
+      description: "Abandon centralized exchanges and ride Mars’  new generalised credit primitive called Rover.", 
       image: Rover1Url, 
       list: "Rover"
     }, 
     vaults: {
       title: "Vaults", 
-      description: "Learn essential insights on the container for assets implementing automated strategies.", 
+      description: "Learn how Mars implements automated strategies in a firewalled container.", 
       image: DiamondUrl, 
       list: "Vaults"
     }, 
@@ -60,19 +60,19 @@ const boxProps = {
   govern: {
     martianCouncil: {
       title: "Martian Council", 
-      description: "Enter the doors of Mars' governing body, the Martian Council.", 
+      description: "Mars Protocol’s governing body.", 
       image: BalanceUrl, 
       list: "Martian Council"
     },
     marsImprovementProposals: {
       title: "Mars Improvement Proposals", 
-      description: "The framework that empowers Council participants for on-chain governance proposals.", 
+      description: "The blueprint that empowers Council participants to submit and approve on-chain governance proposals", 
       image: Rocket2Url, 
       list: "Mars Improvement Proposals"
     }, 
     marsRiskFramework: {
       title: "Mars Risk Framework", 
-      description: "A framework to determine the risk parameters of protocols and assets for Mars.", 
+      description: "A framework for determining the risk parameters associated with assets and credit lines on Mars.", 
       image: ErrorUrl, 
       list: "Mars Risk Framework"
     }
@@ -80,25 +80,25 @@ const boxProps = {
   develop: {
     marsCLI: {
       title: "Mars CLI", 
-      description: "Interact with Mars'endpoints.", 
+      description: "Interact with Mars' function via the terminal.", 
       image: BuildingUrl, 
       list: "Mars CLI"
     }, 
     contracts: {
       title: "Contracts", 
-      description: "Overview of all Martian contracts.", 
+      description: "Overview of all Martian smart contracts.", 
       image: Globe1Url, 
       list: "Contracts"
     }, 
     modules: {
       title: "Modules", 
-      description: "Core and third-party modules that make up Mars Hub.", 
+      description: "Enter the realm of CosmosSDK, CosmWasm, and IBC modules.", 
       image: MarsUrl, 
       list: "Modules"
     }, 
     backend: {
       title: "Backend", 
-      description: "Insights and detailed information on the red backend.", 
+      description: "Insights and details on the red backend.", 
       image: SatelliteUrl, 
       list: "Backend"
     }
@@ -112,13 +112,13 @@ const boxProps = {
     }, 
     validators: {
       title: "Validators", 
-      description: "Learn how to become a Validator for Mars Hub.", 
+      description: "Spin up a Martian validator.", 
       image: PioneerUrl,
       list:"Validators"
     }, 
     relayers: {
       title: "IBC Relayers", 
-      description: "Getting started with IBC Relayers.", 
+      description: "Get started with IBC Relayers.", 
       image: SpaceshipUrl,
       list:"IBC Relayers"
     }
