@@ -6,7 +6,7 @@
 
 .docsWrapper {
   display: flex;
-  overflow: hidden;
+  overflow: clip;
 }
 
 .banner {
@@ -16,7 +16,6 @@
   background-position: center;
   display: contain;
   position: absolute;
-  overflow: auto;
   width: 100%;
   height: 342px;
   left: 0px;
@@ -35,3 +34,4 @@
 /* .sub {
   opacity: 1;
 } */
+
