@@ -6,11 +6,11 @@ sidebar_position: 1
 
 The Mars Hub is based on [Tendermint](https://github.com/tendermint/tendermint/tree/master/docs/introduction), which relies on a set of validators that are responsible for committing new blocks in the blockchain. These validators participate in the consensus protocol by broadcasting votes that contain cryptographic signatures signed by each validator's private key.
 
-Validator candidates can bond their own MARS and have MARS ["delegated"](https://hub.cosmos.network/main/delegators/delegator-guide-cli.html), or staked, to them by token holders. The Mars Hub has 100 validators, but over time the number of validators can increase. The validators are determined by the total number of MARS tokens delegated to them — the top 100 validator candidates with the most voting power are the current Mars validators.
+Validator candidates can bond their own MARS and have MARS ["delegated"](https://hub.cosmos.network/main/delegators/delegator-guide-cli.html), or staked, to them by token holders. The active validator set is determined by which validators have the most bonded and/or delegated $MARS, with greater bonded and/or delegated $MARS amounts held by a validator increasing the likelihood that the validator will be included in the active set. The Mars Hub initially allows up to 50 validators to be in the active validating set at any given time, but over time the number of validators can increase if so approved by the Martian Counsel. 
 
 Validators and their delegators earn MARS as block provisions and tokens as transaction fees through execution of the Tendermint consensus protocol. Note that validators can set a commission percentage on the fees their delegators receive as additional incentive. You can find an overview of all current validators and their voting power on Mintscan.
 
-If validators double sign, are offline for an [extended period](https://hub.cosmos.network/main/validators/validator-faq.html#what-are-the-slashing-conditions), their staked ATOM (including ATOM of users that delegated to them) can be slashed. The penalty depends on the severity of the violation.
+If validators double-sign, are offline for an [extended period](https://hub.cosmos.network/main/validators/validator-faq.html#what-are-the-slashing-conditions), their staked ATOM (including ATOM of users that delegated to them) can be slashed. The penalty depends on the severity of the violation.
 
 ## Hardware
 

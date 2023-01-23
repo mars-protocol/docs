@@ -8,9 +8,10 @@ import CollateralisedBorrowing2Url from '@site/static/img/learn/red-bank/collate
 
 # Collateralised Borrowing
 
-Users who deposit assets into smart contract liquidity pools may borrow other assets listed on the Red Bank using their original deposits as collateral, also known as non-custodial, over-collateralised borrowing.
 
-Lending thus serves two purposes: generating yield and, if the user chooses, acting as collateral to borrow against. The interest rates paid by borrowers and received by lenders are determined algorithmically, taking into account supply and demand via a utilisation rate target.
+The core feature of each Red Bank is the facilitation of peer-to-peer 'overcollateralized' token borrowing/lending among users on the relevant Outpost. 
+
+ In this type of lending/borrowing, depositors may also borrow other tokens from the other depositors (through the Red Bank), but the value of the borrowers' own Red Bank token deposits must sufficiently exceed the value of the tokens they are borrowing. Each borrower's collateral within the Red Bank becomes subject to incentivized [liquidation](./red-bank-liquidations) if the applicable loan-to-value (LTV) ratio falls below governance-determined safety levels.
 
 The first Red Bank outpost is expected to launch on Osmosis with borrowing and lending support for ATOM, OSMO and axlUSDC (Axelar USDC).
 

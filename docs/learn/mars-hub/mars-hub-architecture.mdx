@@ -7,9 +7,9 @@ import MarsHubArchitectureUrl from '@site/static/img/learn/mars-hub/mars-hub-arc
 
 # Mars Hub Architecture
 
-A new Cosmos-SDK Layer 1 (L1) appchain, dubbed Mars Hub, will coordinate and govern smart contract code deployments across numerous blockchains. As its name implies, Mars Hub will be the central or organising “hub” in a “hub and spoke” design. Other L1 chains that Mars Hub interacts with operate as “spokes.” Each spoke will be home to an Outpost consisting of the Red Bank and Rover credit account contracts. 
+Mars Hub is a new Cosmos-SDK Layer 1 (L1) appchain. Mars Hub coordinates and governs Mars Protocol smart contract code deployments (Outposts) across numerous blockchains. As its name implies, Mars Hub will be the central or organising “hub” in a “hub and spoke” design. Other L1 chains that Mars Hub interacts with operate as “spokes.” Each spoke will be home to an Outpost consisting of the Red Bank and Credit Manager/Rover credit account contracts. 
 
-All governance decisions impacting Mars outposts and Mars Hub itself will be made by governance – specifically, MARS token holders who have staked tokens on Mars Hub.
+On Mars Hub, $MARS holders stake, vote and delegate their $MARS in the Martian Council and use $MARS to securely build and validate the Mars blockchain. The Mars Hub also receives fees from Outposts, and distributes fees to the Martian Council as a reward for its validation, staking and governance work. 
 
 This unique architecture enables:
 
@@ -26,13 +26,13 @@ Appchains using the Cosmos SDK are constructed by aggregating the configurable a
 
 - `Customgov`: A wrapper module around the [vanilla governance module](https://docs.cosmos.network/main/modules/gov/) that comes as standard within the Cosmos SDK. This wrapper inherits most of the standard governance module but implements alternative vote tallying logic. That is, tokens locked in a vesting contract contribute towards that token-holders’ voting power. This module has been built to account for the builders’ token allocation and to facilitate their participation in governance.
 - `Incentives`: A module that facilitates the incentivisation of staking on Mars Hub. Incentivisation is defined via linear unlocking schedules. Tokens associated with a schedule are sourced from the community pool and therefore incentives can only be launched after a successful governance action. It should be noted that a schedule can consist of multiple tokens, not only MARS.
-- `Safetyfund`: A module tasked solely with receiving a fraction of an outpost’s revenues denominated in stablecoins. See the section “Safety Fund”, below, for a breakdown in the use of the outpost’s revenue. Spending the funds in the safetyfund can only be done so via a successful governance proposal.
+- `Safetyfund`: A module tasked solely with receiving a fraction of an Outpost’s revenues denominated in stablecoins. See the section “Safety Fund”, below, for a breakdown in the use of the Outpost’s revenue. Spending the funds in the safetyfund can only be done so via a successful governance proposal.
 
 ## Running Smart Contracts on Mars Hub
 
 Built on Cosmos SDK, v0.45, Mars Hub is expected to launch with support for CosmWasm smart contracts written in Rust. The smart contract virtual machine (VM) is implemented as a portable module that can be plugged into any blockchain built using the Cosmos SDK. This will allow Mars Hub to facilitate the MARS token claim procedure and token vesting schedule for its builders. CW3 multisig contracts and relevant frontend webapps, including Apollo Safe’s multisig frontend, are also expected to be deployed onto Mars Hub.
 
-Mars Hub’s design features a permissioned version of the WASM module, where deployment and migration of smart contracts require approval by the Martian Council.
+Mars Hub’s design features a governance-permissioned version of the WASM module, where deployment and migration of smart contracts require approval by the Martian Council.
 
 ## Validators
 

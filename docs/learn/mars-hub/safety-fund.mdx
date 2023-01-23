@@ -4,13 +4,16 @@ sidebar_position: 3
 
 # Safety Fund
 
-Shortfall events happen whenever the value of a borrower’s debt exceeds the value of the borrower’s collateral. This deficit is distinct from an illiquidity event, where utilisation rates are at 100% and lenders are temporarily unable to withdraw their deposits. In the latter case, the protocol is illiquid but solvent, whereas in a shortfall event the protocol is actually insolvent.
+Red Bank users face two primary risks: 
 
-Shortfall events can be caused by various risks such as smart contract exploits, untimely liquidations, and/or oracle attacks. To be clear, they should not happen under normal conditions and can be mitigated by proper risk management. However, if a shortfall event does occur, Mars includes a backstop intended to limit losses. This backstop mechanism differs from the backstops in Mars v1.
+1. Risks of Shortfall Events. Shortfall events happen whenever the value of the tokens borrowed from the  Red Bank by a borrower (the borrower's 'debt')  exceeds the value of the tokens supplied by the borrower to the Red Bank (the borrower’s 'collateral'). This means that it can never reasonably be expected that the Red Bank will receive the full amount of the borrowed tokens (or other tokens of equivalent value) back from the borrower and that the Red Bank is, in effect, insolvent. 
+2. Risks of Illiquidity Events. In an illiquidity event,  Red Bank utilisation rates (token 'borrowings') are at 100% and lenders are temporarily unable to withdraw the tokens they had deposited in to the Red Bank. In this case, the Red Bank is solvent (i.e., retains sufficient collateral to ultimately incentivize all borrowed tokens to be repaid), but repayment of borrowed tokens is occurring more slowly than preferred by the token lenders (who wish to withdraw their tokens immediately). 
 
-Specifically, Mars v1 relied upon a pool of reserved aUST (the “Safety Fund”) as a first-resort source of recovery for shortfall events and staked Mars (the “Safety Module”) as a last-resort source of recovery, with up to 30% of any staked position being locked and sold in case of a shortfall event.
+Illiquidity events can be dealt with by waiting for changed market conditions or through Martian Council governance parameter changes (eg, increasing interest rates on token borrowings and thus incentivizing speedier repayment of token loans into the Red Bank). 
 
-Mars v2 will feature a Safety Fund, but will not launch with a Safety Module as the staking model on Mars v2 is significantly more complicated and provides chain security. The Safety Fund will continuously receive a share of protocol fees (10% of total) from launch. Fees will be converted to axlUSDC and reserved in the Safety Fund pool. Governance could vote to compensate users affected by a shortfall via this fund. Governance could also modify the portion of fees allocated to the Safety Fund.
+Shortfall events, on the other hand, are more serious. Shortfall events can be caused by various risks such as smart contract exploits, untimely liquidations, and/or oracle attacks. To be clear, they should not happen under normal conditions and can be mitigated by proper risk management. However, if a shortfall event does occur, the Safety Fund has been created to provide the Martian Council with a tool to potentially mitigate the ensuing losses to Red Bank depositors. 
+
+The Safety Fund will continuously receive a share of protocol fees (10% of total) from launch. Fees will be converted to axlUSDC and reserved in the Safety Fund pool. The Martian Council could vote to compensate users affected by a shortfall event via this fund. The Martian Council could also modify the portion of fees allocated to the Safety Fund to grow the Safety Fund more quickly or more slowly.
 
 Ultimately, however, compensation cannot be guaranteed and is subject to the discretion of Mars governance. Based on the relevant incentives, though, Mars governance is expected to treat the Safety Fund as a coverage source of first resort.
 
@@ -22,3 +25,5 @@ To learn about submitting a Safety Fund proposal, check out:
 
 - Docs: [safety](../../develop/modules/custom-modules/safety)
 - Video walkthrough: https://www.youtube.com/watch?v=2UjSXEcbyuY
+
+***NOTE:** Mars v2 differs from Mars v1 in handling shortfall events. Mars v1 had both a Safety Fund (like Mars v2) and a Safety Module (unlike Mars v2). The Safety Module in Mars v1 consisted of $MARS held in the Martian Council governance contract, with up to 30% of such staked $MARS being subject to being auctioned to provide additional liquidity in the event that the Safety Fund was inadequate to cover a Red Bank insolvency. This $MARS slashing/sale mechanism is not included in Mars v2 because the staking model on Mars v2 is significantly more complicated and not only governs the Red Bank (as in Mars v1) but also provides security to the Mars Hub appchain, meaning that any use of staked $MARS to cover Red Bank illiquidity could jeopardize the security of Mars Hub. 
