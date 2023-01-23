@@ -61,12 +61,17 @@ const boxProps = {
     marsImprovementProposals: {
       title: "Mars Improvement Proposals", 
       description: "The framework that empowers Council participants for on-chain governance proposals.", 
-      image: BalanceUrl
+      image: Rocket2Url
     }, 
     marsRiskFramework: {
       title: "Mars Risk Framework", 
       description: "A framework to determine the risk parameters of protocols and assets for Mars.", 
       image: ErrorUrl
+    }, 
+    onChainSubmission: {
+      title: "On-chain Submission", 
+      description: "Submit a proposal on-chain and take it to a vote.", 
+      image: Rocket1Url
     }
   }, 
   develop: {
@@ -838,6 +843,14 @@ export default function ContentBox(props) {
             title={boxProps.govern.marsRiskFramework.title}
             description={boxProps.govern.marsRiskFramework.description}
             image={boxProps.govern.marsRiskFramework.image}
+          />
+        </a>
+
+        <a className={styles.links} href="../../../docs/govern/on-chain-submission">
+          <Box 
+            title={boxProps.govern.onChainSubmission.title}
+            description={boxProps.govern.onChainSubmission.description}
+            image={boxProps.govern.onChainSubmission.image}
           />
         </a>
 

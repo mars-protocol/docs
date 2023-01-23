@@ -1,0 +1,94 @@
+---
+sidebar_position: 5
+---
+
+# On-Chain Submission
+
+Using [`marsd`](../develop/mars-cli/marsd)  in the CLI.
+
+### Base Level Proposal
+
+```bash
+marsd tx gov submit-proposal 
+--title="Test Proposal" 
+--description="Insert Description" 
+--type="Text" 
+--from [account] 
+--chain-id [chain-id] 
+--deposit "10000umars"
+```
+
+All above flags are mandatory for all proposals.
+
+### Param Change Proposal
+
+```bash
+marsd tx gov submit-proposal param-change <path/to/proposal.json> --from=<account>
+```
+
+where `proposal.json` contains: 
+
+```json 
+{
+  "title": "Staking Param Change",
+  "description": "Update max validators",
+  "changes": [
+    {
+      "subspace": "staking",
+      "key": "MaxValidators",
+      "value": 105
+    }
+  ],
+  "deposit": "1000stake"
+}
+```
+
+### Create Incentives Schedule
+
+```bash
+marsd tx gov submit-proposal create-incentives-schedule [start-time] [end-time] [amount] 
+--title [text] 
+--description [text] 
+--deposit [amount]
+```
+
+where `[start-time] [end-time] [amount]` are formatted as: 
+
+```json
+"start_time": "2022-12-20T15:10:00.000000Z",
+"end_time": "2022-12-20T15:30:00.000000Z",
+"amount":
+    {
+    "denom": "umars",
+    "amount": "1000000000000"
+    }
+```
+
+### Wasm Binary Proposal 
+
+```bash
+marsd tx gov submit-proposal wasm-store [wasm file] 
+--title="Test" 
+--description="Description"  
+--run-as [address]
+```
+
+where `[wasm file]` is your wasm binary proposal.
+
+### Community Pool Spend Proposal
+
+```bash
+marsd tx gov submit-proposal community-pool-spend <path/to/proposal.json> --from=<key_or_address>
+```
+
+where `proposal.json` contains: 
+
+```json
+{
+  "title": "Community Pool Spend",
+  "description": "Pay me some Atoms!",
+  "recipient": "mars1s5afhd6gxevu37mkqcvvsj8qeylhn0rz46zdlq",
+  "amount": "1000stake",
+  "deposit": "1000stake"
+}
+```

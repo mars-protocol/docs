@@ -139,6 +139,28 @@ const learnContent = [
       ],
     },
 
+    {
+      title: "On-chain Submission",
+      description: "Submit a proposal on-chain and take it to a vote.",
+      listItems: [
+        {
+          href: "../../../../docs/govern/on-chain-submission#base-level-proposal",
+          label: "Base Level Proposal",
+        },
+
+        {
+          href: "../../../../docs/govern/on-chain-submission#param-change-proposal",
+          label: "Param Change Proposal",
+        },
+
+        {
+          href: "../../../../docs/govern/on-chain-submission#wasm-binary-proposal",
+          label: "Wasm Binary Proposal",
+        },
+
+      ],
+    },
+
   ];
   
   const developContent = [
@@ -276,7 +298,7 @@ export default function ContentBox(props) {
         <div className="flex flex-wrap justify-center gap-4 mb-20">
           {learnContent.map((entry) => (
             <Card key={entry.title}>
-              <a className={styles.links} href="../../../../docs/learn/overview">
+              {/* <a className={styles.links} href="../../../../docs/learn/overview"> */}
                 <div className={styles.box}>
                   {/* <img src={entry.image} height={76} width={76} className="opacity-50 self-start mt-4" /> */}
                   <div className={styles.titleBanner}>
@@ -297,7 +319,7 @@ export default function ContentBox(props) {
                     </ul>
                   </div>
                 </div>
-              </a>
+              {/* </a> */}
             </Card>
           ))}
         </div>
@@ -307,7 +329,7 @@ export default function ContentBox(props) {
         <div className="flex flex-wrap justify-center gap-4 mb-20">
           {governContent.map((entry) => (
             <Card key={entry.title}>
-              <a className={styles.links} href="../../../../docs/govern/overview">
+              {/* <a className={styles.links} href="../../../../docs/govern/overview"> */}
                 <div className={styles.box}>
                   {/* <img src={entry.image} height={76} width={76} className="opacity-50 self-start mt-4" /> */}
                   <div className={styles.titleBanner}>
@@ -328,7 +350,7 @@ export default function ContentBox(props) {
                     </ul>
                   </div>
                 </div>
-              </a>
+              {/* </a> */}
             </Card>
           ))}
         </div>
@@ -338,7 +360,7 @@ export default function ContentBox(props) {
         <div className="flex flex-wrap justify-center gap-4 mb-20">
           {developContent.map((entry) => (
             <Card key={entry.title}>
-              <a className={styles.links} href="../../../../docs/develop/overview">
+              {/* <a className={styles.links} href="../../../../docs/develop/overview"> */}
                 <div className={styles.box}>
                   {/* <img src={entry.image} height={76} width={76} className="opacity-50 self-start mt-4" /> */}
                   <div className={styles.titleBanner}>
@@ -359,7 +381,7 @@ export default function ContentBox(props) {
                     </ul>
                   </div>
                 </div>
-              </a>
+              {/* </a> */}
             </Card>
           ))}
         </div>
@@ -369,7 +391,7 @@ export default function ContentBox(props) {
         <div className="flex flex-wrap justify-center gap-4 mb-20">
           {validateContent.map((entry) => (
             <Card key={entry.title}>
-              <a className={styles.links} href="../../../../docs/validate/overview">
+              {/* <a className={styles.links} href="../../../../docs/validate/overview"> */}
                 <div className={styles.box}>
                   {/* <img src={entry.image} height={76} width={76} className="opacity-50 self-start mt-4" /> */}
                   <div className={styles.titleBanner}>
@@ -390,7 +412,7 @@ export default function ContentBox(props) {
                     </ul>
                   </div>
                 </div>
-              </a>
+              {/* </a> */}
             </Card>
           ))}
         </div>

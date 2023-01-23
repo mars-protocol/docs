@@ -120,6 +120,10 @@ const contentBoxProps = {
   }, 
   IBCRelayers: {
     title: 'IBC Relayers'
+  },
+
+  onChainSubmission: {
+    title: 'On-chain Submission'
   }
 
 }
@@ -364,6 +368,12 @@ export default function Cards(props) {
     return (
       <div>
         <ContentBox title={contentBoxProps.IBCRelayers.title} />
+      </div>
+    );
+  } else if (props.title == 'On-chain Submission') {
+    return (
+      <div>
+        <ContentBox title={contentBoxProps.onChainSubmission.title} />
       </div>
     );
   }
