@@ -1,0 +1,5 @@
+{
+    "label": "Mission Control",
+    "position": 2,
+    "link": { "type": "doc", "id": "mission-control-intro" }
+}

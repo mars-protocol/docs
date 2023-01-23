@@ -124,6 +124,10 @@ const contentBoxProps = {
 
   onChainSubmission: {
     title: 'On-chain Submission'
+  }, 
+
+  missionControl: {
+    title: "Mission Control"
   }
 
 }
@@ -374,6 +378,12 @@ export default function Cards(props) {
     return (
       <div>
         <ContentBox title={contentBoxProps.onChainSubmission.title} />
+      </div>
+    );
+  } else if (props.title == 'Mission Control') {
+    return (
+      <div>
+        <ContentBox title={contentBoxProps.missionControl.title} />
       </div>
     );
   }

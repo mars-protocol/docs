@@ -120,7 +120,7 @@ const boxProps = {
       image: ErrorUrl
     },
     bugBountyProgram: {
-      title: "Bug Bounty Program", 
+      title: "Bug Bounty", 
       description: "Join the taskforce and search for bugs through Mars' codebase.", 
       image: Mushroom1Url
     }
@@ -746,17 +746,25 @@ const boxProps = {
       description: "Activacte inter-stellar communication between the Cosmos.", 
       image: PioneerUrl
     }
+  }, 
+
+  missionControl: {
+    launchSequence: {
+      title: "Launch Sequence", 
+      description: "Stay up to date with the Mars launch sequence.", 
+      image: SatelliteUrl
+    }, 
+    deployedOutposts: {
+      title: "Deployed Outposts", 
+      description: "Discover Mars' deployed outposts.", 
+      image: PioneerUrl
+    },
+    riskParameters: {
+      title: "Risk Parameters", 
+      description: "Learn about Mars' risk parameters.", 
+      image: PioneerUrl
+    }
   }
-
-
-
-
-
-
-
-
-
-
 
 }
 
@@ -2083,6 +2091,39 @@ export default function ContentBox(props) {
       </div>
     );
   }
+
+  else if (props.title == 'Mission Control') {
+    return (
+      <div className="grid md:grid-cols-2 gap-3">
+
+        <a className={styles.links} href="../../../docs/overview/mission-control/launch-sequence">
+          <Box 
+            title={boxProps.missionControl.launchSequence.title}
+            description={boxProps.missionControl.launchSequence.description}
+            image={boxProps.missionControl.launchSequence.image}
+          />
+        </a>
+
+        <a className={styles.links} href="../../../docs/overview/mission-control/deployed-outposts">
+          <Box 
+            title={boxProps.missionControl.deployedOutposts.title}
+            description={boxProps.missionControl.deployedOutposts.description}
+            image={boxProps.missionControl.deployedOutposts.image}
+          />
+        </a>
+
+        <a className={styles.links} href="../../../docs/overview/mission-control/risk-parameters">
+          <Box 
+            title={boxProps.missionControl.riskParameters.title}
+            description={boxProps.missionControl.riskParameters.description}
+            image={boxProps.missionControl.riskParameters.image}
+          />
+        </a>
+
+      </div>
+    );
+  }
+
 
 
 }
