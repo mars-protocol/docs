@@ -177,3 +177,60 @@ ul.list li:before{
 .links a {
     /* width: 420px !important; */
 }
+
+@media only screen and (max-width: 500px) {
+    .box {
+      background-color: rgba(255, 255, 255, 0.07);
+    }
+  
+    .box:hover {
+      background-color: rgba(255, 255, 255, 0.07);
+    }
+  
+    .title {
+      color:rgba(255, 255, 255, 1);
+    }
+  
+    .box .titleBanner {
+      opacity: 1;
+    }
+  
+    .subtext {
+      color: rgba(255, 255, 255, 0.8);
+    }
+  
+    .box:hover .subtext {
+      color: rgba(255, 255, 255, 0.8);
+      /* font-weight: bold; */
+    }
+  
+      
+    .links {
+      color: rgba(255, 255, 255, 0.6);
+    }
+  
+    .links:hover {
+      color: rgba(255, 255, 255, 0.6);
+    }
+  
+    .box:hover .links {
+      color: rgba(255, 255, 255, 0.6);
+    }
+  
+    ul.list li:before {
+      border-right: 2px solid rgba(255, 255, 255, 0.6);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+    }
+    
+    .box:hover ul.list li:before {
+      border-right: 2px solid rgba(255, 255, 255, 0.6);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+      /* font-weight: bold; */
+    }
+  
+    ul.list li:hover {
+      text-decoration: underline;
+      font-weight: normal;
+    }
+  
+  }

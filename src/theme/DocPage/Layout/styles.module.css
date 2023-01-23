@@ -1,7 +1,7 @@
 .docPage {
   display: flex;
   width: 100%;
-  margin-top: 35px;
+  margin-top: 0px;
 }
 
 .docsWrapper {
@@ -39,4 +39,13 @@
   .docsWrapper {
     overflow: hidden;
   }
+
+  .docPage {
+    margin-top: 0px;
+  }
+
+  .banner {
+    height: 250px;
+  }
+
 }

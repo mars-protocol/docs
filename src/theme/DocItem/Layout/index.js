@@ -36,11 +36,13 @@ export default function DocItemLayout({children}) {
     <div className="row">
       <div className={clsx('col', !docTOC.hidden && styles.docItemCol)}>
         <DocVersionBanner />
+        {docTOC.mobile}
         <div className={styles.docItemContainer}>
           <article>
+            {/* {docTOC.mobile} */}
             <DocBreadcrumbs />
             <DocVersionBadge />
-            {docTOC.mobile}
+            {/* {docTOC.mobile} */}
             <DocItemContent>{children}</DocItemContent>
             <DocItemFooter />
           </article>

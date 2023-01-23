@@ -64,7 +64,7 @@
   .title {
     margin-left: 16px;
     margin-bottom: 8px;
-    margin-top: 8px;
+    margin-top: 10px;
 
     color: rgba(255, 255, 255, 1);
     letter-spacing: 0.25em;
@@ -141,11 +141,11 @@
 
 @media only screen and (max-width: 500px) {
   .box {
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: rgba(255, 255, 255, 0.07);
   }
 
   .box:hover {
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: rgba(255, 255, 255, 0.07);
   }
 
   .title {
@@ -193,10 +193,5 @@
     text-decoration: underline;
     font-weight: normal;
   }
-
-
-
-
-
 
 }

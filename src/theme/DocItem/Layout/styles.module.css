@@ -1,6 +1,6 @@
 .docItemContainer header + *,
 .docItemContainer article > *:first-child {
-  margin-top: 0;
+  margin-top: 70px;
 }
 
 @media (min-width: 997px) {
@@ -9,4 +9,18 @@
     max-width: 100% !important;
     /* width: 75% !important; */
   }
+
+/* .docItemContainer {
+  margin-top: 70px;
+} */
+
 }
+
+
+/* @media only screen and (max-width: 996px) {
+  .docItemContainer header + *,
+  .docItemContainer article > *:first-child {
+    margin-top: 20px;
+  }
+
+} */

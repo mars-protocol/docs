@@ -268,7 +268,7 @@ h1  {
   font-size: 2.566rem;
   line-height: 3.7333333333rem;
   text-transform: uppercase;
-  letter-spacing: .6rem;
+  letter-spacing: .4rem;
 }
 
 h2 {
@@ -407,16 +407,30 @@ header.hero.hero--primary.heroBanner_src-pages-index-module {
 } */
 
 nav.theme-doc-breadcrumbs {
-  height: 30px;
+  height: 10px;
   /* width: 1200px; */
   /* width: 100%; */
-  margin-bottom: 45px;
+  /* margin-top: 30px; */
+  margin-bottom: 40px;
 }
 
 div.col.col--3 {
   margin-top: 165px;
   /* padding-left: 100px; */
 }
+
+@media only screen and (max-width: 996px) {
+  nav.theme-doc-breadcrumbs {
+    height: 40px;
+    /* width: 1200px; */
+    /* width: 100%; */
+    margin-top: 90px;
+    margin-bottom: 10px;
+  }
+  
+
+}
+
 /* 
 table {
   width: 1000px;
@@ -672,4 +686,13 @@ b.navbar__title.text--truncate {
   transition: all var(--ifm-transition-fast) ease;
  }
 
+ @media only screen and (max-width: 500px) {
+  h1 {
+    font-size: 1.7rem;
+    font-style: normal;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .2rem;
+  }
 
+}
