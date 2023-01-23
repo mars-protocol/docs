@@ -104,8 +104,8 @@ ul.list li:hover {
 
 
 .boxContainer {
-    display: flex;
-    flex-direction: row;
+    /* display: flex;
+    flex-direction: row; */
 }
 
 a.links_src-components-Cards-ContentBox-styles-module {
@@ -127,15 +127,17 @@ a.links_src-components-Cards-ContentBox-styles-module {
 .text {
     margin-top: 4%;
     margin-left: 4%;
+    width: fit-content !important;
 }
 
 .subtext {
     /* margin-top: -4%; */
     color: rgba(255, 255, 255, 0.4);
     font-size: 13.3333px;
-    padding-right: 4%;
-    
-
+    margin-top: 8px;
+    padding-right: 16px;
+    padding-left: 16px;
+    width: 100%;
 
 }
 

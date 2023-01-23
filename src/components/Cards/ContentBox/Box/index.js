@@ -54,14 +54,17 @@ export default function Box(props) {
       <p className={styles.title}>{props.title}</p>
     </div>
 
-    <div className={styles.boxContainer}> 
-      {/* <div className={styles.fig}>
+    <p className={styles.subtext}>{props.description}</p>
+
+
+    {/* <div className={styles.boxContainer}> 
+      <div className={styles.fig}>
         <img src={props.image} />
-      </div> */}
+      </div>
 
       <div className={styles.text}>
         <p className={styles.subtext}>{props.description}</p>
-        {/* <ul className={styles.list}>
+        <ul className={styles.list}>
 
           <li>
             <a className={styles.links} href="../../../../docs/learn/rover/nft-credit-accounts">NFT Credit Accounts</a>
@@ -71,9 +74,11 @@ export default function Box(props) {
             <a className={styles.links} href="../../../../docs/learn/category/trading">Trading</a>
           </li>
 
-        </ul> */}
+        </ul>
       </div>
-    </div>
+
+      
+    </div> */}
 
   </div>
 
