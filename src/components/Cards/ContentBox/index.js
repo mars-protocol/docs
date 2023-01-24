@@ -77,7 +77,7 @@ const boxProps = {
   develop: {
     marsCLI: {
       title: "Mars CLI", 
-      description: "Interact with Mars' function via the terminal.", 
+      description: "Interact with Mars' functions via the terminal.", 
       image: BuildingUrl
     }, 
     contracts: {
@@ -172,7 +172,7 @@ const boxProps = {
   marsToken: {
     marsTokenAndDistribution: {
       title: "Distribution", 
-      description: "Learn how MARS accrues value and is distributed between its  critical stakeholders.", 
+      description: "Learn how MARS accrues value and is distributed between its critical stakeholders.", 
       image: MarsUrl
     }, 
     staking: {
@@ -518,7 +518,7 @@ const boxProps = {
     }, 
     customModules: {
       title: "Custom Modules", 
-      description: "Custom modules written by Mars contributors.", 
+      description: "Custom modules built for Mars Hub.", 
       image: MarsUrl
     }, 
     cosmosSDKModules: {
