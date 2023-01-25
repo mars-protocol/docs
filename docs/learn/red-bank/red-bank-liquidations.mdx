@@ -20,22 +20,23 @@ Liquidation LTV (LT) = Max LTV + Safety Cushion
 
 The Health Factor formula is a simple ratio of the sum of adjusted assets by their Max LTVs over the amount borrowed in the account.
 
-<img src={RedBankLiquidationsFormulaUrl} />
 
-<Admonition type="warning" title="Bug">
-Equations need to be fixed - latex package needs to be installed.
-</Admonition>
+<div style={{ textAlign: 'center' }}>
+    <img src={RedBankLiquidationsFormulaUrl} style={{ marginBottom: 15 }} />
+</div>
 
-$c_$ = Position size of the $i-th$ asset in the account.
+Where:
+
+`Ci` = Position size of the `i-th` asset in the account.
 $$
 
-$p_$ = Price of the $i-th$ asset in the account.
+`Pi` = Price of the `i-th` asset in the account.
 
-$LT_$ = Liquidation LTV for the $i-th$ asset in the account.
+`LTi` = Liquidation LTV for the `i-th` asset in the account.
 
-$b_$ = Borrow size of a $k-th$ liability in the account.
+`Bk` = Borrow size of a `k-th` liability in the account.
 
-$p_$ = Price of a $k-th$ liability in the account.
+`Pk` = Price of a `k-th` liability in the account.
 
 When the health factor of any position falls below 1, it is deemed undercollateralised and becomes liquidatable. When a position becomes liquidatable, any user can repay the debt of the position (up to a limit called the close factor) to receive a portion of the collateral and a bonus.
 

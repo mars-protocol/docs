@@ -450,7 +450,7 @@ const boxProps = {
     }, 
     delegator: {
       title: "delegator", 
-      description: "Distributes the MARS token airdrop to holders of Mars Protocol on Terra.", 
+      description: "Enhances the security of the Mars Hub blockchain at launch.", 
       image: PioneerUrl
     }, 
     vesting: {
