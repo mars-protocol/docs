@@ -2,6 +2,62 @@
 sidebar_position: 2
 ---
 
-# Station
+import Admonition from '@theme/Admonition'
 
-## TBD
+import StationStep3Url from '@site/static/img/web-app-tutorials/basics/installing-a-wallet/station/station-step3.png';
+import StationStep4Url from '@site/static/img/web-app-tutorials/basics/installing-a-wallet/station/station-step4.png';
+import StationStep5Url from '@site/static/img/web-app-tutorials/basics/installing-a-wallet/station/station-step5.png';
+import StationStep6Url from '@site/static/img/web-app-tutorials/basics/installing-a-wallet/station/station-step6.png';
+
+# Station Wallet
+
+### Step 1: Select the correct extension for your browser
+
+[Chrome extension](https://chrome.google.com/webstore/detail/station/aiifbnbfobpmeekipheeijimdpnlpgpp)  
+[Firefox extension](https://addons.mozilla.org/firefox/addon/station-wallet/)  
+
+We will be using the Chrome extension for this tutorial. Once you select your extension, you will be redirected to the Chrome Web Store where you will be able to install the Station wallet browser extension.
+
+### Step 2: Install the Station Wallet extension
+
+Click on "Add to Chrome" and install the web extension in your browser. After the extension is done installing, you should be able to select Station Wallet under your Extensions folder on the top-right side of your browser. 
+
+### Step 3: Creating a new Station Wallet
+
+After you select the Station Wallet extension for the first time, you will be presented with important tips for recovering an existing wallet. If your intention is to recover an existing wallet, please carefully read and follow those tips to insure that you do so properly. For this tutorial, we will be creating a new wallet. To create a new Station Wallet, click Confirm to close the recovery tips, and then select "New wallet" from the available options.  
+
+<img src={StationStep3Url} />
+
+### Step 4: Write down your Seed Phrase
+
+After selecting "New wallet" you will be redirected to a Station Wallet page where you will be prompted to securely write down your mnemonic seed phrase. Write down your 24-word seed phrase exactly as it appears. Number each word to make verifying easier. Please verify the written seed phrase to ensure every word is spelled correctly and that each word is in the correct order.
+
+<Admonition type="danger" title="PROTECT YOUR SEED PHRASE"> 
+
+Anyone who gains access to your seed phrase can access the contents of the corresponding wallet. Be cognizant of the fact that there is no recourse for theft of a seed phrase. To protect your seed phrase, consider the following  tips.
+
+* Never save or store your seed phrase as a digital file on any device.  
+* Always write down your seed phrase with a pen and paper.  
+* Store the paper with your seed phrase on it somewhere safe.  
+* Never give your seed phrase to anyone, not even support staff.  
+</Admonition>
+
+Once you've written down your seed phrase, you will also need to create a name and password for your new wallet. Note your password down in a safe place as this will be required to log in to your wallet interface. If you lose your password, you can retrieve your wallet by recovering from your seed phrase and creating a new wallet name/password.
+
+Once complete, click on "Submit".
+
+<img src={StationStep4Url} />
+
+### Step 5: Verify the seed phrase
+
+Verify the seed phrase by inserting the correct phrase in the right order. Once complete, click on "Complete".
+
+<img src={StationStep5Url} />
+
+### Step 6: Congrats! You've created a Station Wallet
+
+Your new wallet has now been created and is ready to go!
+
+<img src={StationStep6Url} />
+
+To learn how to use other Station features, visit the [Station guides](https://docs.terra.money/learn/station).
