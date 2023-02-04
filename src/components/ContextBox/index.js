@@ -226,7 +226,7 @@ const learnContent = [
       listItems: [
         {
           label: "Liquidation Bots",
-          href: "../../../../docs/develop/category/liquidation-bots",
+          href: "../../../../docs/develop/backend/liquidation-bots/liquidation-bots-intro",
         },
       ],
     },
