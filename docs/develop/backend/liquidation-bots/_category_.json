@@ -1,7 +1,5 @@
 {
     "label": "Liquidation Bots",
     "position": 1,
-    "link": {
-      "type": "generated-index"
-    }
+    "link": { "type": "doc", "id": "liquidation-bots-intro" }
 }

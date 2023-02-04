@@ -1939,7 +1939,7 @@ export default function ContentBox(props) {
     return (
       <div className="grid md:grid-cols-2 gap-3">
 
-        <a className={styles.links} href="../../../docs/develop/category/liquidation-bots">
+        <a className={styles.links} href="../../../docs/develop/backend/liquidation-bots/liquidation-bots-intro">
           <Box 
             title={boxProps.backend.liquidationBots.title}
             description={boxProps.backend.liquidationBots.description}
