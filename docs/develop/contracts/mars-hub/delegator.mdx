@@ -15,14 +15,7 @@ To mitigate this risk, the Mars community pool will have a portion of its tokens
 - **Contract address:** 
 - **Testnet address:** 
 - **Contract repo:** https://github.com/mars-protocol/periphery/tree/main/contracts/delegator
-- **contract.rs:** https://github.com/mars-protocol/periphery/blob/main/contracts/delegator/src/contract.rs
-- **execute.rs:** https://github.com/mars-protocol/periphery/blob/main/contracts/delegator/src/execute.rs
-- **query.rs:** https://github.com/mars-protocol/periphery/blob/main/contracts/delegator/src/query.rs
-- **msg.rs (packages):** https://github.com/mars-protocol/periphery/blob/main/contracts/delegator/src/msg.rs
-- **Tests:** https://github.com/mars-protocol/periphery/blob/main/contracts/delegator/tests/tests.rs
-- **Audit:** 
-
-
+- **Audits:** https://github.com/mars-protocol/mars-audits/tree/main/periphery
 
 ## InstantiateMsg
 
@@ -45,65 +38,6 @@ pub type InstantiateMsg = Config;
 pub struct Config {
     pub bond_denom: String,
     pub ending_time: u64,
-}
-```
-
-```rust contract.rs
-#[entry_point]
-pub fn instantiate(
-    deps: DepsMut,
-    _env: Env,
-    _info: MessageInfo,
-    msg: InstantiateMsg,
-) -> Result<Response, ContractError> {
-    cw2::set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
-    execute::init(deps, msg)
-}
-```
-
-```rust test
-[test]
-fn instantiating() {
-    let mut deps = setup_test();
-
-    let res = instantiate(
-        deps.as_mut(),
-        mock_env(),
-        mock_info("deployer", &coins(10000, BOND_DENOM)),
-        InstantiateMsg {
-            bond_denom: BOND_DENOM.into(),
-            ending_time: 10000,
-        },
-    )
-    .unwrap();
-
-    assert_eq!(
-        res.messages,
-        vec![
-            SubMsg::new(StakingMsg::Delegate {
-                validator: "larry".into(),
-                amount: coin(3334, BOND_DENOM)
-            }),
-            SubMsg::new(StakingMsg::Delegate {
-                validator: "jake".into(),
-                amount: coin(3333, BOND_DENOM)
-            }),
-            SubMsg::new(StakingMsg::Delegate {
-                validator: "pumpkin".into(),
-                amount: coin(3333, BOND_DENOM)
-            }),
-        ]
-    );
-
-    let cfg_bytes = query(deps.as_ref(), mock_env(), QueryMsg::Config {}).unwrap();
-    let cfg: Config = from_binary(&cfg_bytes).unwrap();
-    assert_eq!(
-        cfg,
-        Config {
-            bond_denom: "umars".into(),
-            ending_time: 10000,
-        },
-    );
 }
 ```
 
@@ -141,22 +75,6 @@ pub enum ExecuteMsg {
 }
 ```
 
-```rust contract.rs focus=1:9,12:13
-#[entry_point]
-pub fn execute(
-    deps: DepsMut,
-    env: Env,
-    _info: MessageInfo,
-    msg: ExecuteMsg,
-) -> Result<Response<MarsMsg>, ContractError> {
-    match msg {
-        ExecuteMsg::Bond {} => execute::bond(deps, env),
-        ExecuteMsg::Unbond {} => execute::unbond(deps, env),
-        ExecuteMsg::Refund {} => execute::refund(deps, env),
-    }
-}
-```
-
 </CH.Code>
 </CH.Section>
 
@@ -186,70 +104,6 @@ pub enum ExecuteMsg {
 }
 ```
 
-```rust contract.rs focus=1:8,10,12:13
-#[entry_point]
-pub fn execute(
-    deps: DepsMut,
-    env: Env,
-    _info: MessageInfo,
-    msg: ExecuteMsg,
-) -> Result<Response<MarsMsg>, ContractError> {
-    match msg {
-        ExecuteMsg::Bond {} => execute::bond(deps, env),
-        ExecuteMsg::Unbond {} => execute::unbond(deps, env),
-        ExecuteMsg::Refund {} => execute::refund(deps, env),
-    }
-}
-```
-
-```rust test
-#[test]
-fn unbonding() {
-    let mut deps = setup_test();
-
-    // cannot unbond before the ending time is reached
-    {
-        let err = execute(
-            deps.as_mut(),
-            mock_env_at_timestamp(9999),
-            mock_info("larry", &[]),
-            ExecuteMsg::Unbond {},
-        )
-        .unwrap_err();
-        assert_eq!(err, ContractError::ending_time_not_reached(10000, 9999));
-    }
-
-    // can unbond after ending time is reached
-    {
-        let res = execute(
-            deps.as_mut(),
-            mock_env_at_timestamp(69420),
-            mock_info("larry", &[]),
-            ExecuteMsg::Unbond {},
-        )
-        .unwrap();
-        assert_eq!(
-            res.messages,
-            vec![
-                SubMsg::new(StakingMsg::Undelegate {
-                    validator: "larry".into(),
-                    amount: coin(3334, BOND_DENOM)
-                }),
-                SubMsg::new(StakingMsg::Undelegate {
-                    validator: "jake".into(),
-                    amount: coin(3333, BOND_DENOM)
-                }),
-                SubMsg::new(StakingMsg::Undelegate {
-                    validator: "pumpkin".into(),
-                    amount: coin(3333, BOND_DENOM)
-                })
-            ]
-        );
-    }
-}
-```
-
-
 </CH.Code>
 </CH.Section>
 
@@ -274,55 +128,6 @@ pub enum ExecuteMsg {
     Bond {},
     Unbond {},
     Refund {},
-}
-```
-
-```rust contract.rs focus=1:8,11:13
-#[entry_point]
-pub fn execute(
-    deps: DepsMut,
-    env: Env,
-    _info: MessageInfo,
-    msg: ExecuteMsg,
-) -> Result<Response<MarsMsg>, ContractError> {
-    match msg {
-        ExecuteMsg::Bond {} => execute::bond(deps, env),
-        ExecuteMsg::Unbond {} => execute::unbond(deps, env),
-        ExecuteMsg::Refund {} => execute::refund(deps, env),
-    }
-}
-```
-
-```rust test
-#[test]
-fn refunding() {
-    let mut deps = setup_test();
-
-    // give the contract some coin balance to be refunded
-    deps.querier.update_balance(MOCK_CONTRACT_ADDR, coins(10000, BOND_DENOM));
-
-    {
-        deps.querier.update_balance(MOCK_CONTRACT_ADDR, coins(10000, BOND_DENOM));
-        let res =
-            execute(deps.as_mut(), mock_env(), mock_info("larry", &[]), ExecuteMsg::Refund {})
-                .unwrap();
-        assert_eq!(
-            res.messages,
-            vec![SubMsg::new(MarsMsg::FundCommunityPool {
-                amount: coins(10000, BOND_DENOM)
-            })]
-        );
-    }
-
-    // test the case where the contract has no coin balance
-    {
-        deps.querier.update_balance(MOCK_CONTRACT_ADDR, vec![]);
-
-        let err =
-            execute(deps.as_mut(), mock_env(), mock_info("larry", &[]), ExecuteMsg::Refund {})
-                .unwrap_err();
-        assert_eq!(err, ContractError::NothingToRefund);
-    }
 }
 ```
 
@@ -353,41 +158,6 @@ pub enum SudoMsg {
 }
 ```
 
-```rust contract.rs
-#[entry_point]
-pub fn sudo(deps: DepsMut, env: Env, msg: SudoMsg) -> StdResult<Response<MarsMsg>> {
-    match msg {
-        SudoMsg::ForceUnbond {} => execute::force_unbond(deps, env),
-    }
-}
-```
-
-```rust test
-#[test]
-fn forced_unbonding() {
-    let mut deps = setup_test();
-
-    let res = sudo(deps.as_mut(), mock_env(), SudoMsg::ForceUnbond {}).unwrap();
-    assert_eq!(
-        res.messages,
-        vec![
-            SubMsg::new(StakingMsg::Undelegate {
-                validator: "larry".into(),
-                amount: coin(3334, BOND_DENOM)
-            }),
-            SubMsg::new(StakingMsg::Undelegate {
-                validator: "jake".into(),
-                amount: coin(3333, BOND_DENOM)
-            }),
-            SubMsg::new(StakingMsg::Undelegate {
-                validator: "pumpkin".into(),
-                amount: coin(3333, BOND_DENOM)
-            })
-        ]
-    );
-}
-```
-
 </CH.Code>
 </CH.Section>
 
@@ -413,15 +183,6 @@ Return the contract configuration.
 pub enum QueryMsg {
     #[returns(Config)]
     Config {},
-}
-```
-
-```rust contract.rs
-#[entry_point]
-pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
-    match msg {
-        QueryMsg::Config {} => to_binary(&query::query_config(deps)?),
-    }
 }
 ```
 

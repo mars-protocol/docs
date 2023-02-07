@@ -18,26 +18,45 @@ Overview of all Martian smart contracts.
 
 **Red Bank** 
 
-Coming soon!
-{/* 
-- [**Address Provider:**](./outposts/address-provider) Holds addresses of the main contracts of the core protocol.
-- [**Incentives:**](./outposts/incentives) Manage MARS incentives for depositors.
-- [**Oracle:**](../../develop/contracts/outposts/oracle/oracle-intro) Provides prices in uusd for assets used in the protocol.
-- [**Red Bank:**](./outposts/red-bank)  Exposes all interactions that are done between the user and the money market. Holds all protocol liquidity.
-- [**Reward Collector:**](../../develop/contracts/outposts/rewards-collector/rewards-collector-intro) Receives protocol revenue; swaps various coins into MARS or other specified assets; forwards assets to Mars Hub via IBC to be distributed as staking rewards or be deposited into the safety fund.  */}
-
+- [**Address Provider:**](./red-bank/address-provider) Holds addresses of the main contracts of the core protocol.
+- [**Incentives:**](./red-bank/incentives) Manage MARS incentives for depositors.
+- [**Oracle:**](../../develop/contracts/red-bank/oracle/oracle-intro) Provides prices in uusd for assets used in the protocol.
+- [**Red Bank:**](./red-bank/)  Exposes all interactions that are done between the user and the money market. Holds all protocol liquidity.
+- [**Reward Collector:**](../../develop/contracts/red-bank/rewards-collector/rewards-collector-intro) Receives protocol revenue; swaps various coins into MARS or other specified assets; forwards assets to Mars Hub via IBC to be distributed as staking rewards or be deposited into the safety fund. 
 
 ## Contract Addresses
 
-### mainnet (`mars-1`)
-
-### testnet (`ares-1`)
+### Mainnet
 
 ```json
 {
     // mars hub
     "delegator": "...", 
     "vesting": "...",
+
+    // red-bank
+    "address_provider": "osmo1g677w7mfvn78eeudzwylxzlyz69fsgumqrscj6tekhdvs8fye3asufmvxr", 
+    "incentives": "osmo1nkahswfr8shg8rlxqwup0vgahp0dk4x8w6tkv3rra8rratnut36sk22vrm", 
+    "oracle": "osmo1mhznfr60vjdp2gejhyv2gax9nvyyzhd3z0qcwseyetkfustjauzqycsy2g", 
+    "red_bank": "osmo1c3ljch9dfw5kf52nfwpxd2zmj2ese7agnx0p9tenkrryasrle5sqf3ftpg", 
+    "reward_collector": "osmo1urvqe5mw00ws25yqdd4c4hlh8kdyf567mpcml7cdve9w08z0ydcqvsrgdy"
+}
+```
+
+### Testnet
+
+```json
+{
+    // mars hub
+    "delegator": "...", 
+    "vesting": "...",
+
+    // red-bank
+    "address_provider": "osmo17dyy6hyzzy6u5khy5lau7afa2y9kwknu0aprwqn8twndw2qhv8ls6msnjr", 
+    "incentives": "osmo1zxs8fry3m8j94pqg7h4muunyx86en27cl0xgk76fc839xg2qnn6qtpjs48", 
+    "oracle": "osmo1dqz2u3c8rs5e7w5fnchsr2mpzzsxew69wtdy0aq4jsd76w7upmsstqe0s8", 
+    "red_bank": "osmo1t0dl6r27phqetfu0geaxrng0u9zn8qgrdwztapt5xr32adtwptaq6vwg36", 
+    "reward_collector": "osmo14kzsqw5tatdvwlkj383lgkh6gcdetwn7kfqm7488uargyy2lpucqsyv53j"
 }
 ```
 

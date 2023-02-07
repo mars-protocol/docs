@@ -2,48 +2,78 @@
 sidebar_position: 3
 ---
 
+import Admonition from '@theme/Admonition'
+
+
 # Risk Parameters
 
 ## Initial Risk Parameters
 
-|  Asset | Liq. LTV  | Liq. Bonus  |  RB Deposit Cap 1 | Rover Vault Cap 1  |
-|:----:|:----:|:----:|:----:|:----:|
-| axlUSDC  | 80%  | 10%  | 2.5M  | -  |
-| ATOM  | 72%  | 15%  | 700,000  | -  |
-| OSMO  | 61%  | 15%  | 13M  | -  |
-| ATOM/OSMO  | 66%  | 15%  | -  | 17M  |
-| axlUSDC/OSMO  | 68%  | 15%  | -  | 5M  |
+### Red Bank - Global Params
 
-Additionally: 
+| Param Name  | Value  | Description  |
+|---|---|---|
+| Safety Fund Fee Share  | 50%  | % of protocol revenue that goes to safety fund, the remainder goes to stakers.  |
+| Revision  | 1  | if a chain winds back blocks it should increment revision that is the reason for this blocks timeout for IBC transfer & seconds timeout for IBC transfer  |
+| Slippage Tolerance  | 1%  | this is for swapping protocol revenue into axlUSDC/MARS before sending via IBC to the Mars Hub  |
+| Close Factor  | 50%  | Max % of debt that's liquidatable  |
 
-**safety_tax_rate** = 50%. Meaning 10% of total interest payments (50% of protocol fees) go to the Safety Fund and the reamining 10% go to stakers.
+### Red Bank - Asset Specific Params
 
-**slippage_tolerance** = 1%. Meaning whenever interest payments are swapped into USDC and MARS, the max slippage allowed for the tx would be 1%.
+| Param Name  | Value ATOM   | Value OSMO  | Value axlUSDC  | Description  |
+|---|---|---|---|---|
+| Reserve Factor  | 20%  | 20%  | 20%  | % Of Borrow interest that stays in the protocol as fees  |
+| Max Loan To Value  | 68%  | 59%  | 74%  | Max percentage of collateral that can be borrowed  |
+| Liquidation Threshold  | 70%  | 61%  | 75%  | LTV at which the loan is defined as undercollateralized and can be liquidated  |
+| Liquidation Bonus  | 15%  | 15%  | 10%  | % of extra collateral the liquidator gets as a bonus  |
+| Active  | yes  | yes  | yes  | Wether any action can be done with the asset  |
+| Deposit Enabled  | yes  | yes  | yes  | Wether addresses can deposit  |
+| Borrow Enabled  | yes  | yes  | yes  | Wether addresses can borrow  |
+| Uoptimal  | 60%  | 60%  | 80%  | Target utilization rate  |
+| Base  | 0  | 0  | 0  | Interest Rate at 0 utilization rate  |
+| slope 1  | 15%  | 15%  | 20%  | slope for when U < Uoptimal  |
+| slope 2  | 300%  | 300%  | 200%  | slope for when U > Uoptimal  |
+| Deposit Cap   | 100,000  | 2,500,000  | 500,000  | Max amount that can be deposited into the Red Bank  |
 
-### Liquidation Bonus Methodology
+<Admonition type="info" title="NOTE">
+RB Caps are denominated in deposit token itself (i.e. 2.5M OSMO)
+</Admonition>
 
-#### Risky (non-stable) assets
+### Red Bank Deposit Incentives
 
-Liquidation profitability analysis is done by simulating a price decline in 30 minutes equal to the worse 30-minute drawdown of the asset: 
+| Param Name  | Value ATOM   | Value OSMO  | Value axlUSDC  | Description  |
+|---|---|---|---|---|
+| Emissions Per Second   | 0.1060950  | 0.23148200  | 0.04822500  | How many MARS will be rewarded per second   |
+| Emissions Per Period   | 275,000  | 600,000  | 125,000  | How many MARS will be rewarded during the whole duration  |
+| Start Time   |  |  |  | When should emissions calculation begin   |
+| Duration (in seconds)    | 2,592,000  | 2,592,000  | 2,592,000  | How long should emissions calculations last   |
 
-- The first priority is for liquidations to be profitable at a considerable amount of blocks using different initial health factors (HFs). 
-- The second priority is that for most HFs, there’s a period of profitable liquidations before the HF goes below the min such that liquidations lead to an increase in HF after liquidation.
+### MARS/OSMO pool
 
-#### Non-risky (stable) assets
+| Param Name  | Value  | Description  |
+|---|---|---|
+| Swap Fee   | 0.2%  | The swap fee is the cut of all swaps that goes to the Liquidity Providers (LPs) for a pool. Suppose a pool has a swap fee s. Then if a user wants to swap T tokens in the pool, sT tokens go to the LP's, and then (1 - s)T tokens are swapped according to the AMM swap function.  |
+| Exit Fee   | 0%  | The exit fee is a fee that is applied to LP's that want to remove their liquidity from the pool. Suppose a pool has an exit fee e. If they currently have S LP shares, then when they remove their liquidity they get tokens worth (1 - e)S shares back. The remaining eS shares are then burned, and the tokens corresponding to these shares are kept as liquidity.  |
+| Future Governor   | No one  | Osmosis plans to allow every pool to act as a DAO, with its own governance in a future upgrade. To facilitate this transition, we allow pools to specify who the governor should be as a string. There are currently 3 options for the future governor. No one will govern it. This is done by leaving the future governor string as blank. Allow a given address to govern it. This is done by setting the future governor as a bech32 address. Lockups to a token. This is the full DAO scenario. The future governor specifies a token denomination denom, and a lockup duration duration. This says that "all tokens of denomination denom that are locked up for duration or longer, have equal say in governance of this pool".  |
+| Weights   | 50/50  | This defines the weights of the pool - https://balancer.fi/whitepaper.pdf  |
+| Smooth Weight Change Params    | NA  | This allows pool governance to smoothly change the weights of the assets it holds in the pool. So it can slowly move from a 2:1 ratio, to a 1:1 ratio. Currently, smooth weight changes are implemented as a linear change in weight ratios over a given duration of time. So weights changed from 4:1 to 2:2 over 2 days, then at day 1 of the change, the weights would be 3:1.5, and at day 2 its 2:2, and will remain at these weight ratios.   |
+| Pool Creation Fee    | 100 OSMO  | Preset value from Osmosis   |
 
-Liquidation profitability analysis is done by simulating a price increase in 30 minutes equal to the max 30-minute increase of any asset in the money market: 
+### External OSMO/MARS Pool Incentives on Osmosis 
 
-- The first priority is for liquidations to be profitable at a considerable amount of blocks using different initial HFs.
-- The second priority is that for most HFs, there’s a period of profitable liquidations before the HF goes below the min such that liquidations lead to an increase in HF after liquidation.
+| Param Name  | Value  | Description  |
+|---|---|---|
+| Start time (UNIX)   |   | When should incentives begin   |
+| Duration   | 14  | How long should a user have MARS locked up for to be able to start claiming incentives (1, 7, or 14 days)   |
+| Epoch  | 30  | How many days should this gauge stay active for   |
+| Reward  | 750,000  | How much total MARS do you want to reward while this guage is active   |
 
-{/* ## Caps
+### TWAP Downtime Detector 
 
-### Caps 1
+| Param Name  | Value  | Description  |
+|---|---|---|
+| Downtime   | 30 mins  | Downtime period options that you can query, to be: 30seconds, 1 min, 2 min, 3 min, 4 min, 5 min, 10 min, 20 min, 30 min, 40 min, 50 min, 1 hr, 1.5hr, 2 hr, 2.5 hr, 3 hr, 4 hr, 5 hr, 6 hr, 9hr, 12hr, 18hr, 24hr, 36hr, 48hr.   |
+| Recovery   | 120 mins  | Recovery seconds since the chain has been down for downtime period    |
 
-Initial caps are defined as 10% of on-chain liquidity for the asset. On-chain liquidity includes both assets when considering XYK pools. In other words, if the ATOM/OSMO pool has 80M in liquidity, we consider both ATOM and OSMO to have 80M in liquidity from this pool.
 
-The idea for the initial caps is to be very conservative at the initial stage after deployment. After a few weeks/months, if everything is working correctly we can increase caps.
 
-### Caps 2
-
-Governance could double caps in the second epoch to 20% on-chain liquidity. */}

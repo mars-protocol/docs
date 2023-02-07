@@ -1,0 +1,2858 @@
+---
+sidebar_position: 4
+---
+
+import RedBankInitAssetUrl from '@site/static/img//develop/contracts/red-bank-init-asset.png';
+import RedBankUpdateAssetUrl from '@site/static/img//develop/contracts/red-bank-update-asset.png';
+import RedBankDepositUrl from '@site/static/img//develop/contracts/red-bank-deposit.png';
+import RedBankWithdrawUrl from '@site/static/img//develop/contracts/red-bank-withdraw.png';
+import RedBankBorrowUrl from '@site/static/img//develop/contracts/red-bank-borrow.png';
+import RedBankRepayUrl from '@site/static/img//develop/contracts/red-bank-repay.png';
+import RedBankLiquidateUrl from '@site/static/img//develop/contracts/red-bank-liquidate.png';
+
+# red-bank
+
+The Red Bank exposes all interactions that are done between the user and the money market. It also holds all protocol liquidity.
+
+## Links 
+
+- **Contract address:** `osmo1c3ljch9dfw5kf52nfwpxd2zmj2ese7agnx0p9tenkrryasrle5sqf3ftpg`
+- **Testnet address:** `osmo1t0dl6r27phqetfu0geaxrng0u9zn8qgrdwztapt5xr32adtwptaq6vwg36`
+- **Contract repo:** https://github.com/mars-protocol/outposts/tree/master/contracts/red-bank
+- **Audits:** https://github.com/mars-protocol/mars-audits/tree/main/red-bank
+
+## InstantiateMsg
+
+Instantiates the Red Bank contract.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "owner": "...", 
+    "emergency_owner": "...",
+    "config": {
+        "address_provider": "...", 
+        "close_factor": 0.123
+    }
+}
+```
+
+```rust msg.rs
+#[cw_serde]
+pub struct InstantiateMsg {
+    pub owner: String,
+    pub emergency_owner: String,
+    pub config: CreateOrUpdateConfig,
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`owner`](focus://json#2)      | `String`       | Contract's owner       |
+| [`emergency_owner`](focus://json#3)      | `String`       | Contract's emergency owner     |
+| [`config`](focus://json#4:7)      | [`CreateOrUpdateConfig`](#createorupdateconfig)       | Market configuration       |
+
+</CH.Section>
+
+#### `CreateOrUpdateConfig`
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "address_provider": "...", 
+    "close_factor": 0.123
+}
+```
+
+```rust msg.rs
+#[cw_serde]
+pub struct CreateOrUpdateConfig {
+    pub address_provider: Option<String>,
+    pub close_factor: Option<Decimal>,
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`address_provider`](focus://json#2)      | `Option<String>`       | Address provider returns addresses for all protocol contracts       |
+| [`close_factor`](focus://json#3)      | `Option<Decimal>`       | Maximum percentage of outstanding debt that can be covered by a liquidator       |
+
+</CH.Section>
+
+## ExecuteMsg
+
+### `update_owner`
+
+Manages owner state.
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "update_owner": {
+                "propose_new_owner": {
+                    "proposed": "..."
+                }
+            }
+        }
+        ```
+
+        ```rust address_provider.rs focus=1:3,46
+        #[cw_serde]
+        pub enum ExecuteMsg {
+            UpdateOwner(OwnerUpdate),
+            UpdateEmergencyOwner(OwnerUpdate),
+            UpdateConfig {
+                config: CreateOrUpdateConfig,
+            },
+            InitAsset {
+                denom: String,
+                params: InitOrUpdateAssetParams,
+            },
+            UpdateAsset {
+                denom: String,
+                params: InitOrUpdateAssetParams,
+            },
+            UpdateUncollateralizedLoanLimit {
+                user: String,
+                denom: String,
+                new_limit: Uint128,
+            },
+            Deposit {
+                on_behalf_of: Option<String>,
+            },
+            Withdraw {
+                denom: String,
+                amount: Option<Uint128>,
+                recipient: Option<String>,
+            },
+            Borrow {
+                denom: String,
+                amount: Uint128,
+                recipient: Option<String>,
+            },
+            Repay {
+                on_behalf_of: Option<String>,
+            },
+            Liquidate {
+                user: String,
+                collateral_denom: String,
+                recipient: Option<String>,
+            },
+            UpdateAssetCollateralStatus {
+                denom: String,
+                enable: bool,
+            },
+        }
+        ```
+
+    </CH.Code>
+</CH.Section>
+
+### `update_emergency_owner`
+
+Manages emergency owner state.
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "update_emergency_owner": {
+                "propose_new_owner": {
+                    "proposed": "..."
+                }
+            }
+        }
+        ```
+
+        ```rust address_provider.rs focus=1:2,4,46
+        #[cw_serde]
+        pub enum ExecuteMsg {
+            UpdateOwner(OwnerUpdate),
+            UpdateEmergencyOwner(OwnerUpdate),
+            UpdateConfig {
+                config: CreateOrUpdateConfig,
+            },
+            InitAsset {
+                denom: String,
+                params: InitOrUpdateAssetParams,
+            },
+            UpdateAsset {
+                denom: String,
+                params: InitOrUpdateAssetParams,
+            },
+            UpdateUncollateralizedLoanLimit {
+                user: String,
+                denom: String,
+                new_limit: Uint128,
+            },
+            Deposit {
+                on_behalf_of: Option<String>,
+            },
+            Withdraw {
+                denom: String,
+                amount: Option<Uint128>,
+                recipient: Option<String>,
+            },
+            Borrow {
+                denom: String,
+                amount: Uint128,
+                recipient: Option<String>,
+            },
+            Repay {
+                on_behalf_of: Option<String>,
+            },
+            Liquidate {
+                user: String,
+                collateral_denom: String,
+                recipient: Option<String>,
+            },
+            UpdateAssetCollateralStatus {
+                denom: String,
+                enable: bool,
+            },
+        }
+        ```
+
+    </CH.Code>
+</CH.Section>
+
+### `update_config`
+
+Updates the contract's config (only the owner of the contract can call)
+
+<CH.Section>
+
+<CH.Code>
+
+```json json
+{
+    "update_config": {
+        "config": {
+            "address_provider": "...", 
+            "closer_factor": 0.123
+        }
+    }
+}  
+```
+
+```rust msg.rs focus=1:6,45
+#[cw_serde]
+#[allow(clippy::large_enum_variant)]
+pub enum ExecuteMsg {
+    UpdateConfig {
+        config: CreateOrUpdateConfig,
+    },
+    InitAsset {
+        denom: String,
+        params: InitOrUpdateAssetParams,
+    },
+    UpdateAsset {
+        denom: String,
+        params: InitOrUpdateAssetParams,
+    },
+    UpdateUncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+        new_limit: Uint128,
+    },
+    Deposit {
+        on_behalf_of: Option<String>,
+    },
+    Withdraw {
+        denom: String,
+        amount: Option<Uint128>,
+        recipient: Option<String>,
+    },
+    Borrow {
+        denom: String,
+        amount: Uint128,
+        recipient: Option<String>,
+    },
+    Repay {
+        on_behalf_of: Option<String>,
+    },
+    Liquidate {
+        user: String,
+        collateral_denom: String,
+        recipient: Option<String>,
+    },
+    UpdateAssetCollateralStatus {
+        denom: String,
+        enable: bool,
+    },
+}
+``` 
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`config`](focus://json#3:7)      | [`CreateOrUpdateConfig`](#createorupdateconfig)       | Market configuration       |
+
+</CH.Section>
+
+### `init_asset`
+
+Initializes an asset on the money market (only the owner of the contract can call)
+
+<CH.Section>
+
+<CH.Code>
+
+```json json
+{
+    "init_asset": {
+        "denom": "...", 
+        "params": {
+            "initial_borrow_rate": 0.123, 
+            "reserve_factor": 0.123, 
+            "max_loan_to_value": 0.123, 
+            "liquidation_threshold": 0.123, 
+            "interest_rate_model": {
+                "optimal_utilization_rate": 0.123, 
+                "base": 0.123, 
+                "slope_1": 0.123, 
+                "slope_2": 0.123
+            }, 
+            "desposit_enabled": true, 
+            "borrow_enabled": true, 
+            "deposit_cap": 123
+        }
+    }
+}
+```
+
+```rust msg.rs focus=1:3,7:10,45
+#[cw_serde]
+#[allow(clippy::large_enum_variant)]
+pub enum ExecuteMsg {
+    UpdateConfig {
+        config: CreateOrUpdateConfig,
+    },
+    InitAsset {
+        denom: String,
+        params: InitOrUpdateAssetParams,
+    },
+    UpdateAsset {
+        denom: String,
+        params: InitOrUpdateAssetParams,
+    },
+    UpdateUncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+        new_limit: Uint128,
+    },
+    Deposit {
+        on_behalf_of: Option<String>,
+    },
+    Withdraw {
+        denom: String,
+        amount: Option<Uint128>,
+        recipient: Option<String>,
+    },
+    Borrow {
+        denom: String,
+        amount: Uint128,
+        recipient: Option<String>,
+    },
+    Repay {
+        on_behalf_of: Option<String>,
+    },
+    Liquidate {
+        user: String,
+        collateral_denom: String,
+        recipient: Option<String>,
+    },
+    UpdateAssetCollateralStatus {
+        denom: String,
+        enable: bool,
+    },
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom`](focus://json#3)      | `String`       | Asset related info       |
+| [`params`](focus://json#4:18)      | [`InitOrUpdateAssetParams`](#initorupdateassetparams)       | Asset parameters       |
+
+</CH.Section>
+
+{/* <img src={RedBankInitAssetUrl} /> */}
+
+#### `InitOrUpdateAssetParams`
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "initial_borrow_rate": 0.123, 
+    "reserve_factor": 0.123, 
+    "max_loan_to_value": 0.123, 
+    "liquidation_treshold": 0.123, 
+    "liquidation_bonus": 0.123, 
+    "interest_rate_model": {
+        "optimal_utilization_rate": 0.123, 
+        "base": 0.123, 
+        "slope_1": 0.123, 
+        "slope_2": 0.123
+    },
+    "desposit_enabled": true, 
+    "borrow_enabled": true, 
+    "deposit_cap": 123
+}
+```
+
+```rust msg.rs
+#[cw_serde]
+pub struct InitOrUpdateAssetParams {
+    pub initial_borrow_rate: Option<Decimal>,
+    pub reserve_factor: Option<Decimal>,
+    pub max_loan_to_value: Option<Decimal>,
+    pub liquidation_threshold: Option<Decimal>,
+    pub liquidation_bonus: Option<Decimal>,
+    pub interest_rate_model: Option<InterestRateModel>,
+    pub deposit_enabled: Option<bool>,
+    pub borrow_enabled: Option<bool>,
+    pub deposit_cap: Option<Uint128>,
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`initial_borrow_rate`](focus://json#2)      | `Option<Decimal>`       | Initial borrow rate       |
+| [`reserve_factor`](focus://json#3)      | `Option<Decimal>`       | Portion of the borrow rate that is kept as protocol rewards       |
+| [`max_loan_to_value`](focus://json#4)      | `Option<Decimal>`       | Max `base_denom` that can be borrowed per uusd of collateral when using the asset as collateral       |
+| [`liquidation_threshold`](focus://json#5)      | `Option<Decimal>`       | uusd amount in debt position per uusd of asset collateral that if surpassed makes the user's position liquidatable       |
+| [`liquidation_bonus`](focus://json#6)      | `Option<Decimal>`       | Bonus amount of collateral liquidator get when repaying user's debt (Will get collateral from user in an amount equal to debt repayed + bonus)       |
+| [`interest_rate_model`](focus://json#7:12)      | [`Option<InterestRateModel>`](#interestratemodel)       | Interest rate strategy to calculate borrow_rate and liquidity_rate       |
+| [`deposit_enabled`](focus://json#13)      | `Option<bool>`       | If false cannot deposit       |
+| [`borrow_enabled`](focus://json#14)      | `Option<bool>`       | If false cannot borrow       |
+| [`deposit_cap`](focus://json#15)      | `Option<Uint128>`       | Deposit Cap defined in terms of the asset (Unlimited by default)       |
+
+
+</CH.Section>
+
+
+#### `InterestRateModel`
+
+<CH.Section>
+
+<CH.Code>
+
+```json json
+{
+    "optimal_utilization_rate": 0.123, 
+    "base": 0.123, 
+    "slope_1": 0.123, 
+    "slope_2": 0.123
+}
+```
+
+```rust interest_rate_model.rs
+#[cw_serde]
+#[derive(Eq, Default)]
+pub struct InterestRateModel {
+    pub optimal_utilization_rate: Decimal,
+    pub base: Decimal,
+    pub slope_1: Decimal,
+    pub slope_2: Decimal,
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`optimal_utilization_rate`](focus://json#2)      | `Decimal`       | Optimal utilization rate       |
+| [`base`](focus://json#3)      | `Decimal`       | Base rate       |
+| [`slope_1`](focus://json#4)      | `Decimal`       | Slope parameter for interest rate model function when utilization_rate < optimal_utilization_rate       |
+| [`slope_2`](focus://json#5)      | `Decimal`       | Slope parameter for interest rate model function when utilization_rate >= optimal_utilization_rate       |
+
+</CH.Section>
+
+### `update_asset`
+
+Update an asset on the money market (only owner can call)
+
+<CH.Section>
+
+<CH.Code>
+
+```json json
+{
+    "update_asset": {
+        "denom": "...", 
+        "params": {
+            "initial_borrow_rate": 0.123, 
+            "reserve_factor": 0.123, 
+            "max_loan_to_value": 0.123, 
+            "liquidation_threshold": 0.123, 
+            "interest_rate_model": {
+                "optimal_utilization_rate": 0.123, 
+                "base": 0.123, 
+                "slope_1": 0.123, 
+                "slope_2": 0.123
+            }, 
+            "desposit_enabled": true, 
+            "borrow_enabled": true, 
+            "deposit_cap": 123
+        }
+    }
+}
+```
+
+```rust msg.rs focus=1:3,11:14,45
+#[cw_serde]
+#[allow(clippy::large_enum_variant)]
+pub enum ExecuteMsg {
+    UpdateConfig {
+        config: CreateOrUpdateConfig,
+    },
+    InitAsset {
+        denom: String,
+        params: InitOrUpdateAssetParams,
+    },
+    UpdateAsset {
+        denom: String,
+        params: InitOrUpdateAssetParams,
+    },
+    UpdateUncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+        new_limit: Uint128,
+    },
+    Deposit {
+        on_behalf_of: Option<String>,
+    },
+    Withdraw {
+        denom: String,
+        amount: Option<Uint128>,
+        recipient: Option<String>,
+    },
+    Borrow {
+        denom: String,
+        amount: Uint128,
+        recipient: Option<String>,
+    },
+    Repay {
+        on_behalf_of: Option<String>,
+    },
+    Liquidate {
+        user: String,
+        collateral_denom: String,
+        recipient: Option<String>,
+    },
+    UpdateAssetCollateralStatus {
+        denom: String,
+        enable: bool,
+    },
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom`](focus://json#3)      | `String`       | Asset related info       |
+| [`params`](focus://json#4:18)      | [`InitOrUpdateAssetParams`](#initorupdateassetparams)       | Asset parameters       |
+
+</CH.Section>
+
+{/* <img src={RedBankUpdateAssetUrl} /> */}
+
+### `update_uncollateralized_loan_limit`
+
+Update uncollateralized loan limit for a given user and asset. Overrides previous value if any. A limit of zero means no uncollateralized limit and the debt in that asset needs to be collateralized (only owner can call).
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "update_uncollateralized_loan_limit": {
+        "user": "...", 
+        "denom": "...", 
+        "new_limit": 123
+    }
+}
+```
+
+```rust msg.rs focus=1:3,15:19,45
+#[cw_serde]
+#[allow(clippy::large_enum_variant)]
+pub enum ExecuteMsg {
+    UpdateConfig {
+        config: CreateOrUpdateConfig,
+    },
+    InitAsset {
+        denom: String,
+        params: InitOrUpdateAssetParams,
+    },
+    UpdateAsset {
+        denom: String,
+        params: InitOrUpdateAssetParams,
+    },
+    UpdateUncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+        new_limit: Uint128,
+    },
+    Deposit {
+        on_behalf_of: Option<String>,
+    },
+    Withdraw {
+        denom: String,
+        amount: Option<Uint128>,
+        recipient: Option<String>,
+    },
+    Borrow {
+        denom: String,
+        amount: Uint128,
+        recipient: Option<String>,
+    },
+    Repay {
+        on_behalf_of: Option<String>,
+    },
+    Liquidate {
+        user: String,
+        collateral_denom: String,
+        recipient: Option<String>,
+    },
+    UpdateAssetCollateralStatus {
+        denom: String,
+        enable: bool,
+    },
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`user`](focus://json#3)      | `String`       | Address that receives the credit       |
+| [`denom`](focus://json#4)      | `String`       | Asset the user receives the credit in       |
+| [`new_limit`](focus://json#5)      | `Uint128`       | Limit for the uncolateralize loan       |
+
+</CH.Section>
+
+### `deposit`
+
+Deposits native coins. Deposited coins must be sent in the transaction this call is made.
+
+<CH.Section>
+
+<CH.Code>
+
+```json json
+{
+    "deposit": {
+        "on_behalf_of": "..."
+    }
+}
+```
+
+```rust msg.rs focus=1:3,20:22,45
+#[cw_serde]
+#[allow(clippy::large_enum_variant)]
+pub enum ExecuteMsg {
+    UpdateConfig {
+        config: CreateOrUpdateConfig,
+    },
+    InitAsset {
+        denom: String,
+        params: InitOrUpdateAssetParams,
+    },
+    UpdateAsset {
+        denom: String,
+        params: InitOrUpdateAssetParams,
+    },
+    UpdateUncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+        new_limit: Uint128,
+    },
+    Deposit {
+        on_behalf_of: Option<String>,
+    },
+    Withdraw {
+        denom: String,
+        amount: Option<Uint128>,
+        recipient: Option<String>,
+    },
+    Borrow {
+        denom: String,
+        amount: Uint128,
+        recipient: Option<String>,
+    },
+    Repay {
+        on_behalf_of: Option<String>,
+    },
+    Liquidate {
+        user: String,
+        collateral_denom: String,
+        recipient: Option<String>,
+    },
+    UpdateAssetCollateralStatus {
+        denom: String,
+        enable: bool,
+    },
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`on_behalf_of`](focus://json#3)      | `Option<String>`       | Address that will receive deposited tokens       |
+
+</CH.Section>
+
+{/* <img src={RedBankDepositUrl} /> */}
+
+### `withdraw`
+
+Withdraws an amount of the asset burning an equivalent amount deposited tokens.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "withdraw": {
+        "denom": "...", 
+        "amount": 123, 
+        "recipient": "..."
+    }
+}
+```
+
+```rust msg.rs focus=1:3,23:27,45
+#[cw_serde]
+#[allow(clippy::large_enum_variant)]
+pub enum ExecuteMsg {
+    UpdateConfig {
+        config: CreateOrUpdateConfig,
+    },
+    InitAsset {
+        denom: String,
+        params: InitOrUpdateAssetParams,
+    },
+    UpdateAsset {
+        denom: String,
+        params: InitOrUpdateAssetParams,
+    },
+    UpdateUncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+        new_limit: Uint128,
+    },
+    Deposit {
+        on_behalf_of: Option<String>,
+    },
+    Withdraw {
+        denom: String,
+        amount: Option<Uint128>,
+        recipient: Option<String>,
+    },
+    Borrow {
+        denom: String,
+        amount: Uint128,
+        recipient: Option<String>,
+    },
+    Repay {
+        on_behalf_of: Option<String>,
+    },
+    Liquidate {
+        user: String,
+        collateral_denom: String,
+        recipient: Option<String>,
+    },
+    UpdateAssetCollateralStatus {
+        denom: String,
+        enable: bool,
+    },
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom`](focus://json#3)      | `String`       | Asset to withdraw       |
+| [`amount`](focus://json#4)      | `Option<Uint128>`       | Amount to be withdrawn. If None is specified, the full amount will be withdrawn       |
+| [`recipient`](focus://json#5)      | `Option<String>`       | The address where the withdrawn amount is sent       |
+
+</CH.Section>
+
+{/* <img src={RedBankWithdrawUrl} /> */}
+
+### `borrow`
+
+Borrows native coins. If borrow allowed, amount is added to caller's debt and sent to the address.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "borrow": {
+        "denom": "...", 
+        "amount": 123, 
+        "recipient" "mars..."
+    }
+}
+```
+
+```rust msg.rs focus=1:3,28:32,45
+#[cw_serde]
+#[allow(clippy::large_enum_variant)]
+pub enum ExecuteMsg {
+    UpdateConfig {
+        config: CreateOrUpdateConfig,
+    },
+    InitAsset {
+        denom: String,
+        params: InitOrUpdateAssetParams,
+    },
+    UpdateAsset {
+        denom: String,
+        params: InitOrUpdateAssetParams,
+    },
+    UpdateUncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+        new_limit: Uint128,
+    },
+    Deposit {
+        on_behalf_of: Option<String>,
+    },
+    Withdraw {
+        denom: String,
+        amount: Option<Uint128>,
+        recipient: Option<String>,
+    },
+    Borrow {
+        denom: String,
+        amount: Uint128,
+        recipient: Option<String>,
+    },
+    Repay {
+        on_behalf_of: Option<String>,
+    },
+    Liquidate {
+        user: String,
+        collateral_denom: String,
+        recipient: Option<String>,
+    },
+    UpdateAssetCollateralStatus {
+        denom: String,
+        enable: bool,
+    },
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom`](focus://json#3)      | `String`       | Asset to borrow       |
+| [`amount`](focus://json#4)      | `Option<Uint128>`       | Amount to borrow       |
+| [`recipient`](focus://json#5)      | `Option<String>`       | The address where the borrowed amount is sent       |
+
+</CH.Section>
+
+{/* <img src={RedBankBorrowUrl} /> */}
+
+
+### `repay`
+
+Repay native coins loan. Coins used to repay must be sent in the transaction this call is made.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "repay": {
+        "on_behalf_of": "..."
+    }
+}
+```
+
+```rust msg.rs focus=1:3,33:35,45
+#[cw_serde]
+#[allow(clippy::large_enum_variant)]
+pub enum ExecuteMsg {
+    UpdateConfig {
+        config: CreateOrUpdateConfig,
+    },
+    InitAsset {
+        denom: String,
+        params: InitOrUpdateAssetParams,
+    },
+    UpdateAsset {
+        denom: String,
+        params: InitOrUpdateAssetParams,
+    },
+    UpdateUncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+        new_limit: Uint128,
+    },
+    Deposit {
+        on_behalf_of: Option<String>,
+    },
+    Withdraw {
+        denom: String,
+        amount: Option<Uint128>,
+        recipient: Option<String>,
+    },
+    Borrow {
+        denom: String,
+        amount: Uint128,
+        recipient: Option<String>,
+    },
+    Repay {
+        on_behalf_of: Option<String>,
+    },
+    Liquidate {
+        user: String,
+        collateral_denom: String,
+        recipient: Option<String>,
+    },
+    UpdateAssetCollateralStatus {
+        denom: String,
+        enable: bool,
+    },
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`on_behalf_of`](focus://json#3)      | `Option<String>`       | Repay the funds for the user       |
+
+</CH.Section>
+
+{/* <img src={RedBankRepayUrl} /> */}
+
+
+### `liquidate`
+
+Liquidate under-collateralized native loans. Coins used to repay must be sent in the transaction this call is made.  The liquidator will receive collateral shares. To get the underlying asset, consider sending a separate [`withdraw`](#withdraw) execute message.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "liquidate": {
+        "user": "mars...",
+        "collateral_denom": "...",
+        "recipient": "..."
+    }
+}
+```
+
+```rust msg.rs focus=1:3,36:40,45
+#[cw_serde]
+#[allow(clippy::large_enum_variant)]
+pub enum ExecuteMsg {
+    UpdateConfig {
+        config: CreateOrUpdateConfig,
+    },
+    InitAsset {
+        denom: String,
+        params: InitOrUpdateAssetParams,
+    },
+    UpdateAsset {
+        denom: String,
+        params: InitOrUpdateAssetParams,
+    },
+    UpdateUncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+        new_limit: Uint128,
+    },
+    Deposit {
+        on_behalf_of: Option<String>,
+    },
+    Withdraw {
+        denom: String,
+        amount: Option<Uint128>,
+        recipient: Option<String>,
+    },
+    Borrow {
+        denom: String,
+        amount: Uint128,
+        recipient: Option<String>,
+    },
+    Repay {
+        on_behalf_of: Option<String>,
+    },
+    Liquidate {
+        user: String,
+        collateral_denom: String,
+        recipient: Option<String>,
+    },
+    UpdateAssetCollateralStatus {
+        denom: String,
+        enable: bool,
+    },
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`user`](focus://json#3)      | `String`       | The address of the borrower getting liquidated       |
+| [`collateral_denom`](focus://json#4)      | `String`       | Denom of the collateral asset, which liquidator gets from the borrower       |
+| [`recipient`](focus://json#5)      | `Option<String>`       | The address for receiving underlying collateral       |
+
+</CH.Section>
+
+{/* <img src={RedBankLiquidateUrl} /> */}
+
+
+### `update_asset_collateral_status`
+
+Update (enable/disable) asset as collateral for the caller.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "update_asset_collateral_status": {
+        "denom": "...", 
+        "enable": true
+    }
+}
+```
+
+```rust msg.rs focus=1:3,41:45
+#[cw_serde]
+#[allow(clippy::large_enum_variant)]
+pub enum ExecuteMsg {
+    UpdateConfig {
+        config: CreateOrUpdateConfig,
+    },
+    InitAsset {
+        denom: String,
+        params: InitOrUpdateAssetParams,
+    },
+    UpdateAsset {
+        denom: String,
+        params: InitOrUpdateAssetParams,
+    },
+    UpdateUncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+        new_limit: Uint128,
+    },
+    Deposit {
+        on_behalf_of: Option<String>,
+    },
+    Withdraw {
+        denom: String,
+        amount: Option<Uint128>,
+        recipient: Option<String>,
+    },
+    Borrow {
+        denom: String,
+        amount: Uint128,
+        recipient: Option<String>,
+    },
+    Repay {
+        on_behalf_of: Option<String>,
+    },
+    Liquidate {
+        user: String,
+        collateral_denom: String,
+        recipient: Option<String>,
+    },
+    UpdateAssetCollateralStatus {
+        denom: String,
+        enable: bool,
+    },
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom`](focus://json#3)      | `String`       | Asset to update status for       |
+| [`enable`](focus://json#4)      | `bool`       | Option to enable (true) / disable (false) asset as collateral       |
+
+
+</CH.Section>
+
+## QueryMsg
+
+### `config`
+
+Get config.
+
+<CH.Section>
+    <CH.Code>
+
+```json json
+{
+    "config": {}
+}
+```
+
+```rust msg.rs focus=1:5,72
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(crate::red_bank::ConfigResponse)]
+    Config {},
+    #[returns(crate::red_bank::Market)]
+    Market {
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::Market>)]
+    Markets {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UncollateralizedLoanLimitResponse)]
+    UncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UncollateralizedLoanLimitResponse>)]
+    UncollateralizedLoanLimits {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserDebtResponse)]
+    UserDebt {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserDebtResponse>)]
+    UserDebts {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserCollateralResponse)]
+    UserCollateral {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserCollateralResponse>)]
+    UserCollaterals {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserPositionResponse)]
+    UserPosition {
+        user: String,
+    },
+    #[returns(Uint128)]
+    ScaledLiquidityAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    ScaledDebtAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingLiquidityAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingDebtAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+}
+```
+
+    </CH.Code>
+</CH.Section>
+
+#### `ConfigResponse`
+
+<CH.Section>
+    <CH.Code>
+
+```json json
+{
+    "owner": "...", 
+    "proposed_new_owner": "...", 
+    "emergency_owner": "...", 
+    "proposed_new_emergency_owner": "...", 
+    "address_provider": "...", 
+    "close_factor": 0.123
+}
+```
+
+```rust types.rs
+#[cw_serde]
+pub struct ConfigResponse {
+    pub owner: Option<String>,
+    pub proposed_new_owner: Option<String>,
+    pub emergency_owner: Option<String>,
+    pub proposed_new_emergency_owner: Option<String>,
+    pub address_provider: String,
+    pub close_factor: Decimal,
+}
+```
+
+    </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`owner`](focus://json#2)      | `Option<String>`       | The contract's owner       |
+| [`proposed_new_owner`](focus://json#3)      | `Option<String>`       | The contract's proposed owner       |
+| [`emergency_owner`](focus://json#4)      | `Option<String>`       | The contract's emergency owner       |
+| [`proposed_new_emergency_owner`](focus://json#5)      | `Option<String>`       | The contract's proposed emergency owner       |
+| [`address_provider`](focus://json#6)      | `String`       | Address provider returns addresses for all protocol contracts       |
+| [`close_factor`](focus://json#7)      | `Decimal`       | Maximum percentage of outstanding debt that can be covered by a liquidator       |
+
+</CH.Section>
+
+{/* #### `Config<T>`
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "owner": "...",
+    "address_provider": "...",
+    "close_factor": 0.123
+}
+```
+
+```rust types.rs
+#[cw_serde]
+pub struct Config<T> {
+    pub owner: T,
+    pub address_provider: T,
+    pub close_factor: Decimal,
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`owner`](focus://json#2)      | `T`       | Contract owner       |
+| [`address_provider`](focus://json#3)      | `T`       | Address provider returns addresses for all protocol contracts       |
+| [`close_factor`](focus://json#4)      | `Decimal`       | Maximum percentage of outstanding debt that can be covered by a liquidator       |
+
+</CH.Section> */}
+
+### `market`
+
+Get asset market.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "market": {
+        "denom": "..."
+    }
+}
+```
+
+```rust msg.rs focus=1:3,6:9,72
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(crate::red_bank::ConfigResponse)]
+    Config {},
+    #[returns(crate::red_bank::Market)]
+    Market {
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::Market>)]
+    Markets {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UncollateralizedLoanLimitResponse)]
+    UncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UncollateralizedLoanLimitResponse>)]
+    UncollateralizedLoanLimits {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserDebtResponse)]
+    UserDebt {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserDebtResponse>)]
+    UserDebts {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserCollateralResponse)]
+    UserCollateral {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserCollateralResponse>)]
+    UserCollaterals {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserPositionResponse)]
+    UserPosition {
+        user: String,
+    },
+    #[returns(Uint128)]
+    ScaledLiquidityAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    ScaledDebtAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingLiquidityAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingDebtAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+}
+```
+
+</CH.Code>
+</CH.Section>
+
+#### `Market` (response)
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "denom": "...", 
+    "max_loan_to_value": 0.123,
+    "liquidation_threshold": 0.123,
+    "liquidation_bonus": 0.123, 
+    "reserve_factor": 0.123, 
+    "interest_rate_model": {
+        "optimal_utilization_rate": 0.123, 
+        "base": 0.123, 
+        "slope_1": 0.123, 
+        "slope_2": 0.123
+    }, 
+    "borrow_index": 0.123, 
+    "liquidity_index": 0.123, 
+    "borrow_rate": 0.123, 
+    "liquidity_rate": 0.123, 
+    "indexes_last_updated": 123,
+    "collateral_total_scaled": 123,
+    "debt_total_scaled": 123,
+    "deposit_enabled": true, 
+    "borrow_enabled": true, 
+    "deposit_cap": 123456
+}
+```
+
+```rust market.rs
+#[cw_serde]
+pub struct Market {
+    pub denom: String,
+    pub max_loan_to_value: Decimal,
+    pub liquidation_threshold: Decimal,
+    pub liquidation_bonus: Decimal,
+    pub reserve_factor: Decimal,
+    pub interest_rate_model: InterestRateModel,
+    pub borrow_index: Decimal,
+    pub liquidity_index: Decimal,
+    pub borrow_rate: Decimal,
+    pub liquidity_rate: Decimal,
+    pub indexes_last_updated: u64,
+    pub collateral_total_scaled: Uint128,
+    pub debt_total_scaled: Uint128,
+    pub deposit_enabled: bool,
+    pub borrow_enabled: bool,
+    pub deposit_cap: Uint128,
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom`](focus://json#2)      | `String`       | Denom of the asset       |
+| [`max_loan_to_value`](focus://json#3)      | `Decimal`       | Max base asset that can be borrowed per "base asset" collateral when using the asset as collateral       |
+| [`liquidation_threshold`](focus://json#4)      | `Decimal`       | Base asset amount in debt position per "base asset" of asset collateral that if surpassed makes the user's position liquidatable       |
+| [`liquidation_bonus`](focus://json#5)      | `Decimal`       | Bonus amount of collateral liquidator get when repaying user's debt (Will get collateral from user in an amount equal to debt repayed + bonus)       |
+| [`reserve_factor`](focus://json#6)      | `Decimal`       | Portion of the borrow rate that is kept as protocol rewards       |
+| [`interest_rate_model`](focus://json#7:12)      | [`InterestRateModel`](#interestratemodel)       | model (params + internal state) that defines how interest rate behaves       |
+| [`borrow_index`](focus://json#13)      | `Decimal`       | Borrow index (Used to compute borrow interest)       |
+| [`liquidity_index`](focus://json#14)      | `Decimal`       | Liquidity index (Used to compute deposit interest)       |
+| [`borrow_rate`](focus://json#15)      | `Decimal`       | Rate charged to borrowers       |
+| [`liquidity_rate`](focus://json#16)      | `Decimal`       | Rate paid to depositors       |
+| [`indexes_last_updated`](focus://json#17)      | `u64`       | Timestamp (seconds) where indexes and where last updated       |
+| [`collateral_total_scaled`](focus://json#18)      | `Uint128`       | Total collateral scaled for the market's currency       |
+| [`debt_total_scaled`](focus://json#19)      | `Uint128`       | Total debt scaled for the market's currency       |
+| [`deposit_enabled`](focus://json#20)      | `bool`       | If false cannot deposit       |
+| [`borrow_enabled`](focus://json#21)      | `bool`       | If false cannot borrow       |
+| [`deposit_cap`](focus://json#22)      | `Uint128`       | Deposit Cap (defined in terms of the asset)       |
+
+</CH.Section>
+
+### `markets`
+
+Enumerate markets with pagination.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "markets": {
+        "start_after": "...", 
+        "limit": 10
+    }
+}
+```
+
+```rust msg.rs focus=1:3,10:14,72
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(crate::red_bank::ConfigResponse)]
+    Config {},
+    #[returns(crate::red_bank::Market)]
+    Market {
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::Market>)]
+    Markets {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UncollateralizedLoanLimitResponse)]
+    UncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UncollateralizedLoanLimitResponse>)]
+    UncollateralizedLoanLimits {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserDebtResponse)]
+    UserDebt {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserDebtResponse>)]
+    UserDebts {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserCollateralResponse)]
+    UserCollateral {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserCollateralResponse>)]
+    UserCollaterals {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserPositionResponse)]
+    UserPosition {
+        user: String,
+    },
+    #[returns(Uint128)]
+    ScaledLiquidityAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    ScaledDebtAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingLiquidityAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingDebtAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`start_after`](focus://json#3)   | `Option<String>`       | A market to start after |
+| [`limit`](focus://json#4)   | `Option<u32>`       | The amount of markets to list |
+
+</CH.Section>
+
+#### `Vec<crate::red_bank::Market>`
+
+`markets` returns a vector of the [`Market`](#market) response struct defined above.
+
+### `uncollateralized_loan_limit`
+
+Get uncollateralized limit for given user and asset.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "uncollateralized_loan_limit": {
+        "user": "mars...", 
+        "denom": "..."
+    }
+}
+```
+
+```rust msg.rs focus=1:3,15:19,72
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(crate::red_bank::ConfigResponse)]
+    Config {},
+    #[returns(crate::red_bank::Market)]
+    Market {
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::Market>)]
+    Markets {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UncollateralizedLoanLimitResponse)]
+    UncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UncollateralizedLoanLimitResponse>)]
+    UncollateralizedLoanLimits {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserDebtResponse)]
+    UserDebt {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserDebtResponse>)]
+    UserDebts {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserCollateralResponse)]
+    UserCollateral {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserCollateralResponse>)]
+    UserCollaterals {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserPositionResponse)]
+    UserPosition {
+        user: String,
+    },
+    #[returns(Uint128)]
+    ScaledLiquidityAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    ScaledDebtAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingLiquidityAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingDebtAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`user`](focus://json#3)   | `String`       | User address with uncollateralized loan |
+| [`denom`](focus://json#4)   | `String`       | Asset denom |
+
+
+</CH.Section>
+
+
+#### `UncollateralizedLoanLimitResponse`
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "denom": "...", 
+    "limit": 123
+}
+```
+
+```rust types.rs
+#[cw_serde]
+pub struct UncollateralizedLoanLimitResponse {
+    pub denom: String,
+    pub limit: Uint128,
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom`](focus://json#2)   | `String`       | Asset denom |
+| [`limit`](focus://json#3)   | `Uint128`       | Limit for uncollateralized loan |
+
+</CH.Section>
+
+### `uncollateralized_loan_limits`
+
+Get all uncollateralized limits for a given user.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "uncollateralized_loan_limits": {
+        "user": "mars...", 
+        "start_after": "...", 
+        "limit": 123
+    }
+}
+```
+
+```rust msg.rs focus=1:3,20:25,72
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(crate::red_bank::ConfigResponse)]
+    Config {},
+    #[returns(crate::red_bank::Market)]
+    Market {
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::Market>)]
+    Markets {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UncollateralizedLoanLimitResponse)]
+    UncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UncollateralizedLoanLimitResponse>)]
+    UncollateralizedLoanLimits {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserDebtResponse)]
+    UserDebt {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserDebtResponse>)]
+    UserDebts {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserCollateralResponse)]
+    UserCollateral {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserCollateralResponse>)]
+    UserCollaterals {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserPositionResponse)]
+    UserPosition {
+        user: String,
+    },
+    #[returns(Uint128)]
+    ScaledLiquidityAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    ScaledDebtAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingLiquidityAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingDebtAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`user`](focus://json#3)   | `String`       | User address with uncollateralized loans |
+| [`start_after`](focus://json#4)   | `Option<String>`       | The amount of loans to list |
+| [`limit`](focus://json#5)   | `Option<u32>`       | Limit for uncollateralized loan |
+
+
+</CH.Section>
+
+#### `Vec<crate::red_bank::UncollateralizedLoanLimitResponse>`
+
+`uncollateralized_loan_limits` returns a vector of the [`UncollateralizedLoanLimitResponse`](#uncollateralizedloanlimitresponse) struct defined above. 
+
+### `user_debt`
+
+Get user debt position for a specific asset.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "user_debt": {
+        "user": "mars...", 
+        "denom": "..."
+    }
+}
+```
+
+```rust msg.rs focus=1:3,26:30,72
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(crate::red_bank::ConfigResponse)]
+    Config {},
+    #[returns(crate::red_bank::Market)]
+    Market {
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::Market>)]
+    Markets {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UncollateralizedLoanLimitResponse)]
+    UncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UncollateralizedLoanLimitResponse>)]
+    UncollateralizedLoanLimits {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserDebtResponse)]
+    UserDebt {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserDebtResponse>)]
+    UserDebts {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserCollateralResponse)]
+    UserCollateral {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserCollateralResponse>)]
+    UserCollaterals {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserPositionResponse)]
+    UserPosition {
+        user: String,
+    },
+    #[returns(Uint128)]
+    ScaledLiquidityAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    ScaledDebtAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingLiquidityAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingDebtAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`user`](focus://json#3)   | `String`       | User address with debt |
+| [`denom`](focus://json#4)   | `String`       | Asset denom |
+
+</CH.Section>
+
+#### `UserDebtResponse`
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "denom": "...", 
+    "amount_scaled": 123,
+    "amount": 123, 
+    "uncollateralized": false
+}
+```
+
+```rust types.rs
+#[cw_serde]
+pub struct UserDebtResponse {
+    pub denom: String,
+    pub amount_scaled: Uint128,
+    pub amount: Uint128,
+    pub uncollateralized: bool,
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom`](focus://json#2)   | `String`       | Asset denom |
+| [`amount_scaled`](focus://json#3)   | `Uint128`       | Scaled debt amount stored in contract state |
+| [`amount`](focus://json#4)   | `Uint128`       | Underlying asset amount that is actually owed at the current block |
+| [`uncollateralized`](focus://json#5)   | `bool`       | Marker for uncollateralized debt |
+
+</CH.Section>
+
+### `user_debts`
+
+Get all debt positions for a user.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "user_debts": {
+        "user": "...", 
+        "start_after": "...", 
+        "limit": 123
+    }
+}
+```
+
+```rust msg.rs focus=1:3,31:36,72
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(crate::red_bank::ConfigResponse)]
+    Config {},
+    #[returns(crate::red_bank::Market)]
+    Market {
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::Market>)]
+    Markets {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UncollateralizedLoanLimitResponse)]
+    UncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UncollateralizedLoanLimitResponse>)]
+    UncollateralizedLoanLimits {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserDebtResponse)]
+    UserDebt {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserDebtResponse>)]
+    UserDebts {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserCollateralResponse)]
+    UserCollateral {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserCollateralResponse>)]
+    UserCollaterals {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserPositionResponse)]
+    UserPosition {
+        user: String,
+    },
+    #[returns(Uint128)]
+    ScaledLiquidityAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    ScaledDebtAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingLiquidityAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingDebtAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`user`](focus://json#3)   | `String`       | User address with debt |
+| [`start_after`](focus://json#4)   | `Option<String>`       | Position to start after |
+| [`limit`](focus://json#5)   | `Option<u32>`       | The amount of positions to list |
+
+</CH.Section>
+
+#### `Vec<crate::red_bank::UserDebtResponse>`
+
+`user_debts`  returns a vector of the [`UserDebtResponse`](#userdebtresponse) struct defined above.
+
+### `user_collateral`
+
+Get user collateral position for a specific asset.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "user_collateral": {
+        "user": "mars...",
+        "denom": "..."
+    }
+}
+```
+
+```rust msg.rs focus=1:3,37:41,72
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(crate::red_bank::ConfigResponse)]
+    Config {},
+    #[returns(crate::red_bank::Market)]
+    Market {
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::Market>)]
+    Markets {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UncollateralizedLoanLimitResponse)]
+    UncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UncollateralizedLoanLimitResponse>)]
+    UncollateralizedLoanLimits {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserDebtResponse)]
+    UserDebt {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserDebtResponse>)]
+    UserDebts {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserCollateralResponse)]
+    UserCollateral {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserCollateralResponse>)]
+    UserCollaterals {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserPositionResponse)]
+    UserPosition {
+        user: String,
+    },
+    #[returns(Uint128)]
+    ScaledLiquidityAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    ScaledDebtAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingLiquidityAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingDebtAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`user`](focus://json#3)   | `String`       | User address with collateral |
+| [`denom`](focus://json#4)   | `String`       | Denom of the asset |
+
+</CH.Section>
+
+#### `UserCollateralResponse`
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "denom": "...",
+    "amount_scaled": 123,
+    "amount": 123, 
+    "enabled": true
+}
+```
+
+```rust types.rs
+#[cw_serde]
+pub struct UserCollateralResponse {
+    pub denom: String,
+    pub amount_scaled: Uint128,
+    pub amount: Uint128,
+    pub enabled: bool,
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom`](focus://json#2)   | `String`       | Asset denom |
+| [`amount_scaled`](focus://json#3)   | `Uint128`       | Scaled collateral amount stored in contract state |
+| [`amount`](focus://json#4)   | `Uint128`       | Underlying asset amount that is actually deposited at the current block |
+| [`enabled`](focus://json#5)   | `boold`       | Wether the user is using asset as collateral or not |
+
+</CH.Section>
+
+### `user_collaterals`
+
+Get all collateral positions for a user.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "user_collaterals": {
+        "user": "...",
+        "start_after": "...",
+        "limit": 123
+    }
+}
+```
+
+```rust msg.rs focus=1:3,42:47,72
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(crate::red_bank::ConfigResponse)]
+    Config {},
+    #[returns(crate::red_bank::Market)]
+    Market {
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::Market>)]
+    Markets {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UncollateralizedLoanLimitResponse)]
+    UncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UncollateralizedLoanLimitResponse>)]
+    UncollateralizedLoanLimits {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserDebtResponse)]
+    UserDebt {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserDebtResponse>)]
+    UserDebts {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserCollateralResponse)]
+    UserCollateral {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserCollateralResponse>)]
+    UserCollaterals {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserPositionResponse)]
+    UserPosition {
+        user: String,
+    },
+    #[returns(Uint128)]
+    ScaledLiquidityAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    ScaledDebtAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingLiquidityAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingDebtAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`user`](focus://json#3)   | `String`       | User address with collateral |
+| [`start_after`](focus://json#4)   | `Option<String>`       | Position to start after |
+| [`limit`](focus://json#5)   | `Option<u32>`       | The amount of positions to list |
+
+</CH.Section>
+
+#### `UserCollateralResponse`
+
+`user_collaterals` returns a vector of the [`UserCollateralResponse`](#usercollateralresponse) struct defined above.
+
+### `user_position`
+
+Get user position.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "user_position": {
+        "user": "mars..."
+    }
+}
+```
+
+```rust msg.rs focus=1:3,48:51,72
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(crate::red_bank::ConfigResponse)]
+    Config {},
+    #[returns(crate::red_bank::Market)]
+    Market {
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::Market>)]
+    Markets {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UncollateralizedLoanLimitResponse)]
+    UncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UncollateralizedLoanLimitResponse>)]
+    UncollateralizedLoanLimits {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserDebtResponse)]
+    UserDebt {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserDebtResponse>)]
+    UserDebts {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserCollateralResponse)]
+    UserCollateral {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserCollateralResponse>)]
+    UserCollaterals {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserPositionResponse)]
+    UserPosition {
+        user: String,
+    },
+    #[returns(Uint128)]
+    ScaledLiquidityAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    ScaledDebtAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingLiquidityAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingDebtAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`user`](focus://json#3)   | `String`       | User address |
+
+</CH.Section>
+
+#### `UserPositionResponse`
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+
+    "total_enabled_collateral": "123",
+    "total_collateralized_debt": "123",
+    "weighted_max_ltv_collateral": "123",
+    "weighted_liquidation_threshold_collateral": "123",
+    "health_status": {
+        "max_ltv_hf": 0.123,
+        "liq_threshold_hf": 0.123
+    }
+}
+```
+
+```rust types.rs
+#[cw_serde]
+pub struct UserPositionResponse {
+    pub total_enabled_collateral: Uint128,
+    pub total_collateralized_debt: Uint128,
+    pub weighted_max_ltv_collateral: Uint128,
+    pub weighted_liquidation_threshold_collateral: Uint128,
+    pub health_status: UserHealthStatus,
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`total_enabled_collateral`](focus://json#3)   | `Uint128`       | Total value of all enabled collateral assets. If an asset is disabled as collateral, it will not be included. |
+| [`total_collateralized_debt`](focus://json#4)   | `Uint128`       | Total value of all collateralized debts. If the user has an uncollateralized loan limit in an asset, the debt in this asset will not be included. |
+| [`weighted_max_ltv_collateral`](focus://json#5)   | `Uint128`       |  |
+| [`weighted_liquidation_threshold_collateral`](focus://json#6)   | `Uint128`       |  |
+| [`health_status`](focus://json#3)   | [`UserHealthStatus`](#userhealthstatus)       |  |
+
+
+</CH.Section>
+
+
+
+#### `UserHealthStatus`
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "user_health_status": {
+        "not_borrowing": {}, 
+        "borrowing": {
+            "max_ltv_hf": 0.123,
+            "liq_threshold_hf": 0.123
+        }
+    }
+}
+```
+
+```rust types.rs
+#[cw_serde]
+pub enum UserHealthStatus {
+    NotBorrowing,
+    Borrowing {
+        max_ltv_hf: Decimal,
+        liq_threshold_hf: Decimal,
+    },
+}
+```
+
+</CH.Code>
+
+Params when borrowing.  
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`max_ltv_hf`](focus://json#5)   | `Decimal`       |  |
+| [`liq_threshold_hf`](focus://json#6)   | `Decimal`       |  |
+
+</CH.Section>
+
+
+### `scaled_liquidity_amount`
+
+Get liquidity scaled amount for a given underlying asset amount. (i.e: how much scaled collateral is added if the given amount is deposited).
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "scaled_liquidity_amount": {
+        "denom": "...", 
+        "amount_scaled": 123
+    }
+}
+```
+
+```rust msg.rs focus=1:3,52:56,72
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(crate::red_bank::ConfigResponse)]
+    Config {},
+    #[returns(crate::red_bank::Market)]
+    Market {
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::Market>)]
+    Markets {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UncollateralizedLoanLimitResponse)]
+    UncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UncollateralizedLoanLimitResponse>)]
+    UncollateralizedLoanLimits {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserDebtResponse)]
+    UserDebt {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserDebtResponse>)]
+    UserDebts {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserCollateralResponse)]
+    UserCollateral {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserCollateralResponse>)]
+    UserCollaterals {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserPositionResponse)]
+    UserPosition {
+        user: String,
+    },
+    #[returns(Uint128)]
+    ScaledLiquidityAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    ScaledDebtAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingLiquidityAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingDebtAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom`](focus://json#3)   | `String`       | Denom of the asset |
+| [`amount_scaled`](focus://json#4)   | `Uint128`       | Amount scaled by |
+
+</CH.Section>
+
+Returns `Uint128`
+
+### `scaled_debt_amount`
+
+Get equivalent scaled debt for a given underlying asset amount. (i.e: how much scaled debt is added if the given amount is borrowed).
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "scaled_debt_amount": {
+        "denom": "...", 
+        "amount": 123
+    }
+}
+```
+
+```rust msg.rs focus=1:3,57:61,72
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(crate::red_bank::ConfigResponse)]
+    Config {},
+    #[returns(crate::red_bank::Market)]
+    Market {
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::Market>)]
+    Markets {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UncollateralizedLoanLimitResponse)]
+    UncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UncollateralizedLoanLimitResponse>)]
+    UncollateralizedLoanLimits {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserDebtResponse)]
+    UserDebt {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserDebtResponse>)]
+    UserDebts {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserCollateralResponse)]
+    UserCollateral {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserCollateralResponse>)]
+    UserCollaterals {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserPositionResponse)]
+    UserPosition {
+        user: String,
+    },
+    #[returns(Uint128)]
+    ScaledLiquidityAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    ScaledDebtAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingLiquidityAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingDebtAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom`](focus://json#3)   | `String`       | Denom of the asset |
+| [`amount`](focus://json#4)   | `Uint128`       | Amount scaled by |
+
+</CH.Section>
+
+Returns `Uint128`
+
+### `underlying_liquidity_amount`
+
+Get underlying asset amount for a given asset and scaled amount. (i.e. How much underlying asset will be released if withdrawing by burning a given scaled collateral amount stored in state).
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "underlying_liquidity_amount": {
+        "denom": "...",
+        "amount_scaled": 123
+    }
+}
+```
+
+```rust msg.rs focus=1:3,62:66,72
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(crate::red_bank::ConfigResponse)]
+    Config {},
+    #[returns(crate::red_bank::Market)]
+    Market {
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::Market>)]
+    Markets {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UncollateralizedLoanLimitResponse)]
+    UncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UncollateralizedLoanLimitResponse>)]
+    UncollateralizedLoanLimits {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserDebtResponse)]
+    UserDebt {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserDebtResponse>)]
+    UserDebts {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserCollateralResponse)]
+    UserCollateral {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserCollateralResponse>)]
+    UserCollaterals {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserPositionResponse)]
+    UserPosition {
+        user: String,
+    },
+    #[returns(Uint128)]
+    ScaledLiquidityAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    ScaledDebtAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingLiquidityAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingDebtAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom`](focus://json#3)   | `String`       | Denom of the asset |
+| [`amount_scaled`](focus://json#4)   | `Uint128`       | Amount scaled by |
+
+</CH.Section>
+
+Returns `Uint128`
+
+### `underlying_debt_amount`
+
+Get underlying debt amount for a given asset and scaled amounts. (i.e: How much underlying asset needs to be repaid to cancel a given scaled debt amount stored in state).
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "underlying_debt_amount": {
+        "denom": "...",
+        "amount_scaled": 123
+    }
+}
+```
+
+```rust msg.rs focus=1:3,67:72
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(crate::red_bank::ConfigResponse)]
+    Config {},
+    #[returns(crate::red_bank::Market)]
+    Market {
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::Market>)]
+    Markets {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UncollateralizedLoanLimitResponse)]
+    UncollateralizedLoanLimit {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UncollateralizedLoanLimitResponse>)]
+    UncollateralizedLoanLimits {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserDebtResponse)]
+    UserDebt {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserDebtResponse>)]
+    UserDebts {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserCollateralResponse)]
+    UserCollateral {
+        user: String,
+        denom: String,
+    },
+    #[returns(Vec<crate::red_bank::UserCollateralResponse>)]
+    UserCollaterals {
+        user: String,
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
+    #[returns(crate::red_bank::UserPositionResponse)]
+    UserPosition {
+        user: String,
+    },
+    #[returns(Uint128)]
+    ScaledLiquidityAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    ScaledDebtAmount {
+        denom: String,
+        amount: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingLiquidityAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+    #[returns(Uint128)]
+    UnderlyingDebtAmount {
+        denom: String,
+        amount_scaled: Uint128,
+    },
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom`](focus://json#3)   | `String`       | Denom of the asset |
+| [`amount_scaled`](focus://json#4)   | `Uint128`       | Amount scaled by |
+
+</CH.Section>
+
+Returns `Uint128`
+

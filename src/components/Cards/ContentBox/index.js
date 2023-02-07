@@ -1537,7 +1537,7 @@ export default function ContentBox(props) {
           />
         </a>
 
-        <a className={styles.links} href="../../../docs/develop/contracts/outposts/outposts-intro">
+        <a className={styles.links} href="../../../docs/develop/contracts/red-bank/red-bank-intro">
           <Box 
             title={boxProps.contracts.outposts.title}
             description={boxProps.contracts.outposts.description}
@@ -1585,7 +1585,7 @@ export default function ContentBox(props) {
     return (
       <div className="grid md:grid-cols-2 gap-3">
 
-        <a className={styles.links} href="../../../develop/contracts/outposts/address-provider">
+        <a className={styles.links} href="../../../develop/contracts/red-bank/address-provider">
           <Box 
             title={boxProps.outposts.addressProvider.title}
             description={boxProps.outposts.addressProvider.description}
@@ -1593,7 +1593,7 @@ export default function ContentBox(props) {
           />
         </a>
 
-        <a className={styles.links} href="../../../develop/contracts/outposts/incentives">
+        <a className={styles.links} href="../../../develop/contracts/red-bank/incentives">
           <Box 
             title={boxProps.outposts.incentives.title}
             description={boxProps.outposts.incentives.description}
@@ -1601,7 +1601,7 @@ export default function ContentBox(props) {
           />
         </a>
 
-        <a className={styles.links} href="../../../develop/contracts/outposts/oracle/oracle-intro">
+        <a className={styles.links} href="../../../develop/contracts/red-bank/oracle/oracle-intro">
           <Box 
             title={boxProps.outposts.oracle.title}
             description={boxProps.outposts.oracle.description}
@@ -1609,7 +1609,7 @@ export default function ContentBox(props) {
           />
         </a>
 
-        <a className={styles.links} href="../../../develop/contracts/outposts/red-bank">
+        <a className={styles.links} href="../../../develop/contracts/red-bank/red-bank">
           <Box 
             title={boxProps.outposts.redBank.title}
             description={boxProps.outposts.redBank.description}
@@ -1617,7 +1617,7 @@ export default function ContentBox(props) {
           />
         </a>
 
-        <a className={styles.links} href="../../../develop/contracts/outposts/rewards-collector/rewards-collector-intro">
+        <a className={styles.links} href="../../../develop/contracts/red-bank/rewards-collector/rewards-collector-intro">
           <Box 
             title={boxProps.outposts.rewardsCollector.title}
             description={boxProps.outposts.rewardsCollector.description}
@@ -1633,7 +1633,7 @@ export default function ContentBox(props) {
     return (
       <div className="grid md:grid-cols-2 gap-3">
 
-        <a className={styles.links} href="../../../contracts/outposts/oracle/base">
+        <a className={styles.links} href="../../../contracts/red-bank/oracle/base">
           <Box 
             title={boxProps.oracle.base.title}
             description={boxProps.oracle.base.description}
@@ -1641,7 +1641,7 @@ export default function ContentBox(props) {
           />
         </a>
 
-        <a className={styles.links} href="../../../contracts/outposts/oracle/osmosis">
+        <a className={styles.links} href="../../../contracts/red-bank/oracle/osmosis">
           <Box 
             title={boxProps.oracle.osmosis.title}
             description={boxProps.oracle.osmosis.description}
@@ -1657,7 +1657,7 @@ export default function ContentBox(props) {
     return (
       <div className="grid md:grid-cols-2 gap-3">
 
-        <a className={styles.links} href="../../../contracts/outposts/rewards-collector/base">
+        <a className={styles.links} href="../../../contracts/red-bank/rewards-collector/base">
           <Box 
             title={boxProps.rewardsCollector.base.title}
             description={boxProps.rewardsCollector.base.description}
@@ -1665,7 +1665,7 @@ export default function ContentBox(props) {
           />
         </a>
 
-        <a className={styles.links} href="../../../contracts/outposts/rewards-collector/osmosis">
+        <a className={styles.links} href="../../../contracts/red-bank/rewards-collector/osmosis">
           <Box 
             title={boxProps.rewardsCollector.osmosis.title}
             description={boxProps.rewardsCollector.osmosis.description}

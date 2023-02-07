@@ -194,8 +194,8 @@ const learnContent = [
         },
   
         {
-          href: "../../../../docs/develop/contracts/outposts/outposts-intro",
-          label: "Outposts",
+          href: "../../../../docs/develop/contracts/red-bank/red-bank-intro",
+          label: "Red Bank",
         },
 
       ],
