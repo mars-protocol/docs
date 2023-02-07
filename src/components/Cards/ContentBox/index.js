@@ -1609,7 +1609,7 @@ export default function ContentBox(props) {
           />
         </a>
 
-        <a className={styles.links} href="../../../develop/contracts/red-bank/red-bank">
+        <a className={styles.links} href="../../../develop/contracts/red-bank/">
           <Box 
             title={boxProps.outposts.redBank.title}
             description={boxProps.outposts.redBank.description}
