@@ -432,16 +432,31 @@ const boxProps = {
   }, 
   contracts: {
     marsHub2: {
-      title: "Mars Hub", 
-      description: "Deep dive into the Cosmos-SDK based appchain that underpins activity on Mars Protocol.", 
+      title: "Periphery", 
+      description: "Periphery smart contracts deployed on Mars Hub.", 
       image: HubUrl
     }, 
     outposts: {
       title: "Red Bank", 
       description: "Learn more about the bundle of smart contracts that comprise an outpost.", 
       image: Globe2Url
+    },
+    liquidationHelpers: {
+      title: "Liquidation Helpers", 
+      description: "Helper contracts facilitating liquidations on the Red Bank.", 
+      image: Rocket1Url
     }
   }, 
+
+  liquidationHelpers: {
+    liquidationFilterer: {
+      title: "Liquidation Filterer", 
+      description: "Queries the health status of each account to be liquidated and removes accounts with a health factor < 1.", 
+      image: HubUrl
+    }
+  },
+
+
   marsHub2: {
     airdrop: {
       title: "airdrop", 
@@ -1542,6 +1557,30 @@ export default function ContentBox(props) {
             title={boxProps.contracts.outposts.title}
             description={boxProps.contracts.outposts.description}
             image={boxProps.contracts.outposts.image}
+          />
+        </a>
+
+        <a className={styles.links} href="../../../docs/develop/contracts/liquidation-helpers/liquidation-helpers-intro">
+          <Box 
+            title={boxProps.contracts.liquidationHelpers.title}
+            description={boxProps.contracts.liquidationHelpers.description}
+            image={boxProps.contracts.liquidationHelpers.image}
+          />
+        </a>
+
+      </div>
+    );
+  }
+
+  else if (props.title == 'Liquidation Helpers') {
+    return (
+      <div className="grid md:grid-cols-2 gap-3">
+
+        <a className={styles.links} href="../../../develop/contracts/liquidation-helpers/liquidation-filterer">
+          <Box 
+            title={boxProps.liquidationHelpers.liquidationFilterer.title}
+            description={boxProps.liquidationHelpers.liquidationFilterer.description}
+            image={boxProps.liquidationHelpers.liquidationFilterer.image}
           />
         </a>
 

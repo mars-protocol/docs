@@ -128,6 +128,10 @@ const contentBoxProps = {
 
   missionControl: {
     title: "Mission Control"
+  }, 
+
+  liquidationHelpers: {
+    title: "Liquidation Helpers"
   }
 
 }
@@ -384,6 +388,12 @@ export default function Cards(props) {
     return (
       <div>
         <ContentBox title={contentBoxProps.missionControl.title} />
+      </div>
+    );
+  } else if (props.title == 'Liquidation Helpers') {
+    return (
+      <div>
+        <ContentBox title={contentBoxProps.liquidationHelpers.title} />
       </div>
     );
   }

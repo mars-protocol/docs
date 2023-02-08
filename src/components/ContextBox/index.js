@@ -190,12 +190,17 @@ const learnContent = [
       listItems: [
         {
           href: "../../../../docs/develop/contracts/mars-hub/mars-hub-intro",
-          label: "Mars Hub",
+          label: "Periphery",
         },
   
         {
           href: "../../../../docs/develop/contracts/red-bank/red-bank-intro",
           label: "Red Bank",
+        },
+
+        {
+          href: "../../../../docs/develop/contracts/liquidation-helpers/liquidation-helpers-intro",
+          label: "Liquidation Helpers",
         },
 
       ],
