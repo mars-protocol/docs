@@ -456,6 +456,14 @@ const boxProps = {
     }
   },
 
+  frontend: {
+    osmosisOutpostFrontend: {
+      title: "Osmosis Outpost Frontend", 
+      description: "Discover Mars Protocol's open-source frontend.", 
+      image: HubUrl
+    }
+  }, 
+
 
   marsHub2: {
     airdrop: {
@@ -1581,6 +1589,22 @@ export default function ContentBox(props) {
             title={boxProps.liquidationHelpers.liquidationFilterer.title}
             description={boxProps.liquidationHelpers.liquidationFilterer.description}
             image={boxProps.liquidationHelpers.liquidationFilterer.image}
+          />
+        </a>
+
+      </div>
+    );
+  }
+
+  else if (props.title == 'Frontend') {
+    return (
+      <div className="grid md:grid-cols-2 gap-3">
+
+        <a className={styles.links} href="../../develop/frontend/osmosis-outpost-frontend">
+          <Box 
+            title={boxProps.frontend.osmosisOutpostFrontend.title}
+            description={boxProps.frontend.osmosisOutpostFrontend.description}
+            image={boxProps.frontend.osmosisOutpostFrontend.image}
           />
         </a>
 

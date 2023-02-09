@@ -132,6 +132,10 @@ const contentBoxProps = {
 
   liquidationHelpers: {
     title: "Liquidation Helpers"
+  }, 
+
+  frontend: {
+    title: "Frontend"
   }
 
 }
@@ -394,6 +398,12 @@ export default function Cards(props) {
     return (
       <div>
         <ContentBox title={contentBoxProps.liquidationHelpers.title} />
+      </div>
+    );
+  } else if (props.title == 'Frontend') {
+    return (
+      <div>
+        <ContentBox title={contentBoxProps.frontend.title} />
       </div>
     );
   }

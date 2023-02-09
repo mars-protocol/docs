@@ -235,9 +235,18 @@ const learnContent = [
         },
       ],
     },
+    {
+      title: "Frontend",
+      description: "Discover Mars Protocol's open-source frontend.",
+      listItems: [
+        {
+          label: "Osmosis Outpost Frontend",
+          href: "../../../../docs/develop/frontend/osmosis-outpost-frontend",
+        },
+      ],
+    },
   ];
 
-  
   const validateContent = [
     {
       title: "Node Operators",

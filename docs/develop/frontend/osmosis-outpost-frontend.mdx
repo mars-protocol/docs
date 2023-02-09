@@ -1,0 +1,70 @@
+# Osmosis Outpost Frontend
+
+{/* ![mars-banner-1200w](https://marsprotocol.io/banner.png) */}
+
+Mission Control has published the [full Mars Protocol frontend repository on Github](https://github.com/mars-protocol/interface). That means anyone in the galaxy can download it to:
+
+- Run the frontend to uncover vulnerabilities
+- Explore Mars’ architecture and learn how to build open Cosmos apps
+
+The release comes with a web application license agreement that grants anyone the right to use the code to interact with Martian Council-governed Outposts. The license imposes conditions on use including compliance with applicable law in the licensee’s jurisdiction.
+
+The description of the license herein is only a summary and may be incomplete or inaccurate–only the [full text of the license](https://github.com/mars-protocol/interface/blob/main/LICENSE) is legally binding.
+
+### GitHub Repo
+
+https://github.com/mars-protocol/interface
+
+### Web App
+
+This project is a [NextJS](https://nextjs.org/) React application.
+
+The project utilises [React hooks](https://reactjs.org/docs/hooks-intro.html), functional components, [Zustand](https://github.com/pmndrs/zustand) for state management, and [useQuery](https://github.com/TanStack/query) for general data fetching and management.
+
+Typescript is added and utilised (but optional if you want to create .jsx or .tsx files).
+
+SCSS with [CSS modules](https://create-react-app.dev/docs/adding-a-css-modules-stylesheet) (webpack allows importing css files into javascript, use the CSS module technique to avoid className clashes).
+
+### Deployment
+
+Start web server
+
+```bash
+yarn && yarn dev
+```
+
+### Text and translations
+
+This repository makes use of a [translation repository](https://github.com/mars-protocol/translations). This repository containes all of the translation key values that are used within the UI. The rationale is to have no _hardcoded_ display string values in this repository.
+
+### Development practices
+
+#### Imports
+
+Local components are imported via index files, which can be automatically generated with `yarn index`. This command targets index.ts files with a specific pattern in order to automate component exports. This results in clean imports throughout the pages:
+
+```
+import { Button, Card, Title } from 'components/common'
+```
+
+or
+
+```
+import { Breakdown, RepayInput } from 'components/fields'
+```
+
+In order for this to work, components are place in a folder with UpperCamelCase with the respective Component.tsx file. The component cannot be exported at default, so rather export the `const` instead.
+
+#### Data orchestration
+
+Data is handled with a combination of container components, useQuery and Zustand. Container components are responsible for syncing the application state with the wallet-provider state. This fire of the required queries in useQuery, which are for many cases also stored in Zustand.
+
+We aim to have as much as possible available in Zustand, to have one source of truth.
+
+### Contributing
+
+We welcome and encourage contributions! Please create a pull request with as much information about the work you did and what your motivation/intention was.
+
+### License
+
+Contents of this repository are open source under the [Mars Protocol Web Application License Agreement](https://github.com/mars-protocol/interface/blob/main/LICENSE).
