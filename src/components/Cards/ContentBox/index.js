@@ -59,7 +59,7 @@ const boxProps = {
       image: BalanceUrl
     },
     marsImprovementProposals: {
-      title: "Mars Improvement Proposals", 
+      title: "Mars Improvement Proposal Framework", 
       description: "The framework that empowers Council participants to submit and approve on-chain governance proposals.", 
       image: Rocket2Url
     }, 

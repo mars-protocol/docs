@@ -106,7 +106,7 @@ const learnContent = [
     },
 
     {
-      title: "Mars Improvement Proposals",
+      title: "Mars Improvement Proposal Framework",
       description: "The blueprint that empowers Council participants to submit and approve on-chain governance proposals.",
       listItems: [
         {
