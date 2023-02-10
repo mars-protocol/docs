@@ -1,0 +1,9 @@
+{
+    "redirects": [
+      {
+        "source": "/mars-protocol/mars/mars-faq",
+        "destination": "/docs/overview/faq",
+        "statusCode": 301
+      }
+    ]
+  }
