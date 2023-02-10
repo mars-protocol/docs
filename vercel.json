@@ -1,8 +1,333 @@
 {
     "redirects": [
       {
+        "source": "/mars-protocol",
+        "destination": "/docs/overview/intro-to-mars-protocol/intro-to-mars-protocol-intro",
+        "statusCode": 301
+      }, 
+      {
+        "source": "/mars-protocol/mars-onboarding/the-impact",
+        "destination": "/docs/overview/intro-to-mars-protocol/intro-to-mars-protocol-intro",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/mars-onboarding/the-vision",
+        "destination": "/docs/overview/intro-to-mars-protocol/the-vision",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/mars/the-red-bank",
+        "destination": "/docs/learn/red-bank/red-bank-intro",
+        "statusCode": 301
+      }, 
+      {
+        "source": "/mars-protocol/mars/the-red-bank/supported-assets",
+        "destination": "/docs/overview/mission-control/risk-parameters",
+        "statusCode": 301
+      }, 
+      {
+        "source": "/mars-protocol/mars/the-red-bank/dynamic-interest-rate-model",
+        "destination": "/docs/learn/red-bank/two-slope-interest-rate-model",
+        "statusCode": 301
+      }, 
+      {
+        "source": "/mars-protocol/mars/the-red-bank/red-bank-liquidation-mechanics",
+        "destination": "/docs/learn/red-bank/red-bank-liquidations",
+        "statusCode": 301
+      }, 
+      {
+        "source": "/mars-protocol/mars/the-fields-of-mars",
+        "destination": "/docs/learn/vaults/fields-of-mars",
+        "statusCode": 301
+      }, 
+      {
+        "source": "/mars-protocol/mars/the-fields-of-mars/supported-strategies",
+        "destination": "/docs/learn/vaults/vaults-intro",
+        "statusCode": 301
+      }, 
+      {
+        "source": "/mars-protocol/mars/the-fields-of-mars/fields-liquidation-mechanics",
+        "destination": "/docs/learn/vaults/vaults-liquidations",
+        "statusCode": 301
+      }, 
+      {
+        "source": "/mars-protocol/mars/martian-council",
+        "destination": "/docs/learn/mars-hub/martian-council",
+        "statusCode": 301
+      }, 
+      {
         "source": "/mars-protocol/mars/mars-faq",
         "destination": "/docs/overview/faq",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/tutorials/basics",
+        "destination": "/docs/learn/workstation/basics/basics-intro",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/tutorials/basics/install-your-terra-wallet",
+        "destination": "/docs/learn/workstation/basics/installing-a-wallet/station",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/tutorials/basics/how-to-fund-your-terra-wallet",
+        "destination": "/docs/learn/workstation/basics/funding-a-wallet",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/tutorials/basics/how-to-connect-your-wallet",
+        "destination": "/docs/learn/workstation/basics/connecting-a-wallet",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/tutorials/depositing-assets-in-the-red-bank",
+        "destination": "/docs/learn/workstation/red-bank/lending",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/tutorials/borrowing-assets-from-the-red-bank",
+        "destination": "/docs/learn/workstation/red-bank/borrowing",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/tutorials/leveraged-yield-farming-in-the-fields",
+        "destination": "/docs/learn/workstation/vaults/fields-of-mars",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/tutorials/manage-positions",
+        "destination": "/docs/learn/workstation/red-bank/managing-positions",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/tutorials/manage-positions/approaching-liquidation",
+        "destination": "/docs/learn/workstation/red-bank/managing-positions",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/tutorials/manage-positions/how-to-remove-excessive-collateral",
+        "destination": "/docs/learn/workstation/red-bank/managing-positions",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/tutorials/governance",
+        "destination": "/docs/learn/workstation/governance/governance-intro",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/tutorials/governance/staking",
+        "destination": "/docs/learn/workstation/governance/staking",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/tutorials/governance/adding-proposals",
+        "destination": "/docs/learn/workstation/governance/submitting-a-proposal",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/tutorials/governance/voting",
+        "destination": "/docs/learn/workstation/governance/voting",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/tokenomics/mars-tokenomics",
+        "destination": "/docs/learn/mars-hub/mars-token/mars-token-intro",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/tokenomics/fees",
+        "destination": "/docs/learn/mars-hub/mars-token/fees-and-value-flows",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/tokenomics/staking",
+        "destination": "/docs/learn/mars-hub/mars-token/staking",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/tokenomics/distribution",
+        "destination": "/docs/learn/mars-hub/mars-token/mars-token-and-distribution",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/governance/mars-improvement-proposals-mips",
+        "destination": "/docs/govern/mars-improvement-proposals",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/education/martian-education",
+        "destination": "/docs/learn/overview",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/education/yield-farming",
+        "destination": "/docs/learn/vaults/fields-of-mars",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/contracts-core/protocol-overview",
+        "destination": "/docs/develop/contracts/contracts-intro",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/contracts-core/mars-contract-addresses",
+        "destination": "/docs/develop/contracts/contracts-intro",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/contracts-core/red-bank",
+        "destination": "/docs/develop/contracts/red-bank/",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/contracts-core/matoken",
+        "destination": "/docs/develop/contracts/red-bank/",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/contracts-core/incentives",
+        "destination": "/docs/develop/contracts/red-bank/incentives",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/contracts-core/protocol-rewards-collector",
+        "destination": "/docs/develop/contracts/red-bank/rewards-collector/rewards-collector-intro",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/contracts-core/council",
+        "destination": "/docs/develop/modules/custom-modules/gov",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/contracts-core/treasury",
+        "destination": "/docs/develop/contracts/contracts-intro",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/contracts-core/safety-fund",
+        "destination": "/docs/develop/modules/custom-modules/safety",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/contracts-core/tokenomics",
+        "destination": "/docs/develop/modules/cosmos-sdk-modules/mint",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/contracts-core/tokenomics/mars-token",
+        "destination": "/docs/develop/modules/cosmos-sdk-modules/mint",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/contracts-core/tokenomics/xmars-token",
+        "destination": "/docs/develop/modules/cosmos-sdk-modules/mint",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/contracts-core/tokenomics/staking",
+        "destination": "/docs/develop/modules/cosmos-sdk-modules/staking",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/contracts-core/tokenomics/vesting",
+        "destination": "/docs/develop/contracts/mars-hub/vesting",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/contracts-core/oracle",
+        "destination": "/docs/develop/contracts/red-bank/oracle/oracle-intro",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/contracts-core/address-provider",
+        "destination": "/docs/develop/contracts/red-bank/address-provider",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/contracts-core/access-controls-and-permissions",
+        "destination": "/docs/develop/contracts/contracts-intro",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/contracts-core/code-repositories",
+        "destination": "/docs/develop/contracts/contracts-intro",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/contracts-c2c/fields-of-mars",
+        "destination": "/docs/develop/contracts/contracts-intro",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/security-and-risks/mars-general-risks",
+        "destination": "/docs/overview/legal",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/security-and-risks/disclaimers-and-disclosures",
+        "destination": "/docs/overview/legal",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/security-and-risks/audits",
+        "destination": "/docs/overview/security/audits",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/security-and-risks/bug-bounty-program",
+        "destination": "/docs/overview/security/bug-bounty-program",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/terms-of-service/marsprotocol.io-terms-of-service",
+        "destination": "/docs/overview/legal",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/terms-of-service/mars-privacy-policy",
+        "destination": "/docs/overview/legal",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/terms-of-service/mars-cookie-policy",
+        "destination": "/docs/overview/legal",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/extras/lockdrop",
+        "destination": "/docs/overview/airdrop",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/extras/community",
+        "destination": "/docs/overview/useful-links#socials",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/extras/brand-policy",
+        "destination": "/docs/overview/brand-kit",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/extras/mars-litepaper",
+        "destination": "/docs/overview/useful-links#whitepaper",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/extras/mars-medal-nft",
+        "destination": "/docs/overview/intro-to-mars-protocol/intro-to-mars-protocol-intro",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/extras/lexicon",
+        "destination": "/docs/overview/intro-to-mars-protocol/intro-to-mars-protocol-intro",
+        "statusCode": 301
+      },
+      {
+        "source": "/mars-protocol/extras/useful-links",
+        "destination": "/docs/overview/useful-links",
         "statusCode": 301
       }
     ]
