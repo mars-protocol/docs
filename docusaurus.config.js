@@ -297,12 +297,16 @@ const config = {
               //   to: '/docs/overview/legal/terms-of-service',
               // },
               {
-                label: 'Privacy Policy',
-                to: '/docs/overview/legal/privacy-policy',
+                label: 'Mars FAQ',
+                to: '/docs/overview/faq',
               },
               {
-                label: 'Cookie Policy',
-                to: '/docs/overview/legal/cookie-policy',
+                label: 'Security',
+                to: '/docs/overview/security/security-intro',
+              },
+              {
+                label: 'Legal',
+                to: '/docs/overview/legal',
               },
             ],
           },

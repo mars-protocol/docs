@@ -127,7 +127,7 @@ const boxProps = {
   }, 
   legal: {
     disclaimersAndDisclosures: {
-      title: "Disclaimers & Disclosures", 
+      title: "Mars FUD Bible", 
       description: "Before interacting with Mars, please carefully review these disclaimers.", 
       image: BuildingUrl
     }, 
@@ -991,7 +991,10 @@ export default function ContentBox(props) {
     return (
       <div className="grid md:grid-cols-2 gap-3">
 
-        <a className={styles.links} href="../../../docs/overview/legal/disclaimers-and-disclosures">
+{/* <a target="\_blank" href={require('../../../static/pdf/mars-fud-bible.pdf').default}> Download this docx </a> */}
+
+
+        <a className={styles.links} target="\_blank" href={require('../../../../static/pdf/mars-fud-bible.pdf').default}>
           <Box 
             title={boxProps.legal.disclaimersAndDisclosures.title}
             description={boxProps.legal.disclaimersAndDisclosures.description}
@@ -999,7 +1002,7 @@ export default function ContentBox(props) {
           />
         </a>
 
-        <a className={styles.links} href="../../../docs/overview/legal/terms-of-service">
+        <a className={styles.links} target="\_blank" href={require('../../../../static/pdf/mars-tos.pdf').default}>
           <Box 
             title={boxProps.legal.termsOfService.title}
             description={boxProps.legal.termsOfService.description}
@@ -1008,7 +1011,7 @@ export default function ContentBox(props) {
           />
         </a>
 
-        <a className={styles.links} href="../../../docs/overview/legal/privacy-policy">
+        <a className={styles.links} target="\_blank" href={require('../../../../static/pdf/mars-privacy-policy.pdf').default}>
           <Box 
             title={boxProps.legal.privacyPolicy.title}
             description={boxProps.legal.privacyPolicy.description}
@@ -1016,7 +1019,7 @@ export default function ContentBox(props) {
           />
         </a>
 
-        <a className={styles.links} href="../../../docs/overview/legal/cookie-policy">
+        <a className={styles.links} target="\_blank" href={require('../../../../static/pdf/mars-cookie-policy.pdf').default}>
           <Box 
             title={boxProps.legal.cookiePolicy.title}
             description={boxProps.legal.cookiePolicy.description}
