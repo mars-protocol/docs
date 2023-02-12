@@ -292,21 +292,17 @@ const config = {
           {
             title: 'Docs',
             items: [
-              // {
-              //   label: 'Terms of Service',
-              //   to: '/docs/overview/legal/terms-of-service',
-              // },
               {
-                label: 'Mars FAQ',
-                to: '/docs/overview/faq',
+                label: 'Terms of Service',
+                to: '/docs/overview/legal/terms-of-service',
               },
               {
-                label: 'Security',
-                to: '/docs/overview/security/security-intro',
+                label: 'Privacy Policy',
+                to: '/docs/overview/legal/privacy-policy',
               },
               {
-                label: 'Legal',
-                to: '/docs/overview/legal',
+                label: 'Cookie Policy',
+                to: '/docs/overview/legal/cookie-policy',
               },
             ],
           },
