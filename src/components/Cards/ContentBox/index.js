@@ -21,6 +21,7 @@ import Rover1Url from '../../../../static/img/icons/rover-1.png';
 import Rover2Url from '../../../../static/img/icons/rover-2.png';
 import SatelliteUrl from '../../../../static/img/icons/satellite.png';
 import SpaceshipUrl from '../../../../static/img/icons/spaceship.png';
+import MarsFudBibleUrl from '../../../../static/pdf/mars-fud-bible.pdf#toolbar=0';
 
 // import LaunchUrl from '../../../static/img/launch.png';
 
@@ -990,11 +991,9 @@ export default function ContentBox(props) {
   else if (props.title == 'Legal') {
     return (
       <div className="grid md:grid-cols-2 gap-3">
+{/* <a className={styles.links} target="\_blank" href={require('../../../../static/pdf/mars-fud-bible.pdf?download=false').default}> */}
 
-{/* <a target="\_blank" href={require('../../../static/pdf/mars-fud-bible.pdf').default}> Download this docx </a> */}
-
-
-        <a className={styles.links} target="\_blank" href={require('../../../../static/pdf/mars-fud-bible.pdf').default}>
+        <a className={styles.links} href="../../../docs/overview/legal/disclaimers-and-disclosures">
           <Box 
             title={boxProps.legal.disclaimersAndDisclosures.title}
             description={boxProps.legal.disclaimersAndDisclosures.description}
@@ -1002,7 +1001,7 @@ export default function ContentBox(props) {
           />
         </a>
 
-        <a className={styles.links} target="\_blank" href={require('../../../../static/pdf/mars-tos.pdf').default}>
+        <a className={styles.links} href="../../../docs/overview/legal/terms-of-service">
           <Box 
             title={boxProps.legal.termsOfService.title}
             description={boxProps.legal.termsOfService.description}
@@ -1011,7 +1010,7 @@ export default function ContentBox(props) {
           />
         </a>
 
-        <a className={styles.links} target="\_blank" href={require('../../../../static/pdf/mars-privacy-policy.pdf').default}>
+        <a className={styles.links} href="../../../docs/overview/legal/privacy-policy">
           <Box 
             title={boxProps.legal.privacyPolicy.title}
             description={boxProps.legal.privacyPolicy.description}
@@ -1019,7 +1018,7 @@ export default function ContentBox(props) {
           />
         </a>
 
-        <a className={styles.links} target="\_blank" href={require('../../../../static/pdf/mars-cookie-policy.pdf').default}>
+        <a className={styles.links} href="../../../docs/overview/legal/cookie-policy">
           <Box 
             title={boxProps.legal.cookiePolicy.title}
             description={boxProps.legal.cookiePolicy.description}
@@ -1028,6 +1027,7 @@ export default function ContentBox(props) {
         </a>
 
       </div>
+
     );
   }
 
