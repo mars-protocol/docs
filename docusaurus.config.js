@@ -340,7 +340,10 @@ const config = {
         // copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
       },
 
-      // metadata: [{property: 'image', content: 'https://docs.marsprotocol.io/img/home-hero.png'}],
+      metadata: [
+        {property: 'og:image', content: 'https://docs.marsprotocol.io/img/home-hero.png'}, 
+        {property: 'image', content: 'https://docs.marsprotocol.io/img/home-hero.png'}, 
+      ],
 
       // prism: {
       //   darkTheme: darkCodeTheme,
