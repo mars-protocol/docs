@@ -74,6 +74,45 @@
 
 }
 
+.DocSearch {
+  /* --docsearch-primary-color: rgb(7, 126, 21); */
+  --docsearch-text-color: var(--ifm-font-color-base);
+  --docsearch-primary-color: white;
+  --docsearch-muted-color: var(--ifm-color-secondary-darkest);
+  --docsearch-container-background: rgba(94, 100, 112, 0.85);
+  /* --docsearch-container-background: rgba(0,0,0,0.3); */
+  /* Modal */
+  /* --docsearch-modal-background: var(--ifm-color-secondary-lighter); */
+  --docsearch-modal-background: rgba(0,0,0,0.5);
+
+  /* Search box */
+  /* --docsearch-searchbox-background: var(--ifm-color-secondary); */
+  --docsearch-searchbox-background: rgba(0,0,0,0.3);
+
+
+  /* --docsearch-searchbox-focus-background: var(--ifm-color-white); */
+  --docsearch-searchbox-focus-background: rgba(0,0,0,0.6);
+
+  /* Hit */
+  --docsearch-hit-color: var(--ifm-font-color-base);
+  --docsearch-hit-active-color: var(--ifm-color-white);
+  /* --docsearch-hit-active-color: black; */
+
+  /* --docsearch-hit-background: var(--ifm-color-white); */
+  --docsearch-hit-background: rgba(0,0,0,0.6);
+  /* Footer */
+  /* --docsearch-footer-background: var(--ifm-color-white); */
+  --docsearch-footer-background: rgba(0,0,0,0.3);
+  /* color: black; */
+
+  --docsearch-highlight-color: var(--ifm-navbar-link-color);
+  --docsearch-highlight-color: #14A693;
+
+  --docsearch-searchbox-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.15);
+
+  /* --docsearch-text-color: black; */
+}
+
 /* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
   --ifm-color-primary: #25c2a0;
@@ -86,6 +125,51 @@
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 
   --ifm-font-family-base: 'Inter';
+}
+
+div.DocSearch-Hit-source {
+  background: none;
+}
+
+span.DocSearch-Button-Keys {
+  display: none;
+}
+
+footer.DocSearch-Footer {
+  display: none;
+}
+
+span.DocSearch-Button-Placeholder {
+  text-transform: uppercase;
+}
+
+div.DocSearch-Modal {
+  box-shadow: none;
+}
+
+button.DocSearch.DocSearch-Button {
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+button.DocSearch.DocSearch-Button {
+  color: rgba(255,255,255,0.7);
+}
+
+/* span.DocSearch-Button-Placeholder {
+  color: var(--ifm-navbar-link-color) !important;
+} */
+
+button.DocSearch.DocSearch-Button:hover {
+  color: white !important;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+button.DocSearch.DocSearch-Button:hover .DocSearch-Search-Icon {
+  color: rgba(255, 255, 255, 1);
+}
+
+.DocSearch-Hit a {
+  box-shadow: none !important;
 }
 
 /* body {
