@@ -260,7 +260,7 @@ const boxProps = {
       image: DiamondUrl
     }, 
     fieldsOfMars: {
-      title: "Fields of Mars", 
+      title: "Farm Vaults", 
       description: "Venture into the Fields of Mars and leveraged yield-farming.", 
       image: Globe2Url
     }, 
@@ -406,7 +406,7 @@ const boxProps = {
   }, 
   vaults2: {
     fieldsOfMars: {
-      title: "Fields of Mars", 
+      title: "Farm Vaults", 
       description: "Venture into the Fields of Mars and leveraged yield-farming.", 
       image: Globe2Url
     }

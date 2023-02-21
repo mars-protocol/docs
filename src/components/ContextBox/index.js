@@ -62,7 +62,7 @@ const learnContent = [
       listItems: [
         {
           href: "../../../../docs/learn/vaults/fields-of-mars",
-          label: "Fields of Mars",
+          label: "Farm Vaults",
         },
 
       ],
