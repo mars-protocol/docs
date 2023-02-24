@@ -6,4 +6,18 @@ sidebar_position: 3
 
 Vaults are implemented as whitelisted strategies available for leverage through Rover credit accounts. This means Vaults use the same liquidation engine as Rover (i.e. if the HF drops below 1, the account is deemed at risk and is available to be liquidated). Additionally, note that since Rover tracks your HF across all your positions through a single liquidation treshold, other positions within the same sub-account may affect your Vaults position. 
 
+Let’s take a look at a liquidation example triggered by a fall in an asset’s price:
+1. Elon opens an OSMO-USDC position at 2x leverage by depositing 100 OSMO (worth $100) in collateral and borrowing 100 USDC from the Red Bank.
+2. The vault deposits the tokens in the appropriate pool on Osmosis, then passes the LP tokens to the Apollo DAO vault. The Apollo DAO vault stakes the tokens on Osmosis for auto compounding.
+3. Elon’s opening loan-to-value ratio stands at 50% (total debt / total position value).
+4. Assume OSMO falls 25% to $0.75 on Day 2. That means Elon’s initial deposit is now worth $75, and his LTV is 57% (total debt / position value or $100 / $175). He should consider adding more OSMO to his position.
+5. If (1) Elon’s busy with a SpaceX launch and doesn’t add additional collateral, and (2) OSMO falls another 30% to ~$0.53, his initial deposit is worth $53 and his entire position is worth $153.
+6. His LTV is now 65.4% (total debt / position value or $100 / $153). That puts him over the liquidation LTV of 65%, and his position is at risk of immediate liquidation.
+
+The UI at [osmosis.marsprotocol.io](https://osmosis.marsprotocol.io/redbank) uses a health factor to help you gauge when your positions are approaching liquidation. It’s calculated using the following formula:
+
+Health Factor = (Position Value in USD * Liquidation LTV) / (Debt in USD)
+
+If you apply the Health Factor formula to the liquidation example above, you can see Elon's health factor fell to 0.9945.
+
 Check out [Rover Liquidations](../rover/rover-liquidations) for more information. 
