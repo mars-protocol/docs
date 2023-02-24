@@ -4,7 +4,7 @@ sidebar_position: 3
 
 # Vaults Liquidations
 
-Vaults are implemented as whitelisted strategies available for leverage through Rover credit accounts. This means Vaults use the same liquidation engine as Rover (i.e. if the HF drops below 1, the account is deemed at risk and is available to be liquidated). Additionally, note that since Rover tracks your HF across all your positions through a single liquidation treshold, other positions within the same sub-account may affect your Vaults position. 
+Vaults are implemented as whitelisted strategies available for leverage through Rover credit accounts. This means Vaults use the same liquidation engine as Rover (i.e. if the HF drops below 1, the account is deemed at risk and is available to be liquidated). Additionally, note that Rover will initially track a single vault position with a single liquidation threshold. In future releases, a Rover should be able to track your HF across all your positions through a single liquidation threshold. That means in the future, other positions within the same sub-account may affect your Vaults position.
 
 Let’s take a look at a liquidation example triggered by a fall in an asset’s price:
 1. Elon opens an OSMO-USDC position at 2x leverage by depositing 100 OSMO (worth $100) in collateral and borrowing 100 USDC from the Red Bank.
