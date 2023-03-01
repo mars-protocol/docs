@@ -14,6 +14,14 @@ With `marsd` connected to a remote node you can:
 - Deploy and interact with contracts
 - and more
 
+## Requirements
+
+To install Marsd, you will need the following: 
+
+- Linux or macOS operating system
+- [Go v1.19+](https://go.dev/dl/)
+
+
 ## Setup
 
 Login to your user account (you don't want to use root) and install some essential packages:
@@ -34,32 +42,80 @@ sudo mv go /usr/local
 go version
 ```
 
-Configure related environment variables:
+## Configure Environment Variables 
+
+After installing Go, it is recommended to configure related environment variables:
+
 
 ```bash
-# vim .bashrc
-
+# ~/.bashrc
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/.go
 export GOBIN=$GOPATH/bin
 export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
 ```
 
-## Compile the Mars App Daemon
+The provided code block is a set of environment variable assignments in a bash configuration file (~/.bashrc). These environment variables are commonly used in Go programming and their purpose is to specify the location of Go installation, workspace, and executable files:
 
-Clone the mars repo, checkout and install v0.0.0:
+- `export GOROOT=/usr/local/go` assigns the location of the Go installation directory to the GOROOT environment variable. The export keyword ensures that this variable is accessible to child processes. If using a package manager such as homebrew, this location may vary.
+- `export GOPATH=$HOME/.go` assigns the location of the Go workspace directory to the GOPATH environment variable. The workspace is where Go source code and its dependencies are stored. By default, the workspace is located in $HOME/go but can be customized using this environment variable. 
+- `export GOBIN=$GOPATH/bin` assigns the location of the Go executable files to the GOBIN environment variable. This variable specifies the directory where Go binary files will be installed when using go install command. 
+- Finally, `export PATH=$PATH:$GOPATH/bin:$GOROOT/bin` adds the directories specified in GOPATH/bin and GOROOT/bin to the system's PATH variable. This makes it possible to execute Go binaries from any directory in the terminal by simply typing their name.
 
-Download the Mars Hub source code and checkout the latest stable release, which in our case is v0.0.0:
+Overall, this is a convenient way to set up the Go development environment by specifying the important directories and their locations as environment variables.
+
+## Installing Marsd
+
+To install Marsd, clone the Mars Hub repository, checkout the latest tag (e.g. v1.0.0), and compile the code:
 
 ```bash
-git clone https://github.com/mars-protocol/hub
+git clone https://github.com/mars-protocol/hub.git 
 cd hub
-git checkout v0.0.0
-```
-The command to compile the app is defined in Makefile. For most Cosmos apps it is make install, which will generate an executable in your $GOBIN folder. 
-
-```bash
+git checkout <tag>
 make install
+```
+A `marsd` executable will be created in the $GOBIN directory. 
+
+## Generate Operator Key
+
+Each node comes with three private keys: an operator key, a consensus key, and a node key. If you are connecting to a remote node, you only need an operator key to transact. Later sections will cover consensus and node keys as well. 
+
+To generate your operator key, run the following command: 
+
+```bash 
+marsd keys add <key-name>
+```
+
+Make sure you save the mnemonics! After you end your terminal session, your keys cannot be recovered. 
+
+To use an existing seed phrase, run the following command: 
+
+```bash 
+marsd keys add <key-name> --recover 
+```
+
+## Connect to a Remote Node 
+
+At this point, you can begin interacting with the Mars blockchain by connecting to a remote note. 
+
+Martians who prefer to not operate a node can connect to a remote node with Marsd by appending the `--node` flag at the end of requests along with an RPC endpoint in the `https://<host>:<port>` format. Alternatively, Martians can configure a default node using the following command: 
+ 
+```bash 
+marsd config node https://<host>:<port>
+```
+
+If you are connecting to a remote node, select a node operator that you can trust. Malicious operators can alter query results and censor transactions. Mars contributors currently maintain the following RPC endpoints for public use: 
+
+Mainnet (`mars-1`): [https://rpc.marsprotocol.io:443](https://rpc.marsprotocol.io:443)
+Testnet (`ares-1`): [https://testnet-rpc.marsprotocol.io:443](https://testnet-rpc.marsprotocol.io:443)
+
+A list of public RPC endpoints can also be found in the [Cosmos chain registry](https://github.com/cosmos/chain-registry/blob/master/mars/chain.json). 
+
+To learn about the list of available commands, run `marsd --help` in your terminal. For more information about a specific command, append the `--help` flag at the end of your request, for example: 
+
+```
+marsd query --help
+marsd query bank --help
 ```
 
 ## Commands
