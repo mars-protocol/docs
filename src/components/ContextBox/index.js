@@ -189,18 +189,23 @@ const learnContent = [
       description: "Overview of all Martian smart contracts.",
       listItems: [
         {
-          href: "../../../../docs/develop/contracts/mars-hub/mars-hub-intro",
-          label: "Periphery",
-        },
-  
-        {
           href: "../../../../docs/develop/contracts/red-bank/red-bank-intro",
           label: "Red Bank",
         },
 
         {
+          href: "../../../../docs/develop/contracts/rover/rover-intro",
+          label: "Farm Vaults",
+        },
+
+        {
           href: "../../../../docs/develop/contracts/liquidation-helpers/liquidation-helpers-intro",
           label: "Liquidation Helpers",
+        },
+
+        {
+          href: "../../../../docs/develop/contracts/mars-hub/mars-hub-intro",
+          label: "Periphery",
         },
 
       ],

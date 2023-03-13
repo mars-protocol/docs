@@ -136,6 +136,18 @@ const contentBoxProps = {
 
   frontend: {
     title: "Frontend"
+  }, 
+
+  farmVaultsContracts: {
+    title: "Farm Vaults Contracts"
+  }, 
+
+  swapper: {
+    title: "Swapper"
+  }, 
+
+  zapper: {
+    title: "Zapper"
   }
 
 }
@@ -406,7 +418,28 @@ export default function Cards(props) {
         <ContentBox title={contentBoxProps.frontend.title} />
       </div>
     );
+  } else if (props.title == 'Farm Vaults Contracts') {
+    return (
+      <div>
+        <ContentBox title={contentBoxProps.farmVaultsContracts.title} />
+      </div>
+    );
+  } else if (props.title == 'Swapper') {
+    return (
+      <div>
+        <ContentBox title={contentBoxProps.swapper.title} />
+      </div>
+    );
+  } else if (props.title == 'Zapper') {
+    return (
+      <div>
+        <ContentBox title={contentBoxProps.zapper.title} />
+      </div>
+    );
   }
+
+
+  
 
 
 

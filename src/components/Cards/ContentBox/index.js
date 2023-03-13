@@ -446,6 +446,11 @@ const boxProps = {
       title: "Liquidation Helpers", 
       description: "Helper contracts facilitating liquidations on the Red Bank.", 
       image: Rocket1Url
+    }, 
+    rover: {
+      title: "Farm Vaults", 
+      description: "Learn how Mars implements automated strategies in a firewalled container.", 
+      image: Rocket1Url
     }
   }, 
 
@@ -456,6 +461,55 @@ const boxProps = {
       image: HubUrl
     }
   },
+
+  farmVaultsContracts: {
+    accountNFT: {
+      title: "Account-NFT", 
+      description: "Extension of the cw721 NFT base contract.", 
+      image: HubUrl
+    }, 
+    creditManager: {
+      title: "Credit Manager", 
+      description: "Core contract for creating and managing credit accounts.", 
+      image: HubUrl
+    }, 
+    swapper: {
+      title: "Swapper", 
+      description: "Helper contract for making swaps.", 
+      image: HubUrl
+    }, 
+    zapper: {
+      title: "Zapper", 
+      description: "Helper contract for adding/removing liquidity.", 
+      image: HubUrl
+    }
+  },
+
+  swapper: {
+    base: {
+      title: "Base", 
+      description: "Chain-agnostic logics for the Swapper contract.", 
+      image: HubUrl
+    }, 
+    osmosis: {
+      title: "Osmosis", 
+      description: "Inherits logic from the base contract, with the Osmosis plugins.", 
+      image: HubUrl
+    }
+  }, 
+
+  zapper: {
+    base: {
+      title: "Base", 
+      description: "Chain-agnostic logics for the Zwapper contract.", 
+      image: HubUrl
+    }, 
+    osmosis: {
+      title: "Osmosis", 
+      description: "Inherits logic from the base contract, with the Osmosis plugins.", 
+      image: HubUrl
+    }
+  }, 
 
   frontend: {
     osmosisOutpostFrontend: {
@@ -1555,14 +1609,6 @@ export default function ContentBox(props) {
     return (
       <div className="grid md:grid-cols-2 gap-3">
 
-        <a className={styles.links} href="../../../docs/develop/contracts/mars-hub/mars-hub-intro">
-          <Box 
-            title={boxProps.contracts.marsHub2.title}
-            description={boxProps.contracts.marsHub2.description}
-            image={boxProps.contracts.marsHub2.image}
-          />
-        </a>
-
         <a className={styles.links} href="../../../docs/develop/contracts/red-bank/red-bank-intro">
           <Box 
             title={boxProps.contracts.outposts.title}
@@ -1571,11 +1617,27 @@ export default function ContentBox(props) {
           />
         </a>
 
+        <a className={styles.links} href="../../../docs/develop/contracts/rover/rover-intro">
+          <Box 
+            title={boxProps.contracts.rover.title}
+            description={boxProps.contracts.rover.description}
+            image={boxProps.contracts.rover.image}
+          />
+        </a>
+
         <a className={styles.links} href="../../../docs/develop/contracts/liquidation-helpers/liquidation-helpers-intro">
           <Box 
             title={boxProps.contracts.liquidationHelpers.title}
             description={boxProps.contracts.liquidationHelpers.description}
             image={boxProps.contracts.liquidationHelpers.image}
+          />
+        </a>
+
+        <a className={styles.links} href="../../../docs/develop/contracts/mars-hub/mars-hub-intro">
+          <Box 
+            title={boxProps.contracts.marsHub2.title}
+            description={boxProps.contracts.marsHub2.description}
+            image={boxProps.contracts.marsHub2.image}
           />
         </a>
 
@@ -1598,6 +1660,96 @@ export default function ContentBox(props) {
       </div>
     );
   }
+
+  else if (props.title == 'Farm Vaults Contracts') {
+    return (
+      <div className="grid md:grid-cols-2 gap-3">
+
+        <a className={styles.links} href="../../../develop/contracts/rover/account-nft">
+          <Box 
+            title={boxProps.farmVaultsContracts.accountNFT.title}
+            description={boxProps.farmVaultsContracts.accountNFT.description}
+            image={boxProps.farmVaultsContracts.accountNFT.image}
+          />
+        </a>
+
+        <a className={styles.links} href="../../../develop/contracts/rover/credit-manager">
+          <Box 
+            title={boxProps.farmVaultsContracts.creditManager.title}
+            description={boxProps.farmVaultsContracts.creditManager.description}
+            image={boxProps.farmVaultsContracts.creditManager.image}
+          />
+        </a>
+
+        <a className={styles.links} href="../../../develop/contracts/rover/swapper">
+          <Box 
+            title={boxProps.farmVaultsContracts.swapper.title}
+            description={boxProps.farmVaultsContracts.swapper.description}
+            image={boxProps.farmVaultsContracts.swapper.image}
+          />
+        </a>
+
+        <a className={styles.links} href="../../../develop/contracts/rover/zapper">
+          <Box 
+            title={boxProps.farmVaultsContracts.zapper.title}
+            description={boxProps.farmVaultsContracts.zapper.description}
+            image={boxProps.farmVaultsContracts.zapper.image}
+          />
+        </a>
+
+      </div>
+    );
+  }
+
+  else if (props.title == 'Swapper') {
+    return (
+      <div className="grid md:grid-cols-2 gap-3">
+
+        <a className={styles.links} href="../../../contracts/rover/swapper/base">
+          <Box 
+            title={boxProps.swapper.base.title}
+            description={boxProps.swapper.base.description}
+            image={boxProps.swapper.base.image}
+          />
+        </a>
+
+        <a className={styles.links} href="../../../contracts/rover/swapper/osmosis">
+          <Box 
+            title={boxProps.swapper.osmosis.title}
+            description={boxProps.swapper.osmosis.description}
+            image={boxProps.swapper.osmosis.image}
+          />
+        </a>
+
+      </div>
+    );
+  }
+
+  else if (props.title == 'Zapper') {
+    return (
+      <div className="grid md:grid-cols-2 gap-3">
+
+        <a className={styles.links} href="../../../contracts/rover/zapper/base">
+          <Box 
+            title={boxProps.zapper.base.title}
+            description={boxProps.zapper.base.description}
+            image={boxProps.zapper.base.image}
+          />
+        </a>
+
+        <a className={styles.links} href="../../../contracts/rover/zapper/osmosis">
+          <Box 
+            title={boxProps.zapper.osmosis.title}
+            description={boxProps.zapper.osmosis.description}
+            image={boxProps.zapper.osmosis.image}
+          />
+        </a>
+
+      </div>
+    );
+  }
+
+
 
   else if (props.title == 'Frontend') {
     return (
