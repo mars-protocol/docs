@@ -405,15 +405,22 @@ const boxProps = {
     }
   }, 
   vaults2: {
-    fieldsOfMars: {
-      title: "Farm Vaults", 
-      description: "Venture into the Fields of Mars and leveraged yield-farming.", 
+    locking: {
+      title: "Locking", 
+      description: "Discover how to lock tokens into one of Mars' automated strategies in a firewalled container.", 
+      image: Globe2Url
+    }, 
+    repayingDebt: {
+      title: "Repaying Debt", 
+      description: "Learn how to repay your debt and lower your leverage.", 
+      image: Globe2Url
+    }, 
+    unlocking:{
+      title: "Unlocking", 
+      description: "Discover unbonding times and how to unlock your position.", 
       image: Globe2Url
     }
   }, 
-
-
-
   marsCLI: {
     publicEndpoints: {
       title: "Public Endpoints", 
@@ -1561,11 +1568,27 @@ export default function ContentBox(props) {
     return (
       <div className="grid md:grid-cols-2 gap-3">
 
-        <a className={styles.links} href="../../../learn/workstation/vaults/fields-of-mars">
+        <a className={styles.links} href="../../../learn/workstation/vaults/locking">
           <Box 
-            title={boxProps.vaults2.fieldsOfMars.title}
-            description={boxProps.vaults2.fieldsOfMars.description}
-            image={boxProps.vaults2.fieldsOfMars.image}
+            title={boxProps.vaults2.locking.title}
+            description={boxProps.vaults2.locking.description}
+            image={boxProps.vaults2.locking.image}
+          />
+        </a>
+
+        <a className={styles.links} href="../../../learn/workstation/vaults/repaying-debt">
+          <Box 
+            title={boxProps.vaults2.repayingDebt.title}
+            description={boxProps.vaults2.repayingDebt.description}
+            image={boxProps.vaults2.repayingDebt.image}
+          />
+        </a>
+
+        <a className={styles.links} href="../../../learn/workstation/vaults/unlocking">
+          <Box 
+            title={boxProps.vaults2.unlocking.title}
+            description={boxProps.vaults2.unlocking.description}
+            image={boxProps.vaults2.unlocking.image}
           />
         </a>
 
