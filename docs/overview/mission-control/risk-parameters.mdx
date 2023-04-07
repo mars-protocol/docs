@@ -20,23 +20,23 @@ import Admonition from '@theme/Admonition'
 
 ### Red Bank - Asset Specific Params
 
-| Param Name  | Value ATOM   | Value OSMO  | Value axlUSDC  | Description  |
-|---|---|---|---|---|
-| Reserve Factor  | 20%  | 20%  | 20%  | % Of Borrow interest that stays in the protocol as fees  |
-| Max Loan To Value  | 68%  | 59%  | 74%  | Max percentage of collateral that can be borrowed  |
-| Liquidation Threshold  | 70%  | 61%  | 75%  | LTV at which the loan is defined as undercollateralized and can be liquidated  |
-| Liquidation Bonus  | 15%  | 15%  | 10%  | % of extra collateral the liquidator gets as a bonus  |
-| Active  | yes  | yes  | yes  | Wether any action can be done with the asset  |
-| Deposit Enabled  | yes  | yes  | yes  | Wether addresses can deposit  |
-| Borrow Enabled  | yes  | yes  | yes  | Wether addresses can borrow  |
-| Uoptimal  | 60%  | 60%  | 80%  | Target utilization rate  |
-| Base  | 0  | 0  | 0  | Interest Rate at 0 utilization rate  |
-| slope 1  | 15%  | 15%  | 20%  | slope for when U < Uoptimal  |
-| slope 2  | 300%  | 300%  | 200%  | slope for when U > Uoptimal  |
-| Deposit Cap   | 100,000  | 2,500,000  | 500,000  | Max amount that can be deposited into the Red Bank  |
+| Param Name  | Value ATOM   | Value OSMO  | Value axlUSDC  | Value stATOM  | Description  |
+|---|---|---|---|---|---|
+| Reserve Factor  | 20%  | 20%  | 20%  | 20%  | % Of Borrow interest that stays in the protocol as fees  |
+| Max Loan To Value  | 68%  | 59%  | 74%  | 54.5%  | Max percentage of collateral that can be borrowed  |
+| Liquidation Threshold  | 70%  | 61%  | 75%  | 55%  | LTV at which the loan is defined as undercollateralized and can be liquidated  |
+| Liquidation Bonus  | 15%  | 15%  | 10%  | 15%  | % of extra collateral the liquidator gets as a bonus  |
+| Active  | yes  | yes  | yes  | yes  | Wether any action can be done with the asset  |
+| Deposit Enabled  | yes  | yes  | yes  | yes  | Wether addresses can deposit  |
+| Borrow Enabled  | yes  | yes  | yes  | no  | Wether addresses can borrow  |
+| Uoptimal  | 60%  | 60%  | 80%  | 60%  | Target utilization rate  |
+| Base  | 0  | 0  | 0  | 0  | Interest Rate at 0 utilization rate  |
+| slope 1  | 15%  | 15%  | 20%  | 10%  | slope for when U < Uoptimal  |
+| slope 2  | 300%  | 300%  | 200%  | 300%  | slope for when U > Uoptimal  |
+| Deposit Cap   | 100,000  | 2,500,000  | 500,000  | 45,000  | Max amount that can be deposited into the Red Bank  |
 
 <Admonition type="info" title="NOTE">
-RB Caps are denominated in deposit token itself (i.e. 2.5M OSMO)
+Red Bank deposit caps are denominated in the deposit token itself (i.e. 2.5M OSMO)
 </Admonition>
 
 ### Red Bank Deposit Incentives
