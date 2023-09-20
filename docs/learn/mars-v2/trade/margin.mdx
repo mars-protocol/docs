@@ -1,0 +1,30 @@
+---
+sidebar_position: 2
+---
+
+import Margin1Url from '@site/static/img/learn/rover/margin1.png';
+import Margin2Url from '@site/static/img/learn/rover/margin2.png';
+
+# Margin
+
+As with every other activity supported by credit accounts in Mars v2, users will be able to long and short assets using leverage. The entire value of a user's account will be used as collateral and the user will be able to long and short a higher value of assets than the sum value of the user’s deposited collateral as long as their HF is > 1.
+
+This also means any position within a credit account can be used as collateral for trading. E.g. you could hold an LP position in the stATOM-ATOM farm. When you trade using margin, the entire value of your account, including your stATOM-ATOM LP position, behaves as collateral for your trade and allows you to take out more leverage. 
+
+This unlocks a new level of capital efficiency and potential strategies. For example, if the yield coming from the LP position outweighs the cost of borrowing to short or long, you could be getting paid to margin trade!
+
+## Leveraged Longs
+
+For leveraged longs, users will be able to select an asset to sell/borrow from the Red Bank (typically a stablecoin) and an asset to buy/long. Behind the scenes, the credit account will automatically borrow stablecoins from the Red Bank and swap them for the desired asset. At the end of the trade, the user will hold more of their desired asset but have a loan in stablecoins. If the value of the asset increases, the stablecoin debt becomes profitable to repay. 
+
+For example, imagine a hypothetical trader who sees a market opportunity to long ATOM, which is trading at $10. The trader buys 200 ATOM on margin by borrowing axlUSDC against his collateral. On the backend, the credit account borrows 2,000 axlUSDC from the Red Bank and swaps it for 200 ATOM. The trader’s total debt is now 2,000 axlUSDC. The figure below shows two hypothetical outcomes from this trade.
+
+<img src={ Margin2Url } />
+
+## Leveraged Shorts
+
+To enable leveraged shorts, the asset must already be borrowable in the Red Bank. Assets that are not yet borrowable can be added via standard governance procedures. Once an asset is borrowable in the Red Bank, a user can select the asset to short and the asset to short it against (typically a stablecoin). Specifically, the short transaction involves borrowing an asset from Mars and selling it for another asset they’re willing to hold for the duration of the short. This effectively creates a borrow position for the asset you are shorting. If the value of the asset decreases, you can repay your loan at a lower cost. 
+
+For example, imagine a hypothetical trader who sees a market opportunity to short ATOM, which is trading at $10. The trader sells 100 ATOM on margin against axlUSDC, borrowing against his collateral in the process. On the backend, the credit account borrows 100 ATOM from the Red Bank and swaps it for 1,000 axlUSDC. The trader’s total debt is now 100 ATOM. The figure below shows two hypothetical outcomes from this trade.
+
+<img src={ Margin1Url } />

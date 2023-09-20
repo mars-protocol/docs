@@ -1,0 +1,59 @@
+---
+sidebar_position: 4
+---
+
+import FieldsofMars1Url from '@site/static/img/learn/vaults/fields-of-mars1.png';
+
+import FieldsofMars2Url from '@site/static/img/learn/vaults/fields-of-mars2.png';
+
+import FieldsofMars3Url from '@site/static/img/learn/vaults/fields-of-mars3.png';
+
+
+# Farm
+
+Farm vaults are a container for assets implementing automated strategies, which generate yield. They offer auto-compounded yield generation capabilities on any supported chain. Written by third parties and approved for integration with Mars by the Martian Council, users can deposit assets into these vaults to participate in the automated yield generation strategies. Strategies could include:
+
+Yield farming governance tokens
+Liquidity provisioning on AMMs
+Other advanced features such as automated trading, options strategies, etc.
+
+At any time, third parties can author or propose new vault strategies with custom risk parameters for Mars. If approved by governance, these strategies will be deployed and incorporated into Mars’ credit accounts, so they can be levered up or used as collateral for other strategies. 
+
+## Leveraged Farming
+
+Farm Vaults allow users to leverage yield farm vault positions by using rover credit accounts. The entire value of a users credit accounts gets used as collateral, extending a credit line to borrow more assets than the collateral deposited (as long as the HF > 1) in order to leverage farm an LP pair. 
+
+At a high level, here's how deposits work with the OSMO-ATOM strategy, resulting in an effective 2x leverage ratio for the user.
+
+<img src={FieldsofMars1Url} alt={"A leveraged yield farming position in the Fields of Mars"} />
+
+<p style={{
+    textAlign: 'center', 
+    color: 'rgb(136, 153, 168)', 
+    fontWeight: '700',
+    fontSize: '14px',
+}}>A leveraged yield farming position in the Fields of Mars</p>
+
+This allows the user to farm with leverage with increased yield (in the form of OSMO tokens issued as bonding rewards). However, should the value of OSMO drop, the risk of liquidation is increased. Both scenarios are illustrated below.
+
+In scenario 1 (figure below), the user supplies ATOM and borrows OSMO from the Red Bank's OSMO pool. The ATOM and OSMO are deposited in the ATOM-OSMO LP pool and staked in the Osmosis staking contract. As long as the yield in fees and OSMO rewards exceeds the interest rate, the user's profit will increase faster than borrowing costs.
+
+<img src={FieldsofMars2Url} alt={"Value of LP asset remains constant or increases"} />
+
+<p style={{
+    textAlign: 'center', 
+    color: 'rgb(136, 153, 168)', 
+    fontWeight: '700',
+    fontSize: '14px',
+}}>Value of LP asset remains constant or increases</p>
+
+In Scenario 2 (figure below), the ATOM-OSMO LP share is held as collateral by the smart contract and the value of the collateral and debt is tracked over time (using the AMM itself as the oracle). If the ratio of debt to collateral exceeds a certain level defined in the smart contract (i.e. the margin requirement), the LP share is liquidated to pay back the debt.
+
+<img src={FieldsofMars3Url} alt={"Value of LP asset decreases, resulting in liquidation"} />
+
+<p style={{
+    textAlign: 'center', 
+    color: 'rgb(136, 153, 168)', 
+    fontWeight: '700',
+    fontSize: '14px',
+}}>Value of LP asset decreases, resulting in liquidation</p>

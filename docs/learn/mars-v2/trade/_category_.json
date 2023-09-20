@@ -1,0 +1,5 @@
+{
+    "label": "Trade",
+    "position": 2,
+    "link": { "type": "doc", "id": "trade-intro" }
+}

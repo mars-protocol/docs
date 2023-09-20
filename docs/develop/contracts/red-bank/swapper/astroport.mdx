@@ -1,0 +1,75 @@
+---
+sidebar_position: 2
+---
+
+# astroport
+
+## Links
+
+- **Deployments**: 
+- **Types**:
+    - **Rust**: 
+    - **Typescript**: 
+- **Contract repo**: 
+- **Audits**: https://github.com/mars-protocol/mars-audits
+
+## `AstroportRoute`
+
+    <CH.Section>
+        <CH.Code>
+
+        ```json
+        {
+          "factory": "string",
+          "operations": SwapOperation[],
+          "oracle": "string",
+          "router": "string"
+        }
+        ```
+
+        </CH.Code>
+    </CH.Section>
+
+### `SwapOperation`
+
+    <CH.Section>
+        <CH.Code>
+
+        ```json
+        | {
+            "native_swap": {
+              "ask_denom": "string",
+              "offer_denom": "string"
+            }
+          }
+        | {
+            "astro_swap": {
+              "ask_asset_info": AssetInfo,
+              "offer_asset_info": AssetInfo
+            }
+          }
+        ```
+
+        </CH.Code>
+    </CH.Section>
+
+### `AssetInfo`
+
+    <CH.Section>
+        <CH.Code>
+
+        ```json
+        | {
+            "token": {
+              "contract_addr": "Addr"
+            }
+          }
+        | {
+            "native_token": {
+              "denom": "string"
+            }
+          }
+        ```
+
+        </CH.Code>
+    </CH.Section>

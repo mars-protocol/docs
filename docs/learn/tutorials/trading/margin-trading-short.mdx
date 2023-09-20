@@ -1,0 +1,64 @@
+---
+sidebar_position: 3
+---
+
+import Step1 from '@site/static/img/mars-v2/tutorials/8-margin-trading-short/step-1.png';
+import Step2 from '@site/static/img/mars-v2/tutorials/8-margin-trading-short/step-2.png';
+import Step3 from '@site/static/img/mars-v2/tutorials/8-margin-trading-short/step-3.png';
+import Step4 from '@site/static/img/mars-v2/tutorials/8-margin-trading-short/step-4.png';
+import Step5 from '@site/static/img/mars-v2/tutorials/8-margin-trading-short/step-5.png';
+import Step6 from '@site/static/img/mars-v2/tutorials/8-margin-trading-short/step-6.png';
+import Step7 from '@site/static/img/mars-v2/tutorials/8-margin-trading-short/step-7.png';
+import Step8 from '@site/static/img/mars-v2/tutorials/8-margin-trading-short/step-8.png';
+
+# Margin Trading Short
+
+In this tutorial, we will explore the steps involved in setting up a margin trade with a short position on the Mars dApp. Margin trading allows you to potentially amplify your gains by leveraging the value of your credit account. Follow along to learn how to initiate a short position:
+
+### Step 1: Initiating Margin Trading
+
+Start by visiting the "Trade" page and toggling the margin option on. This process utilizes the entire value of your credit account as collateral, enabling you to borrow assets whose value surpasses your account's total, as long as your Health Factor (HF) remains above 1.
+
+<img src={ Step1 } style={{ marginBottom: 15 } } />
+
+### Step 2: Selecting an Asset to Buy
+
+Typically, this would be a stablecoin. Engaging in a short trade means borrowing the asset you aim to short, which is then swapped for stablecoins. If the asset's value diminishes, repaying the loan becomes less costly, thus yielding a profit.
+
+<img src={ Step2 } style={{ marginBottom: 15 } } />
+
+### Step 3: Choosing an Asset to Sell/Short
+
+Subsequently, pick an asset from the available list that you intend to sell or short in the trade. Note that the asset must be borrowable in order to be eligible for shorting with leverage. 
+
+<img src={ Step3 } style={{ marginBottom: 15 } } />
+
+### Step 4: Defining the Trade Amount
+
+Decide on the amount you wish to trade. Remember, specifying an amount less than what's indicated on the margin ticker will execute a regular spot trade.
+
+<img src={ Step4 } style={{ marginBottom: 15 } } />
+
+### Step 5: Executing a Leveraged Short
+
+When you select an amount beyond the margin ticker, the system borrows the respective asset, selling it for stablecoins and shorting it on leverage, enhancing your position's potential gains.
+
+<img src={ Step5 } style={{ marginBottom: 15 } } />
+
+### Step 6: Transaction Confirmation
+
+Confirm your intention by signing and authorizing the transaction as instructed on the screen, thereby initializing the short trade.
+
+<img src={ Step6 } style={{ marginBottom: 15 } } />
+
+### Step 7: Inspecting Balances
+
+Once the transaction is complete, take a moment to inspect your balances. You will notice an increased exposure to stablecoins and a debt in the asset you shorted. The objective is to settle this debt at a lower cost if the asset depreciates, securing a profit.
+
+<img src={ Step7 } style={{ marginBottom: 15 } } />
+
+### Step 8: Managing Borrowed Positions
+
+To manage and observe your borrowed position more closely, navigate to the "Borrow" tab. Here, you can comprehensively view and manage your borrowed assets, optimizing your trading strategy.
+
+<img src={ Step8 } style={{ marginBottom: 15 } } />

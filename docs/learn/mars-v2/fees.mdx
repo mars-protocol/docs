@@ -1,0 +1,16 @@
+---
+sidebar_position: 8
+---
+
+import FeesUrl from '@site/static/img/mars-v2/fees.png';
+
+
+# Fees 
+
+90% of all “interest” payments made by borrowers will flow to Red Bank lenders (depositors), and the remaining 10% will be split equally between the Safety Fund (described in the next section) and Mars Hub stakers (less a commission to validators, if applicable) (see Fig. 18). 
+
+All interest payments sent to the Safety Fund are first swapped to Axelar USDC (axlUSDC) by a rewards collector contract and transferred to Mars Hub. Interest payments for Mars Hub validators are swapped to MARS and sent to the Mars Hub distribution module, which splits it between validators and delegators per the validator’s commission rates.
+
+<img src={ FeesUrl } style={{ paddingBottom: 15 }} />
+
+Note that the share of fees, the asset they’re denominated in and the fee recipient groups are parameters that can be adjusted by Mars governance.

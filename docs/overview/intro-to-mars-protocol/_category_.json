@@ -1,5 +1,5 @@
 {
-    "label": "Welcome to Mars",
+    "label": "Welcome to Mars v2",
     "position": 1,
     "link": { "type": "doc", "id": "intro-to-mars-protocol-intro" }
 }

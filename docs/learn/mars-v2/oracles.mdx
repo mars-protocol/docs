@@ -1,0 +1,44 @@
+---
+sidebar_position: 9
+---
+
+import PythParamsUrl from '@site/static/img/mars-v2/pyth.png';
+
+# Oracles
+
+Embracing the future, the Martian Council has chosen Pythnet as its oracle solution for pricing assets. Pyth is a sophisticated oracle network that supplies real-time, high-fidelity data feeds from multiple price sources. This enhances its robustness against price manipulation attacks by making it more expensive and less profitable to exploit.
+
+This integration involves two significant changes. 
+
+1. The first relates to Mars' base asset. Previously, Mars operated with OSMO as the reference asset, providing the base value against which all other assets were compared and valued. However, given that Pyth price feeds are denominated in USD, the normalization asset has been revised accordingly. 
+2. The second change relates to the specific oracle implementations for each asset. Note that as not all assets are supported by Pyth, a hybrid implementation (where a TWAP and a Pyth-based feed are used) is needed for some.
+
+The following chart shows the new implementation for each asset currently listed on the Red Bank:
+
+<img src={ PythParamsUrl } style={{ marginBottom: 15 } } />
+
+Some additional notes for specific assets: 
+
+- **axlUSDC, axlWETH, and axlWBTC**: The new oracle implementation utilizes the price of the underlying asset instead of the bridged asset. This approach has notable implications. If an incident impacts the bridge - for instance, a loss of assets - Mars would remain unaware of this development, continuing to price bridged assets at the underlying asset's value. This scenario could expose the protocol to potential losses. It's a known but considerable risk, and Mars’ current implementation should be regarded as a temporary measure. In the future, the protocol could aim to adopt a more robust implementation incorporating a bridge “proof of reserves” mechanism. However, with Axelar’s widespread adoption in the Cosmos, and a long track record of security for bridged assets, the Martian Council has deemed the risk minimal enough to proceed.
+- **stATOM**: A hybrid implementation is necessary since Pyth doesn’t offer an stATOM/USD feed. Stride is in the process of deploying a redemption rate contract on Osmosis, which would enable the migration to a redemption rate-centric approach. As soon as the Stride contract becomes operational, the protocol could be upgraded to proceed with updating the current implementation.
+- **AXL**: Similar to stATOM, a hybrid implementation is required since Pyth doesn’t currently offer an AXL/USD feed. However, Pyth is actively working on this addition. Once it becomes available, the protocol could be upgraded to transition the current implementation exclusively to Pyth.
+
+## Circuit Breakers
+
+Instead of naively absorbing the feeds received from Pyth, Mars v2 implements two new circuit breakers intended to mitigate potential price manipulation attacks. These circuit breakers will activate whenever the volatility of a certain feed is extremely high or there’s too much uncertainty over the real level of a certain price. Whenever any of these filters triggers, the transaction will be invalidated*. The circuit breakers are the following:
+
+- **Exponential Moving Average (EMA)**: In addition to the spot price, Pyth offers an Exponential Moving Average (EMA) with each price feed. The EMA is a single price that aggregates the spot price and historical prices for a certain asset, where “the most recent samples receive the most weight, and samples further back in time get exponentially less weight the farther in the past they are.” Given this characteristic, the EMA is significantly more resistant to manipulation than the spot price. This is the reason we incorporate the EMA as a circuit breaker. The way we incorporate it is as follows:
+    - First, we set some bounds above and below the EMA (i.e. Upper Bound = EMA + 15%; Lower Bound = EMA - 15%).
+    - Then we check whether the spot price is within those bounds.
+    - If it is, the transaction is valid.
+    - If it isn’t, the transaction is invalidated.
+- **Confidence Interval (CI)**: Pyth offers a CI with each feed that informs on the level of certainty that the publishers of that feed have on the reported price. All else equal, the larger the CI, the lower the certainty of publishers on the real spot price of the asset. As such, the rationale for incorporating this circuit breaker is obvious. The way it’s implemented is as follows:
+    - If the ratio between the CI and the EMA is above a certain threshold, the transaction is invalidated.
+
+Both the magnitude of the EMA bounds and the Confidence Interval threshold are governance defined parameters.
+
+*Note that there are some exceptions on what transactions are invalidated by circuit breakers triggering. These exceptions are: liquidation, deposit and repay transactions. The reason for the exceptions is that we want to always guarantee liveness for these transactions. For liquidations because solvency of the system is a paramount concern and circuit breakers could lead to halting liquidations. For deposit and repay transactions because we want to allow users to always be able to save their positions from liquidation, even when certain circuit breakers are activated. There’s one final exception, and it’s for withdraw transactions from accounts with no debt.*
+
+**These circuit breakers trade off liveness for security. For a lending protocol, we believe this is a worthwhile tradeoff. However, users should be aware that when these new circuit breakers are triggered they won’t be able to interact with the protocol (including borrows, withdrawals and so on). This could lead to temporary or permanent loss of funds or value, including the inability to sell assets while prices or market conditions are deteriorating. While we don’t expect this to happen often, it is definitely a possibility.**
+
+**Additionally, as with the new liquidations mechanism, these new circuit breakers might lead to unforeseen issues at both the mechanism and smart contract levels.**

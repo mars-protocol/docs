@@ -1,0 +1,5 @@
+{
+    "label": "Credit Accounts",
+    "position": 2,
+    "link": { "type": "doc", "id": "credit-accounts-intro" }
+}

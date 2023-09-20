@@ -1,0 +1,75 @@
+---
+sidebar_position: 6
+---
+
+import Admonition from '@theme/Admonition'
+
+# Risk Parameters
+
+## Osmosis
+
+### Red Bank - Global Params
+
+| Param Name  | Value  | Description  |
+|---|---|---|
+| Safety Fund Fee Share  | 50%  | % of protocol revenue that goes to safety fund, the remainder goes to stakers.  |
+| Revision  | 1  | if a chain winds back blocks it should increment revision that is the reason for this blocks timeout for IBC transfer & seconds timeout for IBC transfer  |
+| Slippage Tolerance  | 1%  | this is for swapping protocol revenue into axlUSDC/MARS before sending via IBC to the Mars Hub  |
+| Close Factor  | 50%  | Max % of debt that's liquidatable  |
+
+### Red Bank - Asset Specific Params
+
+<Admonition type="info" title="NOTE">
+Red Bank deposit caps are denominated in the deposit token itself (i.e. 2.5M OSMO)
+</Admonition>
+
+| Asset | Reserve Factor | Max LTV | Liquidation Treshold | Liquidation Bonus | Deposit Enabled | Borrow Enabled | Target Utilization Rate | Interest Rate at 0 Utilization | Slope 1 | Slope 2 | Deposit Cap |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| USDC.axl | 10% | 79.5% | 80% | 7.5% | yes | yes | 80% | 0% | 12.5% | 200% | 3M |
+| WBTC.axl | 10% | 78% | 80% | 10% | yes | yes | 60% | 0% | 10% | 300% | 20 |
+| WETH.axl | 10% | 78% | 80% | 10% | yes | yes | 60% | 0% | 10% | 300% | 300 |
+| ATOM | 10% | 74% | 75% | 10% | yes | yes | 70% | 0% | 20% | 300% | 700k |
+| OSMO | 10% | 73% | 75% | 10% | yes | yes | 60% | 0% | 15% | 300% | 10M |
+| stATOM | 10% | 54.5%% | 55% | 15% | yes | no | 60% | 0% | 10% | 300% | 200k |
+| AXL | 10% | 44% | 45% | 12.5% | yes | no | 60% | 0% | 17% | 300% | 400k |
+
+### Red Bank - Farm Vaults Specific Params
+
+| Vault | Max LTV | Liquidation Treshold | Liquidation Bonus | Deposit Enabled | Deposit Cap |
+|---|---|---|---|---|---|
+| WETH.axl/OSMO LP | 75% | 77% | 12.5% | yes | 500k USDC.axl |
+| WBTC.axl/OSMO LP | 75% | 77% | 12.5% | yes | 250k USDC.axl | 
+| USDC.axl/OSMO LP | 75% | 77% | 12.5% | yes | - | 
+| ATOM/OSMO LP | 73% | 75% | 12.5% | yes | - |
+| stATOM/ATOM LP | 64% | 65% | 15% | yes | 3M USDC.axl |
+
+### MARS/OSMO pool
+
+| Param Name  | Value  | Description  |
+|---|---|---|
+| Swap Fee   | 0.2%  | The swap fee is the cut of all swaps that goes to the Liquidity Providers (LPs) for a pool. Suppose a pool has a swap fee s. Then if a user wants to swap T tokens in the pool, sT tokens go to the LP's, and then (1 - s)T tokens are swapped according to the AMM swap function.  |
+| Exit Fee   | 0%  | The exit fee is a fee that is applied to LP's that want to remove their liquidity from the pool. Suppose a pool has an exit fee e. If they currently have S LP shares, then when they remove their liquidity they get tokens worth (1 - e)S shares back. The remaining eS shares are then burned, and the tokens corresponding to these shares are kept as liquidity.  |
+| Future Governor   | No one  | Osmosis plans to allow every pool to act as a DAO, with its own governance in a future upgrade. To facilitate this transition, we allow pools to specify who the governor should be as a string. There are currently 3 options for the future governor. No one will govern it. This is done by leaving the future governor string as blank. Allow a given address to govern it. This is done by setting the future governor as a bech32 address. Lockups to a token. This is the full DAO scenario. The future governor specifies a token denomination denom, and a lockup duration duration. This says that "all tokens of denomination denom that are locked up for duration or longer, have equal say in governance of this pool".  |
+| Weights   | 50/50  | This defines the weights of the pool - https://balancer.fi/whitepaper.pdf  |
+| Smooth Weight Change Params    | NA  | This allows pool governance to smoothly change the weights of the assets it holds in the pool. So it can slowly move from a 2:1 ratio, to a 1:1 ratio. Currently, smooth weight changes are implemented as a linear change in weight ratios over a given duration of time. So weights changed from 4:1 to 2:2 over 2 days, then at day 1 of the change, the weights would be 3:1.5, and at day 2 its 2:2, and will remain at these weight ratios.   |
+| Pool Creation Fee    | 100 OSMO  | Preset value from Osmosis   |
+
+### External OSMO/MARS Pool Incentives on Osmosis 
+
+| Param Name  | Value  | Description  |
+|---|---|---|
+| Start time (UNIX)   |   | When should incentives begin   |
+| Duration   | 14  | How long should a user have MARS locked up for to be able to start claiming incentives (1, 7, or 14 days)   |
+| Epoch  | 30  | How many days should this gauge stay active for   |
+| Reward  | 750,000  | How much total MARS do you want to reward while this guage is active   |
+
+## Neutron 
+
+### Red Bank - Asset Specific Params
+
+| Asset | Max. LTV | Liq. LTV | Liq. Bonus | Deposit Cap | IR Params. | Oracle | Deposit Enabled | Borrow Enabled |
+|---|---|---|---|---|---|---|---|---|
+| ATOM | 68% | 70% | 10% | 150,000 ATOM | Base: 0 Slope 1: 0.20 Slope 2: 3 Optimal Util.: 0.70 | ATOM/USDC from Pyth | yes | yes |
+| axlUSDC | 74% | 75% | 10% | 500,000 axlUSDC | Base: 0 Slope 1: 0.125 Slope 2: 2 Optimal Util.: 0.80 | USDC from Pyth | yes | yes |
+| NTRN | 35% | 40% | 15% | 5,000,000 NTRN | Base: 0 Slope 1: 0.15 Slope 2: 3 Optimal Util.: 0.60 | NTRN/ATOM (TWAP) * ATOM/USDC (Pyth) | yes | yes |
+| stATOM | 44.5% | 45% | 15% | 50,000 stATOM | Optimal Utilization: 60% Base IR: 0% Slope 1: 10% Slope 2: 300% | stATOM/ATOM (TWAP) * ATOM/USD (Pyth) | yes | no |

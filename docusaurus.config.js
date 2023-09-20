@@ -267,6 +267,14 @@ const config = {
             activeBaseRegex: `/learn/`,
           },
 
+          {
+            // to: '/docs/develop/smart-contracts/astroport-contract-addresses',   
+            to: '/docs/develop/overview',   
+            label: 'Develop',
+            position: 'left',
+            activeBaseRegex: `/develop/`,
+          },
+
           // {to: '/blog', label: 'Blog', position: 'left'},
 
           {
@@ -275,13 +283,7 @@ const config = {
             position: 'left',
             activeBaseRegex: `/govern/`,
           },
-          {
-            // to: '/docs/develop/smart-contracts/astroport-contract-addresses',   
-            to: '/docs/develop/overview',   
-            label: 'Develop',
-            position: 'left',
-            activeBaseRegex: `/develop/`,
-          },
+
           // {
           //   to: '/docs/infrastructure/category/node-operators',    // ./docs-api/intro.md
           //   label: 'Infrastructure',

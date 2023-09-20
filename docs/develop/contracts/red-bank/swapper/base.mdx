@@ -1,0 +1,209 @@
+---
+sidebar_position: 1
+---
+
+# base
+
+## Links
+
+- **Deployments**: 
+- **Types**:
+    - **Rust**: 
+    - **Typescript**: 
+- **Contract repo**: 
+- **Audits**: https://github.com/mars-protocol/mars-audits
+
+## InstantiateMsg
+
+    <CH.Section>
+        <CH.Code>
+
+        ```json
+        {
+          "owner": "string"
+        }
+        ```
+
+        </CH.Code>
+    </CH.Section>
+
+## ExecuteMsg
+
+### `update_owner`
+
+    <CH.Section>
+        <CH.Code>
+
+        ```json
+        {
+          "update_owner": OwnerUpdate
+        }
+        ```
+
+        </CH.Code>
+    </CH.Section>
+
+#### `OwnerUpdate`
+
+    <CH.Section>
+        <CH.Code>
+
+        ```json
+        | {
+            "propose_new_owner": {
+              "proposed": "string"
+            }
+          }
+        | "clear_proposed"
+        | "accept_proposed"
+        | "abolish_owner_role"
+        | {
+            "set_emergency_owner": {
+              "emergency_owner": "string"
+            }
+          }
+        | "clear_emergency_owner"
+        ```
+
+        </CH.Code>
+    </CH.Section>
+
+### `set_route`
+
+    <CH.Section>
+        <CH.Code>
+
+        ```json
+        {
+          "set_route": {
+            "denom_in": "string",
+            "denom_out": "string",
+            "route": <Route>
+          }
+        }
+        ```
+
+        </CH.Code>
+    </CH.Section>
+
+### `swap_exact_in`
+
+    <CH.Section>
+        <CH.Code>
+
+        ```json
+        {
+          "swap_exact_in": {
+            "coin_in": Coin,
+            "denom_out": "string",
+            "slippage": "Decimal"
+          }
+        }
+        ```
+
+        </CH.Code>
+    </CH.Section>
+
+#### `Coin`
+
+    <CH.Section>
+        <CH.Code>
+
+        ```json
+        {
+          "amount": "Uint128",
+          "denom": "string"
+        }
+        ```
+
+        </CH.Code>
+    </CH.Section>
+
+### `transfer_result`
+
+    <CH.Section>
+        <CH.Code>
+
+        ```json
+        {
+          "transfer_result": {
+            "denom_in": "string",
+            "denom_out": "string",
+            "recipient": "Addr"
+          }
+        }
+        ```
+
+        </CH.Code>
+    </CH.Section>
+
+## QueryMsg
+
+### `owner`
+
+    <CH.Section>
+        <CH.Code>
+
+        ```json
+        {
+          "owner": {}
+        }
+        ```
+
+        </CH.Code>
+    </CH.Section>
+
+### `route`
+
+    <CH.Section>
+        <CH.Code>
+
+        ```json
+        {
+          "route": {
+            "denom_in": "string",
+            "denom_out": "string"
+          }
+        }
+        ```
+
+        </CH.Code>
+    </CH.Section>
+
+### `routes`
+
+    <CH.Section>
+        <CH.Code>
+
+        ```json
+        {
+          "routes": {
+            "limit"?: number | null,
+            "start_after"?: ["string", "string"] | null
+          }
+        }
+        ```
+
+        </CH.Code>
+    </CH.Section>
+
+### `estimate_exact_in_swap`
+
+    <CH.Section>
+        <CH.Code>
+
+        ```json
+        {
+          "estimate_exact_in_swap": {
+            "coin_in": Coin,
+            "denom_out": "string"
+          }
+        }
+        ```
+
+        </CH.Code>
+    </CH.Section>
+
+#### `Coin`
+
+See [above](#coin).

@@ -1,0 +1,158 @@
+---
+sidebar_position: 1
+---
+
+# base
+
+Base `zapper` contract. 
+
+## Links
+
+- **Deployments**: https://github.com/mars-protocol/rover/tree/master/scripts/deploy/addresses
+- **Types**:
+    - **Rust**: https://github.com/mars-protocol/rover/blob/master/packages/rover/src/adapters/zapper.rs
+    - **Typescript**: https://github.com/mars-protocol/rover/blob/master/scripts/types/generated/mars-v2-zapper-base/MarsV2ZapperBase.types.ts
+- **Contract repo**: https://github.com/mars-protocol/rover/blob/master/contracts/v2-zapper/base/src/contract.rs
+- **Audits**: https://github.com/mars-protocol/mars-audits/tree/main/rover
+
+## InstantiateMsg
+
+<CH.Section>
+    <CH.Code>
+
+        ```json
+        interface InstantiateMsg {}
+        ```
+
+    </CH.Code>
+</CH.Section>
+
+## ExecuteMsg
+
+### `provide_liquidity`
+
+<CH.Section>
+    <CH.Code>
+
+        ```json
+        {
+          "provide_liquidity": {
+            "lp_token_out": "string",
+            "minimum_receive": "Uint128",
+            "recipient"?: "string" | null
+          }
+        }
+        ```
+
+    </CH.Code>
+</CH.Section>
+
+### `withdraw_liquidity`
+
+<CH.Section>
+    <CH.Code>
+
+        ```json
+        {
+          "withdraw_liquidity": {
+            "minimum_receive": Coin[],
+            "recipient"?: "string" | null
+          }
+        }
+        ```
+
+    </CH.Code>
+</CH.Section>
+
+#### `Coin`
+
+<CH.Section>
+    <CH.Code>
+
+        ```json
+        {
+          "amount": "Uint128",
+          "denom": "string"
+        }
+        ```
+
+    </CH.Code>
+</CH.Section>
+
+### `callback`
+
+<CH.Section>
+    <CH.Code>
+
+        ```json
+        {
+          "callback": CallbackMsg
+        }
+        ```
+
+    </CH.Code>
+</CH.Section>
+
+#### `CallbackMsg`
+
+<CH.Section>
+    <CH.Code>
+
+        ```json
+        {
+          "return_coin": {
+            "balance_before": Coin,
+            "recipient": "Addr"
+          }
+        }
+        ```
+
+    </CH.Code>
+</CH.Section>
+
+#### `Coin`
+
+See [above](#coin).
+
+## QueryMsg
+
+### `estimate_provide_liquidity`
+
+<CH.Section>
+    <CH.Code>
+
+        ```json
+        {
+          "estimate_provide_liquidity": {
+            'coins_in': Coin[],
+            "lp_token_out": "string"
+          }
+        }
+        ```
+
+    </CH.Code>
+</CH.Section>
+
+#### `Coin`
+
+See [above](#coin).
+
+### `estimate_withdraw_liquidity`
+
+<CH.Section>
+    <CH.Code>
+
+        ```json
+        {
+          "estimate_withdraw_liquidity": {
+            "coin_in": Coin
+          }
+        }
+        ```
+
+    </CH.Code>
+</CH.Section>
+
+#### `Coin`
+
+See [above](#coin).

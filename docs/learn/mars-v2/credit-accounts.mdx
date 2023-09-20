@@ -1,0 +1,45 @@
+---
+sidebar_position: 1
+---
+
+import MarsV1VsV2Url from '@site/static/img/mars-v2/mars-v1-vs-v2.png';
+import RoverArchitectureUrl from '@site/static/img/learn/rover/rover-architecture.png';
+
+
+# Credit Accounts
+
+Mars v2 unleashes a new primitive in Cosmos: **credit accounts (dubbed “Rovers”)**. Rover credit accounts are DeFi’s answer to the subaccount experience on CEXes, introducing a new era of on-chain capital efficiency. Similar to their centralized counterparts, Rovers feature:
+
+1. **One simple UX**: Create a credit account and perform most crypto activities (spot, margin, lend, farm, borrow) using leverage in a single UI. Create multiple credit accounts for different strategies / risks. 
+2. **Cross-collateralization**: Every asset in an account can act as collateral, enabling cross-collateralization of positions and resulting in massive capital efficiency.
+
+Mars v1’s Farm Vaults offered a limited, proof-of-concept version of credit accounts. You could deposit collateral into a credit account and borrow from the Red Bank to engage in leveraged yield farming. 
+
+<img src={ MarsV1VsV2Url } style={{ marginBottom: 15 } } />
+
+With Mars v2 Rovers, you’ll be able to do far more than enter a single vault. You’ll be able to:
+
+- Spot trade
+- Margin trade
+- Farm 
+- Lend and borrow
+- Leverage up your DeFi strategies
+- All within a single cross collateralized account
+
+Credit accounts are flexible and allow leverage to be added to any of these DeFi primitives. Effectively, when a DeFi primitive is whitelisted in a credit account, users are immediately able to interact with that primitive using leverage. This means that a user could for example take on leveraged spot positions on a DEX, or perform Leveraged Yield Farming, Leveraged Staking / Leveraged Vaults by using their credit accounts.
+
+More importantly, positions held in credit accounts are cross-collateralized by default. What this means is that any position within an account can be used as collateral to open and guarantee the solvency of other positions within the same account. For example, a leveraged LP position on Apollo Vaults could be used as collateral to open a margin long trade, all within the same UI.
+Without the credit account as the middleware connecting both primitives (LP positions in Apollo vaults and tokens traded on Osmosis DEX), this transaction wouldn’t be possible since there’d be no underlying mechanism to ensure the solvency of the position. Cross-collateralization naturally translates into more capital efficiency, more use cases, and a better UX.
+
+### Credit Accounts Architecture 
+
+Each outpost where v2 is launched will include a special credit manager smart contract, which holds all the borrowing and liquidation logic for v2. It also allows borrowing from Mars’ Red Bank to use leverage with any whitelisted activity.
+
+Whenever a Rover credit account is minted on that outpost, it’s minted as a transferable NFT that sits inside that chain’s credit manager contract. Each NFT can then borrow from the Red Bank to trade and farm with leverage all in one account with cross-collateralized positions and a single health factor. 
+
+Credit accounts hold a user’s assets and compute a health factor based on the value and riskiness of the user’s positions, as determined by on-chain data and the Red Bank’s risk parameters. If this health factor drops below the minimum threshold, a liquidation engine incentivises third parties to repay the debt and keep the system solvent. 
+
+The architecture is modular and extensible, allowing new protocols and integrations to be added easily.
+
+<img src={ RoverArchitectureUrl } style={{ marginBottom: 15 }} />
+

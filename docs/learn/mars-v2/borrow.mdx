@@ -1,0 +1,19 @@
+---
+sidebar_position: 3
+---
+
+# Lend & Borrow
+
+## The Red Bank 
+
+The Red Bank is a peer-to-peer, decentralized, autonomous token lending/borrowing smart contract deployed to a particular Outpost. Lenders deposit tokens into the Red Bank to earn token rewards (sometimes described as 'yield' or an 'interest rate' or 'APR/APY') that are ultimately funded by token borrowers.
+
+## Collateralized vs C2C Borrowing
+
+In Mars v1, borrowers were also Red Bank lenders who chose to borrow tokens from the Red Bank. They did this using their Red Bank deposits as collateral. Instead, Mars v2 leverages C2C borrowing. C2C Borrowers are smart contract systems on an Outpost that have been approved by the Martian Council to 'borrow' tokens from that Outpost's Red Bank on a contract-to-contract ("C2C") basis. 
+
+Unlike ordinary Red Bank borrowers in v1, C2C Borrowers do not need to overcollateralize their loans from the Red Bank with matching deposits--instead, due to pre-programmed compatibility between the Red Bank and a liquidation engine for the borrowing smart contract system, the Red Bank holds an indirect, virtual 'smart lien' on the borrowed tokens. Because of this, the borrowed tokens can be liquidated from the C2C Borrower and the proceeds of that liquidation paid to the Red Bank to maintain the Red Bank's solvency.
+
+## Mars v2 Leverage 
+
+In Mars v2, the primary C2C Borrower from Red Banks will be the Credit Manager smart contract, through its user-specific Rovers (credit accounts). Rovers are machines that superpower your crypto holdings. Simply deposit tokens into a Rover, and you automatically get a credit line to borrow more assets to leverage (or hedge) any position. As a result, Mars v2 is likely to see more borrowing demand from new leveraged activities, such as margin trading and leveraged farming. This could also mean higher returns for lenders. 
