@@ -148,6 +148,38 @@ const contentBoxProps = {
 
   zapper: {
     title: "Zapper"
+  }, 
+
+  marsV2: {
+    title: "Mars v2"
+  },
+
+  tutorials: {
+    title: "Tutorials"
+  },
+
+  basicsV2: {
+    title: "Basics"
+  }, 
+
+  creditAccounts: {
+    title: "Credit Accounts"
+  },
+
+  tradingV2: {
+    title: "Trading v2"
+  },
+  
+  lendingV2: {
+    title: "Lending v2"
+  },
+
+  farmingV2: {
+    title: "Farming v2"
+  },
+  
+  borrowingV2: {
+    title: "Borrowing v2"
   }
 
 }
@@ -436,7 +468,59 @@ export default function Cards(props) {
         <ContentBox title={contentBoxProps.zapper.title} />
       </div>
     );
+  } else if (props.title == 'Mars v2') {
+    return (
+      <div>
+        <ContentBox title={contentBoxProps.marsV2.title} />
+      </div>
+    );
+  } else if (props.title == 'Tutorials') {
+    return (
+      <div>
+        <ContentBox title={contentBoxProps.tutorials.title} />
+      </div>
+    );
+  } else if (props.title == 'Basics') {
+    return (
+      <div>
+        <ContentBox title={contentBoxProps.basicsV2.title} />
+      </div>
+    );
+  } else if (props.title == 'Credit Accounts') {
+    return (
+      <div>
+        <ContentBox title={contentBoxProps.creditAccounts.title} />
+      </div>
+    );
+  } else if (props.title == 'Trading v2') {
+    return (
+      <div>
+        <ContentBox title={contentBoxProps.tradingV2.title} />
+      </div>
+    );
+  } else if (props.title == 'Lending v2') {
+    return (
+      <div>
+        <ContentBox title={contentBoxProps.lendingV2.title} />
+      </div>
+    );
+  } else if (props.title == 'Farming v2') {
+    return (
+      <div>
+        <ContentBox title={contentBoxProps.farmingV2.title} />
+      </div>
+    );
+  } else if (props.title == 'Borrowing v2') {
+    return (
+      <div>
+        <ContentBox title={contentBoxProps.borrowingV2.title} />
+      </div>
+    );
   }
+
+
+
+
 
 
   

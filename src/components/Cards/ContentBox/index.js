@@ -27,6 +27,190 @@ import MarsFudBibleUrl from '../../../../static/pdf/mars-fud-bible.pdf#toolbar=0
 
 const boxProps = {
   learn: {
+
+    creditAccounts: {
+      title: "Credit Accounts", 
+      description: "Discover Mars v2's new DeFi primitive: Rover credit accounts.",
+    },
+
+    tradeV2: {
+      title: "Trade", 
+      description: "Use Rover credit accounts to trade on outposts with leverage.", 
+    },
+
+    lendAndBorrow: {
+      title: "Lend and Borrow", 
+      description: "Learn how to lend and borrow assets listed on the Red Bank.", 
+    },
+
+    farm: {
+      title: "Farm", 
+      description: "Venture into the Fields of Mars and leveraged yield-farming.", 
+    },
+
+    interestRates: {
+      title: "Interest Rates",
+      description: "Learn how the Red Bank's two-slope interest rate model works."
+    }, 
+
+    riskParams: {
+      title: "Risk Parameters", 
+      description: "Learn about the Mars risk parameters that secure the protocol."
+    },
+
+    liquidations: {
+      title: "Liquidations", 
+      description: "Understand how Mars v2 handles dynamic liquidations."
+    },
+
+    fees: {
+      title: "Fees", 
+      description: "Discover how fees work in the Mars ecosystem."
+    }, 
+
+    oraclesV2: {
+      title: "Oracles", 
+      description: "Discover how Mars v2 handles price feed data."
+    },
+
+    tradefi: {
+      title: "Differences from TradFi", 
+      description: "Understand how the Mars' functionality differs from traditional credit arrangements.", 
+    },
+
+
+    // tutorials 
+
+    basics: {
+      title: "Basics", 
+      description: "Start your journey into the Mars ecosystem here."
+    },
+
+    creditAccountsV2: {
+      title: "Credit Accounts", 
+      description: "Learn about Mars' new DeFi primitive: Rover credit accounts."
+    },
+
+    tradingTutorials: {
+      title: "Trading",
+      description: "Learn how to use Rover credit accounts to trade on outposts with leverage."
+    }, 
+
+    lendingTutorials: {
+      title: "Lending", 
+      description: "Learn how to lend assets listed on the Red Bank."
+    }, 
+
+    farmingTutorials: {
+      title: "Farming", 
+      description: "Learn how to use Rover credit accounts to farm and leveraged yield-farm."
+    },
+
+    borrowingTutorials: {
+      title: "Borrowing", 
+      description: "Learn how to borrow assets listed on the Red Bank."
+    },
+
+    // basics
+
+    connectingYourWallet: {
+      title: "Connecting Your Wallet", 
+      description: "Begin your journey by connecting a wallet to the Mars dApp."
+    }, 
+
+
+    // credit accounts
+
+    creatingFirstAccount: {
+      title: "Creating your First Account", 
+      description: "Learn how to create your first Rover credit account."
+    }, 
+
+    creatingAdditionalAccount: {
+      title: "Creating Additional Accounts", 
+      description: "Become a specialist and learn how to create additional credit accounts."
+    }, 
+
+    fundingAccount: {
+      title: "Funding Your Account", 
+      description: "Learn how to fund your Rover credit account."
+    }, 
+
+    withdrawingFromAccount: {
+      title: "Withdrawing From Your Account", 
+      description: "Learn how to withdraw your funds from credit accounts."
+    },
+
+    // trading
+
+    spotTradingTutorial: {
+      title: "Spot Trading",
+      description: "Learn how to use Rover credit accounts to trade assets."
+    }, 
+
+    marginTradingLongTutorial: {
+      title: "Margin Trading Long", 
+      description: "Learn how to use Rover credit accounts to long assets with leverage."
+    }, 
+
+    marginTradingShortTutorial: {
+      title: "Margin Trading Short", 
+      description: "Learn how to use Rover credit accounts to short assets with leverage."
+    }, 
+
+    // lending 
+
+    lendingAssetsTutorial: {
+      title: "Lending Assets", 
+      description: "Learn how to use Rover credit accounts to lend your assets and earn borrowing yield."
+    },
+
+    withdrawingAssetsTutorial: {
+      title: "Withdrawing Lent Assets", 
+      description: "Learn how to withdraw your lent assets."
+    },
+
+    // farming 
+
+    lpFarming: {
+      title: "LP Farming", 
+      description: "Learn how to use Rover credit accounts to enter into a simple LP farm."
+    },
+
+    farmingCustomRatio: {
+      title: "Farming with Custom Ratio", 
+      description: "Learn how to set custom ratios for your farms."
+    }, 
+
+    leveragedFarming: {
+      title: "Leveraged Yield Farming",
+      description: "Discover the Fields of Mars and leveraged yield farming."
+    }, 
+
+    unlockingFarmVaults: {
+      title: "Unlocking Farm Vaults", 
+      description: "Learn how to unlock your farm vault positions."
+    }, 
+
+    // borrowing 
+
+    borrowingAssetsTutorial: {
+      title: "Borrowing Assets", 
+      description: "Learn how to use Rover credit accounts to borrow asserts."
+    }, 
+
+    repayingYourLoan: {
+      title: "Repaying your Loan", 
+      description: "Learn how to repay your loans"
+    },
+
+
+
+
+
+
+
+
     marsHub: {
       title: "Mars Hub", 
       description: "Deep dive into the Cosmos-SDK appchain that administers activity on Mars’ intergalactic outposts.", 
@@ -180,11 +364,6 @@ const boxProps = {
       title: "Staking", 
       description: "Discover how to stake MARS, secure Mars Hub, govern outposts, and earn protocol fees.", 
       image: PioneerUrl
-    }, 
-    feesAndValueFlows: {
-      title: "Fees & Value Flows", 
-      description: "Dive into the distribution of fees across the Mars Protocol.", 
-      image: BuildingUrl
     }
   }, 
   redBank: {
@@ -869,7 +1048,320 @@ export default function ContentBox(props) {
         <Box />
       </div>
     );
-  } else if (props.title == "Learn") {
+  } 
+  
+  
+  else if (props.title == "Mars v2") {
+    return (
+      <div className="grid md:grid-cols-2 gap-3">
+        
+
+        <a className={styles.links} href="../../../docs/learn/mars-v2/credit-accounts"> 
+        <Box 
+        title={boxProps.learn.creditAccounts.title}
+        description={boxProps.learn.creditAccounts.description}
+        />
+        </a>
+
+        <a className={styles.links} href="../../../docs/learn/mars-v2/trade/trade-intro"> 
+        <Box 
+        title={boxProps.learn.tradeV2.title}
+        description={boxProps.learn.tradeV2.description}
+        />
+        </a>
+
+        <a className={styles.links} href="../../../docs/learn/mars-v2/borrow"> 
+        <Box 
+        title={boxProps.learn.lendAndBorrow.title}
+        description={boxProps.learn.lendAndBorrow.description}
+        />
+        </a>
+
+        <a className={styles.links} href="../../../docs/learn/mars-v2/farm"> 
+        <Box 
+        title={boxProps.learn.farm.title}
+        description={boxProps.learn.farm.description}
+        />
+        </a>
+
+        <a className={styles.links} href="../../../docs/learn/mars-v2/interest-rates"> 
+        <Box 
+        title={boxProps.learn.interestRates.title}
+        description={boxProps.learn.interestRates.description}
+        />
+        </a>
+
+        <a className={styles.links} href="../../../docs/learn/mars-v2/liquidations"> 
+        <Box 
+        title={boxProps.learn.liquidations.title}
+        description={boxProps.learn.liquidations.description}
+        />
+        </a>
+
+        <a className={styles.links} href="../../../docs/learn/mars-v2/fees"> 
+        <Box 
+        title={boxProps.learn.fees.title}
+        description={boxProps.learn.fees.description}
+        />
+        </a>
+
+        <a className={styles.links} href="../../../docs/learn/mars-v2/oracles"> 
+        <Box 
+        title={boxProps.learn.oraclesV2.title}
+        description={boxProps.learn.oraclesV2.description}
+        />
+        </a>
+
+        <a className={styles.links} href="../../../docs/learn/mars-v2/differences-from-tradefi-credit-agreements.mdx"> 
+        <Box 
+        title={boxProps.learn.tradefi.title}
+        description={boxProps.learn.tradefi.description}
+        />
+        </a>
+        
+        
+      </div>
+    );
+  }
+
+
+else if (props.title == "Tutorials") {
+    return (
+      <div className="grid md:grid-cols-2 gap-3">
+        
+
+        <a className={styles.links} href="../../../docs/learn/tutorials/basics/basics-intro"> 
+        <Box 
+        title={boxProps.learn.basics.title}
+        description={boxProps.learn.basics.description}
+        />
+        </a>
+
+        <a className={styles.links} href="../../../docs/learn/tutorials/credit-accounts/credit-accounts-intro"> 
+        <Box 
+        title={boxProps.learn.creditAccountsV2.title}
+        description={boxProps.learn.creditAccountsV2.description}
+        />
+        </a>
+
+        <a className={styles.links} href="../../../docs/learn/tutorials/trading/trading-intro"> 
+        <Box 
+        title={boxProps.learn.tradingTutorials.title}
+        description={boxProps.learn.tradingTutorials.description}
+        />
+        </a>
+
+        <a className={styles.links} href="../../../docs/learn/tutorials/lending/lending-intro"> 
+        <Box 
+        title={boxProps.learn.lendingTutorials.title}
+        description={boxProps.learn.lendingTutorials.description}
+        />
+        </a>
+
+        <a className={styles.links} href="../../../docs/learn/tutorials/farming/farming-intro"> 
+        <Box 
+        title={boxProps.learn.farmingTutorials.title}
+        description={boxProps.learn.farmingTutorials.description}
+        />
+        </a>
+
+        <a className={styles.links} href="../../../docs/learn/tutorials/borrowing/borrowing-intro"> 
+        <Box 
+        title={boxProps.learn.borrowingTutorials.title}
+        description={boxProps.learn.borrowingTutorials.description}
+        />
+        </a>
+        
+      </div>
+    );
+  }
+
+else if (props.title == "Basics") {
+  return (
+    <div className="grid md:grid-cols-2 gap-3">
+      
+
+      <a className={styles.links} href="../../../learn/tutorials/basics/connecting-your-wallet"> 
+      <Box 
+      title={boxProps.learn.connectingYourWallet.title}
+      description={boxProps.learn.connectingYourWallet.description}
+      />
+      </a>
+      
+    </div>
+  );
+}
+
+
+else if (props.title == "Credit Accounts") {
+  return (
+    <div className="grid md:grid-cols-2 gap-3">
+      
+
+      <a className={styles.links} href="../../../learn/tutorials/credit-accounts/creating-your-first-credit-account"> 
+      <Box 
+      title={boxProps.learn.creatingFirstAccount.title}
+      description={boxProps.learn.creatingFirstAccount.description}
+      />
+      </a>
+
+      <a className={styles.links} href="../../../learn/tutorials/credit-accounts/creating-additional-credit-accounts"> 
+      <Box 
+      title={boxProps.learn.creatingAdditionalAccount.title}
+      description={boxProps.learn.creatingAdditionalAccount.description}
+      />
+      </a>
+
+      <a className={styles.links} href="../../../learn/tutorials/credit-accounts/funding-your-account"> 
+      <Box 
+      title={boxProps.learn.fundingAccount.title}
+      description={boxProps.learn.fundingAccount.description}
+      />
+      </a>
+
+      <a className={styles.links} href="../../../learn/tutorials/credit-accounts/withdrawing-from-your-account"> 
+      <Box 
+      title={boxProps.learn.withdrawingFromAccount.title}
+      description={boxProps.learn.withdrawingFromAccount.description}
+      />
+      </a>
+
+
+      
+    </div>
+  );
+}
+  
+
+else if (props.title == "Trading v2") {
+  return (
+    <div className="grid md:grid-cols-2 gap-3">
+      
+
+      <a className={styles.links} href="../../../learn/tutorials/trading/spot-trading"> 
+      <Box 
+      title={boxProps.learn.spotTradingTutorial.title}
+      description={boxProps.learn.spotTradingTutorial.description}
+      />
+      </a>
+
+      <a className={styles.links} href="../../../learn/tutorials/trading/margin-trading-long"> 
+      <Box 
+      title={boxProps.learn.marginTradingLongTutorial.title}
+      description={boxProps.learn.marginTradingLongTutorial.description}
+      />
+      </a>
+
+      <a className={styles.links} href="../../../learn/tutorials/trading/margin-trading-short"> 
+      <Box 
+      title={boxProps.learn.marginTradingShortTutorial.title}
+      description={boxProps.learn.marginTradingShortTutorial.description}
+      />
+      </a>
+
+    </div>
+  );
+}
+
+
+else if (props.title == "Lending v2") {
+  return (
+    <div className="grid md:grid-cols-2 gap-3">
+      
+
+      <a className={styles.links} href="../../../learn/tutorials/lending/lending-assets"> 
+      <Box 
+      title={boxProps.learn.lendingAssetsTutorial.title}
+      description={boxProps.learn.lendingAssetsTutorial.description}
+      />
+      </a>
+
+      <a className={styles.links} href="../../../learn/tutorials/lending/withdrawing-lent-assets"> 
+      <Box 
+      title={boxProps.learn.withdrawingAssetsTutorial.title}
+      description={boxProps.learn.withdrawingAssetsTutorial.description}
+      />
+      </a>
+
+    </div>
+  );
+}
+
+else if (props.title == "Farming v2") {
+  return (
+    <div className="grid md:grid-cols-2 gap-3">
+      
+
+      <a className={styles.links} href="../../../learn/tutorials/farming/lp-farming"> 
+      <Box 
+      title={boxProps.learn.lpFarming.title}
+      description={boxProps.learn.lpFarming.description}
+      />
+      </a>
+
+      <a className={styles.links} href="../../../learn/tutorials/farming/farming-with-custom-ratio"> 
+      <Box 
+      title={boxProps.learn.farmingCustomRatio.title}
+      description={boxProps.learn.farmingCustomRatio.description}
+      />
+      </a>
+
+      <a className={styles.links} href="../../../learn/tutorials/farming/leveraged-farming"> 
+      <Box 
+      title={boxProps.learn.leveragedFarming.title}
+      description={boxProps.learn.leveragedFarming.description}
+      />
+      </a>
+
+      <a className={styles.links} href="../../../learn/tutorials/farming/unlocking-farm-vaults"> 
+      <Box 
+      title={boxProps.learn.unlockingFarmVaults.title}
+      description={boxProps.learn.unlockingFarmVaults.description}
+      />
+      </a>
+
+    </div>
+  );
+}
+
+else if (props.title == "Borrowing v2") {
+  return (
+    <div className="grid md:grid-cols-2 gap-3">
+      
+
+      <a className={styles.links} href="../../../learn/tutorials/borrowing/borrowing-assets"> 
+      <Box 
+      title={boxProps.learn.borrowingAssetsTutorial.title}
+      description={boxProps.learn.borrowingAssetsTutorial.description}
+      />
+      </a>
+
+      <a className={styles.links} href="../../../learn/tutorials/borrowing/repaying-your-loan"> 
+      <Box 
+      title={boxProps.learn.repayingYourLoan.title}
+      description={boxProps.learn.repayingYourLoan.description}
+      />
+      </a>
+
+    </div>
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  else if (props.title == "Learn") {
     return (
       <div className="grid md:grid-cols-2 gap-3">
         
@@ -1152,14 +1644,6 @@ export default function ContentBox(props) {
           />
         </a>
 
-        <a className={styles.links} href="../../../learn/mars-hub/mars-token/fees-and-value-flows">
-          <Box 
-            title={boxProps.marsToken.feesAndValueFlows.title}
-            description={boxProps.marsToken.feesAndValueFlows.description}
-            image={boxProps.marsToken.feesAndValueFlows.image}
-          />
-        </a>
-
       </div>
     );
   }
@@ -1264,7 +1748,7 @@ export default function ContentBox(props) {
     return (
       <div className="grid md:grid-cols-2 gap-3">
 
-        <a className={styles.links} href="../../../learn/rover/trading/spot">
+        <a className={styles.links} href="../../../learn/mars-v2/trade/spot">
           <Box 
             title={boxProps.trading.spot.title}
             description={boxProps.trading.spot.description}
@@ -1272,7 +1756,7 @@ export default function ContentBox(props) {
           />
         </a>
 
-        <a className={styles.links} href="../../../learn/rover/trading/margin">
+        <a className={styles.links} href="../../../learn/mars-v2/trade/margin">
           <Box 
             title={boxProps.trading.margin.title}
             description={boxProps.trading.margin.description}
@@ -1372,37 +1856,37 @@ export default function ContentBox(props) {
     );
   }
 
-  else if (props.title == 'Basics') {
-    return (
-      <div className="grid md:grid-cols-2 gap-3">
+  // else if (props.title == 'Basics') {
+  //   return (
+  //     <div className="grid md:grid-cols-2 gap-3">
 
-        <a className={styles.links} href="../../../learn/workstation/basics/installing-a-wallet/installing-a-wallet-intro">
-          <Box 
-            title={boxProps.basics.installingAWallet.title}
-            description={boxProps.basics.installingAWallet.description}
-            image={boxProps.basics.installingAWallet.image}
-          />
-        </a>
+  //       <a className={styles.links} href="../../../learn/workstation/basics/installing-a-wallet/installing-a-wallet-intro">
+  //         <Box 
+  //           title={boxProps.basics.installingAWallet.title}
+  //           description={boxProps.basics.installingAWallet.description}
+  //           image={boxProps.basics.installingAWallet.image}
+  //         />
+  //       </a>
 
-        <a className={styles.links} href="../../../learn/workstation/basics/funding-a-wallet">
-          <Box 
-            title={boxProps.basics.fundingAWallet.title}
-            description={boxProps.basics.fundingAWallet.description}
-            image={boxProps.basics.fundingAWallet.image}
-          />
-        </a>
+  //       <a className={styles.links} href="../../../learn/workstation/basics/funding-a-wallet">
+  //         <Box 
+  //           title={boxProps.basics.fundingAWallet.title}
+  //           description={boxProps.basics.fundingAWallet.description}
+  //           image={boxProps.basics.fundingAWallet.image}
+  //         />
+  //       </a>
 
-        <a className={styles.links} href="../../../learn/workstation/basics/connecting-a-wallet">
-          <Box 
-            title={boxProps.basics.connectingAWallet.title}
-            description={boxProps.basics.connectingAWallet.description}
-            image={boxProps.basics.connectingAWallet.image}
-          />
-        </a>
+  //       <a className={styles.links} href="../../../learn/workstation/basics/connecting-a-wallet">
+  //         <Box 
+  //           title={boxProps.basics.connectingAWallet.title}
+  //           description={boxProps.basics.connectingAWallet.description}
+  //           image={boxProps.basics.connectingAWallet.image}
+  //         />
+  //       </a>
 
-      </div>
-    );
-  }
+  //     </div>
+  //   );
+  // }
 
   else if (props.title == 'Installing a Wallet') {
     return (

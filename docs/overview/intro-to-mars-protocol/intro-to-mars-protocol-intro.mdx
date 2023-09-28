@@ -1,17 +1,16 @@
-import IntroToMarsUrl from '@site/static/img/intro-to-mars.png';
+import TheVisionUrl from '@site/static/img/the-vision.png';
+import TheVision2Url from '@site/static/img/the-vision2.png';
 
 # Welcome to Mars v2
 
 Welcome Martians! 🔴
 
-Mars is a credit protocol for the future: decentralized, self-sovereign, inter-chain, non-custodial, open-sourced, transparent, algorithmic, and community-governed. 
+**Mars is a credit protocol for the future: decentralized, self-sovereign, inter-chain, non-custodial, open-sourced, and community-governed.**
 
-Like existing credit protocols, Mars' "Red Bank" facilitates overcollateralized loans with a two-slope interest rate model (similar to Aave or Compound). In addition, Mars brings outstanding improvements in Contract-to-Contract (C2C) lending, allowing for smart contracts that are whitelisted to borrow assets from Mars liquidity pools collateralized by the whitelisted contracts' own assets rather than being collateralized by Red Bank deposits. These credit lines power Mars’ credit accounts ("rovers"), giving end users access to leverage when interacting with other Mars-compatible DeFi protocols' smart contracts.
+Like existing credit protocols, Mars' "Red Bank" facilitates overcollateralized loans with a two-slope interest rate model (similar to Aave or Compound). In addition, Mars brings outstanding improvements in Contract-to-Contract (C2C) lending, allowing for smart contracts that are whitelisted to borrow assets from Mars liquidity pools collateralized by the whitelisted contracts' own assets rather than being collateralized by Red Bank deposits. These credit lines power Mars’ credit accounts ("Rovers"), giving end users access to leverage when interacting with other Mars-compatible DeFi protocols' smart contracts.
 
-To achieve this vision, Mars smart contracts must be deployed on a highly performant, decentralized platform offering a thriving DeFi ecosystem with many potential integrations and demand for leverage. Rather than selecting a single platform, Mars should be present on multiple chains ("Outposts"), wherever there’s demand for liquidity. Crucially, Mars should be present on these chains natively, because a competitive DeFi experience requires atomic, synchronous composability, which cannot be achieved by cross-chain calls.
+Any user can create their own Rover on an Outpost through that Outpost's Credit Manager smart contract. This Rover will initially be funded  by the user's own tokens, which then may be used as collateral to borrow additional tokens into the Rover from the Red Bank. The Rover architecture resembles the “sub-account” experience familiar to users of centralised exchanges and enables Rovers to composably integrate with other DeFi mechanisms, whether such mechanisms are part of Mars (borrowing/lending on the Red Bank) or belong to other whistelisted DeFi protocols. Through Rovers and Vaults, users can cross-collateralise leveraged strategies with multiple assets counting toward a single liquidation LTV.
 
-This is the rationale that underpins the Mars Hub and Outpost topology illustrated below. Each Outpost is an integrated DeFi experience native to a specific chain that connects to the Mars Hub - a Cosmos SDK chain. 
+<img src={TheVision2Url} style={{ paddingBottom: 15 }} />
 
-<img src={IntroToMarsUrl} style={{ paddingBottom: 15 }} />
-
-The motivation behind Mars is simple: To become the leading DeFi credit protocol serving both individual users and dApps. We aim to seed life on a new planet… one that takes the best of the old world and uses it to build something radically new. 
+Rovers effectively allow for a “rebundled” DeFi experience as users would be able to access their favourite tokens, farms, and protocols, using leverage, through the Mars credit account. This integrated experience represents the next evolution of DeFi, providing a user experience (UX) comparable to centralised exchanges (CEXes) on many important dimensions (such as speed, leverage, liquidation penalty, and asset choice), while gaining the potential to integrate key DeFi primitives and maintaining the advantages of decentralisation: self-custody and censorship-resistance.
