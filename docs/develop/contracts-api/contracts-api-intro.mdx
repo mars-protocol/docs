@@ -1,1 +1,196 @@
 # Contracts API
+
+## CosmJs
+
+### Step 1: Setting up your Development Environment
+
+Before you start, make sure you have Node.js and npm (Node Package Manager) installed on your system. You can verify the installation by running the following commands:
+
+```bash
+node -v
+npm -v
+```
+
+Next, create a new Node.js project by running:
+
+```bash
+npm init -y
+```
+
+Install the necessary dependencies:
+
+```bash
+npm install @cosmjs/cosmwasm-stargate @cosmjs/proto-signing
+```
+
+### Step 2: Connecting to Osmosis with CosmJS
+
+In this section, we will create a script that connects to the Osmosis network using CosmJs.
+
+```js
+import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
+import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
+import { GasPrice } from "@cosmjs/stargate";
+
+const rpc = 'https://rpc-osmosis.keplr.app'; // Osmosis RPC
+const mnemonic = 'your mnemonic here'; // Replace with your mnemonic
+const prefix = 'osmo'; // Prefix for Osmosis
+
+const start = async () => {
+    const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, { prefix });
+
+    const [firstAccount] = await wallet.getAccounts();
+    const walletAddress = firstAccount.address;
+
+    const signingClient = await SigningCosmWasmClient.connectWithSigner(rpc, wallet, {
+        gasPrice: GasPrice.fromString("0.1uosmo"),
+    });
+
+    console.log(
+        "Connected to Osmosis, chain id:", 
+        await signingClient.getChainId(), 
+        ", height:", 
+        await signingClient.getHeight()
+    );
+};
+
+start();
+```
+
+### Step 3: Querying Data
+
+Now we will create a script to query smart contract data from the Osmosis network. 
+
+```js
+import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
+
+const rpc = 'https://rpc-osmosis.keplr.app'; // Osmosis RPC
+const contractAddress = 'osmosis-contract-address-here'; // Replace with actual contract address
+
+const start = async () => {
+    try {
+        const client = new CosmWasmClient(rpc);
+
+        // Generic Contract Query - This should be adapted based on the actual contract's query methods
+        const contractQuery = await client.queryContractSmart(contractAddress, {
+            "custom_query": { 
+                // ... your custom query parameters here 
+            }
+        });
+
+        console.log('Contract Query Result:', contractQuery);
+
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+start();
+```
+
+### Step 4: Sign and Broadcast Transactions
+
+Lastly, let's create a script to sign broadcast transactions to the Osmosis network. 
+
+```js focus=20:31
+import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
+import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
+import { GasPrice } from "@cosmjs/stargate";
+
+const rpc = 'https://rpc-osmosis.keplr.app'; // Osmosis RPC
+const mnemonic = 'your mnemonic here'; // Replace with your mnemonic
+const contractAddress = 'osmosis-contract-address-here'; // Replace with actual contract address
+const prefix = 'osmo'; // Prefix for Osmosis
+
+const start = async () => {
+    const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, { prefix });
+
+    const [firstAccount] = await wallet.getAccounts();
+    const walletAddress = firstAccount.address;
+
+    const signingClient = await SigningCosmWasmClient.connectWithSigner(rpc, wallet, {
+        gasPrice: GasPrice.fromString("0.1uosmo"),
+    });
+
+    const msg = {
+        // Your transaction message here
+    };
+
+    const result = await signingClient.execute(
+        walletAddress,
+        contractAddress,
+        msg,
+        "auto",
+        "",
+        [{ denom: "uosmo", amount: "1000000" }]
+    );
+
+    console.log(JSON.stringify(result));
+};
+
+start();
+```
+
+Remember to replace `your mnemonic here` and `osmosis-contract-address-here` with actual values.
+
+### Step 5: IBC Transactions
+
+In this step, we will create a script to facilitate Inter-Blockchain Communication (IBC) transactions, which allow for the transfer of tokens between different blockchains within the Cosmos ecosystem. Create a file named ibc-transaction.js and add the following generalized code:
+
+```js focus=29:50
+import {
+  CosmWasmClient,
+  SigningCosmWasmClient,
+} from "@cosmjs/cosmwasm-stargate";
+import { coins, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
+import { GasPrice } from "@cosmjs/stargate";
+import { SigningStargateClient } from "@cosmjs/stargate";
+
+const rpc = 'YOUR_RPC_URL_HERE';
+const mnemonic = 'YOUR_MNEMONIC_HERE';
+const prefix = 'YOUR_CHAIN_PREFIX_HERE';
+
+const start = async () => {
+    const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, {
+        prefix: prefix
+    });
+
+    const [firstAccount] = await wallet.getAccounts();
+    const walletAddress = firstAccount.address;
+
+    console.log('Wallet Address:', walletAddress);
+
+    const signingClient = await SigningStargateClient.connectWithSigner(
+        rpc, 
+        wallet, 
+        { gasPrice: GasPrice.fromString("0.1YOUR_GAS_TOKEN_HERE") }
+    );
+
+    // Replace with the recipient's address
+    const recipient = 'RECIPIENT_ADDRESS_HERE';
+    // Replace with the appropriate token denomination and amount to transfer
+    const amount = {
+        denom: "YOUR_TOKEN_DENOMINATION_HERE",
+        amount: "YOUR_TOKEN_AMOUNT_HERE",
+    };
+
+    // The timeout is set to one hour in the future as an example, adjust as needed
+    const timeoutTimestamp = Math.floor(Date.now() / 1000) + 60 * 60;
+
+    const tx = await signingClient.sendIbcTokens(
+        walletAddress,
+        recipient, 
+        amount, 
+        'YOUR_PORT_HERE', // Usually 'transfer', replace if different
+        'YOUR_CHANNEL_HERE', // Replace with the channel identifier (e.g., 'channel-0')
+        undefined, // Timeout block height, leave undefined if using timeout timestamp
+        timeoutTimestamp, 
+        "auto", // Fee, set to "auto" to automatically calculate the fee
+        "" // Memo, optional
+    );
+
+    console.log(JSON.stringify(tx));
+};
+
+start();
+```
