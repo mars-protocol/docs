@@ -147,20 +147,6 @@ export default function Home() {
           </div>
 
           <div>
-
-            <div className={styles.figs}>
-              <img src={GovernFigUrl} />
-            </div>
-
-            <h2 className={styles.title}>Govern</h2>
-            <p className={subheaderClasses}>
-            Discover how to become an active community member of the Mars Protocol governing body, the Martian Council, and help steer the future of Mars.
-            </p>
-            <ContentBox title="Govern" />
-          </div>
-
-          <div>
-
             <div className={styles.figs}>
               <img src={DevelopFigUrl} />
             </div>
@@ -171,8 +157,19 @@ export default function Home() {
             </p>
             <ContentBox title="Develop" />
           </div>
+          <div>
 
           <div>
+            <div className={styles.figs}>
+              <img src={GovernFigUrl} />
+            </div>
+
+            <h2 className={styles.title}>Govern</h2>
+            <p className={subheaderClasses}>
+            Discover how to become an active community member of the Mars Protocol governing body, the Martian Council, and help steer the future of Mars.
+            </p>
+            <ContentBox title="Govern" />
+          </div>
 
             <div className={styles.figs}>
               <img src={InfrastructureFigUrl} />

@@ -629,72 +629,8 @@ export default function Box(props) {
   
       </div>
     );
-  } else if (props.list == 'Vaults') {
-    return (
-      <div className={styles.box}>
+  }
 
-        <div className={styles.titleBanner}>
-          <p className={styles.title}>{props.title}</p>
-        </div>
-  
-        <div className={styles.boxContainer}> 
-        {/* <div className={styles.fig}>
-          <img src={props.image} />
-        </div> */}
-  
-        <div className={styles.text}>
-          <p className={styles.subtext}>{props.description}</p>
-          <ul className={styles.list}>
-
-            <li>
-              <a className={styles.links} href="../../../../docs/learn/vaults/fields-of-mars">Fields of Mars</a>
-            </li>
-
-          </ul>
-        </div>
-        </div>
-  
-      </div>
-    );
-  } 
-
-  else if (props.list == 'Workstation') {
-    return (
-      <div className={styles.box}>
-
-        <div className={styles.titleBanner}>
-          <p className={styles.title}>{props.title}</p>
-        </div>
-  
-        <div className={styles.boxContainer}> 
-        {/* <div className={styles.fig}>
-          <img src={props.image} />
-        </div> */}
-  
-        <div className={styles.text}>
-          <p className={styles.subtext}>{props.description}</p>
-          <ul className={styles.list}>
-
-            <li>
-              <a className={styles.links} href="../../../../docs/learn/workstation/basics/basics-intro">Basics</a>
-            </li>
-
-            <li>
-              <a className={styles.links} href="../../../../docs/learn/workstation/governance/governance-intro">Governance</a>
-            </li>
-
-
-            <li>
-              <a className={styles.links} href="../../../../docs/learn/workstation/red-bank/red-bank-intro">Red Bank</a>
-            </li>
-
-          </ul>
-        </div>
-        </div>
-  
-      </div>
-    );
-  } 
 
   else if (props.list == 'Martian Council') {
     return (

@@ -24,67 +24,44 @@ const learnContent = [
       ],
     },
     {
-      title: "Red Bank",
-      description: "Enter the decentralized & fully automated, on-chain credit facility that can be deployed throughout the Cosmos.",
-      listItems: [
-        {
-          href: "../../../../docs/learn/red-bank/collateralised-borrowing",
-          label: "Collateralised Borrowing",
-        },
-  
-        {
-          href: "../../../../docs/learn/red-bank/contract-to-contract-lending",
-          label: "Contract-to-Contract Lending",
-        },
-
-      ],
-    },
-    {
-      title: "Rover",
+      title: "Mars v2",
       description: "Abandon centralized exchanges and ride Mars’ new generalised credit primitive called Rover.",
       listItems: [
         {
-          href: "../../../../docs/learn/rover/nft-credit-accounts",
-          label: "NFT Credit Accounts",
+          href: "../../../../docs/learn/mars-v2/credit-accounts",
+          label: "Credit Accounts",
         },
   
         {
-          href: "../../../../docs/learn/rover/trading/trading-intro",
+          href: "../../../../docs/learn/mars-v2/trade/trade-intro",
+          label: "Trade",
+        },
+
+        {
+          href: "../../../../docs/learn/mars-v2/farm",
+          label: "Farm",
+        },
+
+      ],
+    },
+
+    {
+      title: "Tutorials",
+      description: "Beginner guides to Mars Protocol with Martian-approved step-by-step screenshots.",
+      listItems: [
+        {
+          href: "../../../../docs/learn/tutorials/credit-accounts/credit-accounts-intro",
+          label: "Credit Accounts",
+        },
+
+        {
+          href: "../../../../docs/learn/tutorials/trading/trading-intro",
           label: "Trading",
         },
 
-      ],
-    },
-
-    {
-      title: "Vaults",
-      description: "Learn how Mars implements automated strategies in a firewalled container.",
-      listItems: [
         {
-          href: "../../../../docs/learn/vaults/fields-of-mars",
-          label: "Farm Vaults",
-        },
-
-      ],
-    },
-
-    {
-      title: "Workstation",
-      description: "Tutorials and beginner guides to Mars Protocol with Martian-approved step-by-step screenshots.",
-      listItems: [
-        {
-          href: "../../../../docs/learn/workstation/basics/basics-intro",
-          label: "Basics",
-        },
-
-        {
-          href: "../../../../docs/learn/workstation/airdrop",
-          label: "Airdrop",
-        },
-
-        {
-          href: "../../../../docs/learn/workstation/red-bank/red-bank-intro",
-          label: "Red Bank",
+          href: "../../../../docs/learn/tutorials/farming/farming-intro",
+          label: "Farming",
         },
 
       ],
@@ -165,22 +142,22 @@ const learnContent = [
   
   const developContent = [
     {
-      title: "Mars CLI",
-      description: "Interact with Mars' function via the terminal.",
+      title: "Connect",
+      description: "Interact with Mars' function via the terminal or scripts.",
       listItems: [
         {
-          href: "../../../../docs/develop/mars-cli/public-endpoints",
-          label: "Public Endpoints",
+          href: "../../../../docs/develop/connect/endpoints",
+          label: "Endpoints",
         },
   
         {
-          href: "../../../../docs/develop/mars-cli/marsd",
-          label: "Marsd",
+          href: "../../../../docs/develop/connect/mars-cli/mars-cli-intro",
+          label: "Mars CLI",
         },
   
         {
-          href: "../../../../docs/develop/mars-cli/generating-signing-and-broadcasting-transactions",
-          label: "Broadcasting Transactions",
+          href: "../../../../docs/develop/connect/cosmjs",
+          label: "CosmJS",
         },
       ],
     },
@@ -211,45 +188,25 @@ const learnContent = [
       ],
     },
     {
-      title: "Modules",
-      description: "Enter the realm of CosmosSDK, CosmWasm, and IBC modules.",
+      title: "Contracts API",
+      description: "Interact with Mars' contracts directly through the smart contracts API.",
       listItems: [
         {
-          href: "../../../../docs/develop/modules/module-accounts",
-          label: "Module Accounts",
-        },
-  
-        {
-          href: "../../../../docs/develop/modules/custom-modules/custom-modules-intro",
-          label: "Custom Modules",
-        },
-  
-        {
-          href: "../../../../docs/develop/modules/cosmos-sdk-modules/cosmos-sdk-modules-intro",
-          label: "Cosmos SDK Modules",
-        },
+          href: "../../../../docs/develop/contracts-api/execute-msgs",
+          label: "Execute Messages",
+        }
       ],
     },
     {
-      title: "Backend",
-      description: "Insights and details on the red backend.",
+      title: "Liquidations",
+      description: "Insights and details on Mars' liquidation bot.",
       listItems: [
         {
           label: "Liquidation Bots",
-          href: "../../../../docs/develop/backend/liquidation-bots/liquidation-bots-intro",
+          href: "../../../../docs/develop/liquidation-bots/liquidation-bots-intro",
         },
       ],
-    },
-    {
-      title: "Frontend",
-      description: "Discover Mars Protocol's open-source frontend.",
-      listItems: [
-        {
-          label: "Osmosis Outpost Frontend",
-          href: "../../../../docs/develop/frontend/osmosis-outpost-frontend",
-        },
-      ],
-    },
+    }
   ];
 
   const validateContent = [
@@ -289,23 +246,7 @@ const learnContent = [
         },
   
       ],
-    },
-    {
-      title: "IBC Relayers",
-      description: "Get started with IBC Relayers.",
-      listItems: [
-        {
-          href: "../../../../docs/validate/ibc-relayers/channels-for-mars",
-          label: "Channels for Mars",
-        },
-  
-        {
-          href: "../../../../docs/validate/ibc-relayers/relayers-guide",
-          label: "Relayers Guide",
-        },
-  
-      ],
-    },
+    }
   ];
   
 

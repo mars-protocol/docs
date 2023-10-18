@@ -43,18 +43,6 @@ const boxProps = {
       description: "Abandon centralized exchanges and ride Mars’  new generalised credit primitive called Rover.", 
       image: Rover1Url, 
       list: "Rover"
-    }, 
-    vaults: {
-      title: "Vaults", 
-      description: "Learn how Mars implements automated strategies in a firewalled container.", 
-      image: DiamondUrl, 
-      list: "Vaults"
-    }, 
-    workstation: {
-      title: "Workstation", 
-      description: "Beginner guides to Mars Protocol with astronaut-approved step-by-step screenshots.", 
-      image: AstronautUrl, 
-      list: "Workstation"
     }
   },
   govern: {
@@ -167,23 +155,6 @@ export default function ContentBox(props) {
         />
         </a>
 
-        <a className={styles.links} href="../../../docs/learn/vaults/vaults-intro">
-        <Box 
-        title={boxProps.learn.vaults.title}
-        description={boxProps.learn.vaults.description}
-        image={boxProps.learn.vaults.image}
-        list={boxProps.learn.vaults.list}
-        />
-        </a>
-
-        <a className={styles.links} href="../../../docs/learn/workstation/workstation-intro">
-        <Box 
-        title={boxProps.learn.workstation.title}
-        description={boxProps.learn.workstation.description}
-        image={boxProps.learn.workstation.image}
-        list={boxProps.learn.workstation.list}
-        />
-        </a>
         
       </div>
     );
