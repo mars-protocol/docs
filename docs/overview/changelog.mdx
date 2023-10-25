@@ -1,0 +1,41 @@
+---
+sidebar_position: 9
+---
+
+# Changelog
+
+### Release v2.0.1
+
+#### Common
+- The copy of the `No supported assets` view was adjusted to avoid confusion
+- `Squid router` was added to the Bridges component
+- Shuttle was updated to prevent infinite connection loader
+- Switching wallets on the `No supported assets` view was fixed
+- The accordion of the `AccountSummary` component inside the modals is now expanded by default and remembers the user's last interaction (collapsed or expanded tabs)
+- Added native USDC (minted on the Noble chain and IBC'ed over to Osmosis)
+
+#### Credit Accounts
+- Health Factor change preview is now displayed as a hatched line
+- Health Factor increase has now the color of the segment it will increase to
+- APR calculation was fixed by replacing total balance with net worth in the mathematical operation
+- `(debt)` was added as a suffix to borrowed positions
+
+#### Trade
+- Dust was left in the Credit Account when a user clicked the Max button on a trade (if the collateral was used as the sell asset). The max button now selects the correct max amount of the sell assets
+- The initial status of the `TradeChart` component got fixed
+- The `TradeChart` component remembers the last selected trading pair now
+
+#### Lend
+- Deposit Caps show now as `XX.XX% filled`
+- Tables have a loading state now
+- Column sorting was fixed
+- `Withdraw` was renamed to `Unlend`
+
+#### Farm
+- Deposit Caps show now as `XX.XX% filled`
+- `Max. TVL` was replaced with `Max. leverage`
+
+#### Borrow
+- Tables have a loading state now
+- Column sorting was fixed
+- The current borrowed value is now displayed on `borrow more` modals
