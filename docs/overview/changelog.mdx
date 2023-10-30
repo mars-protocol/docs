@@ -39,3 +39,19 @@ sidebar_position: 9
 - Tables have a loading state now
 - Column sorting was fixed
 - The current borrowed value is now displayed on `borrow more` modals
+
+### Release v2.0.2
+
+#### Common
+- Selected Accounts persist on reload now
+- The version in the footer now links to a change log page in the docs
+
+#### Credit Accounts
+- The Credit Account Health calculation has been changed from a linear conversion of the Health Factor (0-10) to a logarithmic function with a base of 3.5. With this change, the Health for a Credit Account turns Healthy at an HF of 1.5, has 100% Health at an HF of 3.5, and the Health of a liquidate-able Credit Account is now 0% instead of 10%.
+- The tooltip of the Health now contains the Health Factor
+- Warnings were added for very risky positions, indicating the moment the Credit Account becomes liquidate-able
+- The Heart Symbol of unhealthy accounts will now start pulsing
+- Liquidate-able Credit Accounts have an exclamation mark instead of a heart symbol now
+
+#### Trade
+- The Credit Account preview was not working when the user moved the slider back to 0 due to a missing condition. This has been fixed
