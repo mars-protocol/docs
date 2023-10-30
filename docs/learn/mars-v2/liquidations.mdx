@@ -15,6 +15,8 @@ import FormulaUrl from '@site/static/img/mars-v2/formula.png';
 import Formula2Url from '@site/static/img/mars-v2/formula-2.png';
 import Formula3Url from '@site/static/img/mars-v2/formula-3.png';
 
+import NewHFCurveUrl from '@site/static/img/mars-v2/new-hf-curve.png';
+
 
 # Liquidations 
 
@@ -25,7 +27,6 @@ One of the most critical upgrades of Mars v2 relates to its new liquidations mec
 When and if an asset passes the whitelisting process, it will be assigned a Liquidation LTV. Liquidation LTVs are used to calculate a Health Factor (HF) for each credit account. A HF determines if the risk-adjusted value of the total positions in a credit account exceeds the total amount borrowed in the account and is represented in the form of a ratio. If the HF drops below 1, the account is deemed at risk and is available to be liquidated. Note that a health factor below 1 does not necessarily mean that the credit account is insolvent, but rather that it has exceeded its Liquidation LTV and may be approaching insolvency.
 
 Since HFs apply to all assets in a given rover credit account, all of the user’s collateral becomes eligible for liquidation. Liquidators could receive back a diverse range of tokens (i.e. axlUSDC, OSMO and ATOM). The liquidation mechanism in rover credit accounts mirrors the process outlined in the section on Red Bank Liquidation Mechanisms.
-
 
 <Admonition type="info" title="NOTE">
 Liquidations occur inside the liquidator’s credit account. Any liquidated assets are sent directly to the liquidator’s rover rather than the user’s wallet. Because liquidators must use the credit manager to initiate a liquidation, they can borrow the funds required to pay down Red Bank debt. This is possible because the transactions can be completed in a single transaction. Specifically, a liquidator can borrow the debt asset, swap the collateral asset back to the debt asset and repay the Red Bank all at once. In this way, credit accounts enable a flash-loan like mechanism to facilitate liquidations.
@@ -62,6 +63,20 @@ A liquidator then identifies the account, pays off a portion of the debt, and re
     fontWeight: '700',
     fontSize: '14px',
 }}>Liquidation flow, Part 2</p>
+
+## Credit Account Health Calculation in the UI
+
+In the UI, Credit Account Health is calculated using a logarithmic function with a base of 3.5. This logarithmic HF calculation offers a more intuitive and responsive representation of account health. Here's how the Health Factor (HF) is interpreted in this system:
+
+### Health Status Thresholds
+
+- **Healthy Accounts**: An account is considered "Healthy" when its HF reaches 1.5 or higher, signifying a relatively stable and secure state.
+- **100% Health**: An account achieves 100% health at an HF of 3.5, indicating optimal health and safety.
+- **Liquidate-able Accounts**: The health of a liquidate-able Credit Account is 0%, underscoring the need for timely action when an account reaches this state.
+
+<img src={ NewHFCurveUrl } style={{ marginBottom: 15 } } />
+
+This logarithmic approach ensures that users can more easily understand and monitor the health of their credit accounts without the need for linear conversion. If your credit account is approaching 0, you know you are at risk of liquidation. 
 
 ## Mars v1 Liquidation Mechanism
 
