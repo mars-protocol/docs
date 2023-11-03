@@ -55,3 +55,19 @@ sidebar_position: 9
 
 #### Trade
 - The Credit Account preview was not working when the user moved the slider back to 0 due to a missing condition. This has been fixed
+
+### Release v2.0.3
+
+#### Common
+- A `Resync Oracle` button was added to the header; whenever the prices of the Pyth oracle on chain get stale or are too old, every user is now able to submit the price data on-chain via a transaction to keep the UI up to date with the latest price feed data. 
+- A bug was fixed where checkboxes weren't selectable or deselectable because a `for` and `id` value were missing on the label and input combination.
+
+#### Credit Accounts
+- HealthFactor above 1 always returns 1% Health now to prevent 0% liquidation warnings for HF > 1 accounts.
+- When a user is not on the Trade page, a click-away handler was added to the `AccountDetails` component to close it when clicking outside of it to prevent buttons from being overlapped by the `AccountDetails` slide-out
+- When lending a tiny amount (0.000001) of an asset, the amount reported by the `AccountQuery` could become 0. To prevent showing 0 values, fractions of the smallest amount possible are now prefixed with the less than sign `<`
+
+#### Trade
+- A bug where your last selected `TradingPair` didn't load into the TradingView was fixed.
+- The `TradingView` container has a preloader now.
+- A liquidity message was added that shows up when a user tries to borrow more of an asset than the Red Bank holds, preventing the transaction.
