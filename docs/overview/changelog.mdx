@@ -71,3 +71,19 @@ sidebar_position: 9
 - A bug where your last selected `TradingPair` didn't load into the TradingView was fixed.
 - The `TradingView` container has a preloader now.
 - A liquidity message was added that shows up when a user tries to borrow more of an asset than the Red Bank holds, preventing the transaction.
+
+### Release v2.0.4
+
+#### Common
+- Listed stOSMO as collateral
+- Listed TIA as collateral and borrowable asset
+- Updated all Token logos to use the official logo provided by the chain-registry repository
+- Updated Keplr and other wallet dependencies to ensure Osmosis1559 support
+
+#### Borrow
+- The APR of the Borrow Rate got converted to APY, to avoid confusion
+
+#### Trade
+- Updated chart loading logic
+- Switched charts source to Pyth for every asset supported by the pyth oracle. If a route has an asset that is not supported by pyth yet, the source of the Trading View chart falls back to the pools on osmosis-1 as a chart source
+- Fixed the SwapModule overlapping the header on scroll
