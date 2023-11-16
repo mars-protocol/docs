@@ -87,3 +87,16 @@ sidebar_position: 9
 - Updated chart loading logic
 - Switched charts source to Pyth for every asset supported by the pyth oracle. If a route has an asset that is not supported by pyth yet, the source of the Trading View chart falls back to the pools on osmosis-1 as a chart source
 - Fixed the SwapModule overlapping the header on scroll
+
+### Release v2.0.5
+
+#### Common
+- Listed INJ as collateral and borrowable asset.
+- Listed USDT as collateral and borrowable asset.
+
+#### Bugfixes
+- The slider mark isn't off-positioned on load anymore.
+- Solved an issue with the slider masks being hidden behind the track sometimes.
+- The `AccountSummary` has a fixed width now to prevent flickering.
+- Checkboxes wrapped into `onClick` handlers did deselect themselves directly on click. This has been fixed.
+- The TradingView Chart is now shown `onLoad` or `onReady`.
