@@ -17,7 +17,7 @@ export default function NavbarWrapper(props) {
           <div className={styles.linkers}>
               <a href="https://blog.marsprotocol.io/">Blog</a>
               {/* <a href="@site">Docs</a> */}
-              <a href="https://app.marsprotocol.io/#/council">Forum</a>
+              <a href="https://forum.marsprotocol.io/">Forum</a>
               <a href="https://app.marsprotocol.io/">
                   <button className={styles.launchButton}>Launch App</button>
               </a>
