@@ -100,3 +100,28 @@ sidebar_position: 9
 - The `AccountSummary` has a fixed width now to prevent flickering.
 - Checkboxes wrapped into `onClick` handlers did deselect themselves directly on click. This has been fixed.
 - The TradingView Chart is now shown `onLoad` or `onReady`.
+
+### Release v2.0.6
+
+#### Common
+- AKT was listed as a collateral and borrowable asset.
+- DYDX was listed as a collateral and borrowable asset.
+- An overflow menu was added to the header menu.
+- A link to the `mars-1` governance was added to the header. This link leads to the governance interface of the currently connected wallet.
+
+#### Wallets
+- ICNS support for `osmosis-1` was added.
+- ICP support was added as a fallback, if no ICNS address was registered.
+- As soon as a user has an ICNS or ICP domain mapped to the connected wallet, the domain name will be displayed in the wallet interface.
+
+#### Trade
+- stATOM and stOSMO are not supported by the Pyth Network Oracles currently. Since The Graph returns stale data for `osmosis-1`, it was decided not to show any price chart data until the issue is resolved on the side of The Graph.
+- Swap fees are now shown in the `TradeSummary`
+- Min. receive was added to the `TradeSummary`
+- The liquidation price of an asset was added to the `TradeSummary`
+
+#### Bugfixes
+- The query for the deposit caps, which returned wrong values, was fixed.
+- Deposit caps cannot exceed 100% in the UI anymore, even if the underlying lent positions accrued more fees and grew higher than the deposit cap.
+- The values of the `withdrawFromAllVaults` overlay were showing zero values. This has been fixed.
+- Lending assets wasn't selected by default, that has been fixed
