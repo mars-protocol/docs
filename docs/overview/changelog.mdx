@@ -125,3 +125,35 @@ sidebar_position: 9
 - Deposit caps cannot exceed 100% in the UI anymore, even if the underlying lent positions accrued more fees and grew higher than the deposit cap.
 - The values of the `withdrawFromAllVaults` overlay were showing zero values. This has been fixed.
 - Lending assets wasn't selected by default, that has been fixed
+
+### Release v2.1.0
+
+#### Common
+- A link to `High Leverage` strategies was added to the header
+
+#### High Leverage Strategies
+- High Leverage Strategies (HLS) were enabled for stATOM and stOSMO staking
+
+### Release v2.1.1
+
+#### Common
+- BTC/USD price feed of WBTC was changed to WBTC/USD
+
+#### Borrow and Lend
+- The Borrow and Lending table layout was adjusted to be more readable when having active and available tables shown
+- Users can now repay debt from Wallet to avoid issues when the deposit cap of the asset they want to repay is full
+
+#### Trade
+- Users can now choose to automatically repay their debt on a trade if they have debt of the selected token they buy
+- Buy/sell token ratio now shows in the Trading View Chart header, as well as the token price in dollars
+- 1 minute and 5 minutes timeframe was added to the Trading View Chart
+- `TradingSummary` is now collapsable
+
+#### High Leverage
+- The HLS health curve for HLS accounts was changed from log(3.5) to log(1.2)
+- The APY range and strategy copy on HLS were adjusted to be less confusing
+- The debt column from the HLS active strategies table was removed to increase readability
+
+#### Bugfixes
+- A bug on the Trading View Chart was fixed, where changing the timeframe flipped the ratio
+- HLS accounts aren't selectable via URL anymore to avoid issues on the `AccountDetails` overlay
