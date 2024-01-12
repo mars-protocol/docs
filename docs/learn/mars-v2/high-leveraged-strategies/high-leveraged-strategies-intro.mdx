@@ -1,0 +1,56 @@
+import Admonition from '@theme/Admonition'
+import HLSParamsUrl from '@site/static/img/mars-v2/hls/hls-params.png';
+import HLSSimYieldsUrl from '@site/static/img/mars-v2/hls/hls-sim-yields.png';
+
+# High Leveraged Strategies (HLS)
+
+Explore the exciting world of Mars **High Leverage Strategies (HLS)**, a groundbreaking feature that revolutionizes how users engage with leveraged staking on the Mars v2 protocol. HLS brings maximum capital efficiency to specific strategies within the Cosmos, allowing users to take advantage of up to 10x leverage.
+
+## Understanding HLS Markets
+
+### HLS Markets Concept
+
+Mars HLS introduces a specialized form of credit accounts known as HLS markets. Unlike the general approach of Rover credit accounts, HLS markets target specific use-cases, dramatically increasing leverage for those scenarios. Each HLS market is defined by a single debt asset and a set of collateral assets, providing users with a tailored approach to high-leverage strategies.
+
+### Initial HLS Markets
+
+The first two proposed HLS markets focus on leveraged staking, offering up to 10x leverage for Stride Staked ATOM (stATOM) and Stride Staked OSMO (stOSMO). These markets aim to bring enhanced capital efficiency to highly-correlated strategies throughout the Cosmos.
+
+### User Journey in HLS Markets
+
+- **Mint an HLS Account**: Create a new account specialized for HLS markets.
+- **Supply Assets**: Deposit stATOM or stOSMO into the relevant HLS market.
+- **Select Leverage**: Choose the desired leverage for stATOM or stOSMO, up to 10x.
+- **Transaction Approval**: Approve the transaction.
+
+Mars then virtually "loops" the user's position until the desired leverage level is achieved.
+
+### Potential Benefits
+
+- **Increased Leverage**: HLS markets offer leverage from a maximum of 3.33x to an impressive 10x, providing users with enhanced capital efficiency.
+- **Reduced Liquidation Risk**: Unlike traditional leveraged strategies, HLS markets focus on highly correlated assets. This correlation between borrow and collateral assets significantly lowers the risk of liquidation. When assets are tightly correlated, such as stATOM and ATOM trading in lockstep, the chance of liquidation decreases. If the collateral's value falls, so does the value of the debt, and vice versa. This correlation helps mitigate the risks associated with higher leverage, providing users with a more secure environment for their leveraged positions.
+
+## Calculating APY
+
+### Formula
+**(Staking Yield * 10) - (Borrow Rate * 9)**
+
+### Examples
+
+<img src={ HLSSimYieldsUrl } style={{ paddingBottom: 15 }} />
+
+<Admonition type="tip" title="NOTE">
+    Rates are volatile and based on real-time supply and demand. Higher leverage increases the likelihood of liquidation if assets decorrelate.
+</Admonition>
+
+## Risks and Parameters
+
+### HLS Risks
+
+- **Smart Contract Risk**: Unforeseen bugs or vulnerabilities may pose risks, even with code audits.
+- **Parameter-Related Vulnerabilities**: Aggressive risk parameters could impact the liquidation system, potentially leading to protocol insolvency.
+- **Liquidation Risk**: Higher leverage increases the likelihood of liquidation, posing risks to users and the Mars system.
+
+### Proposed Risk Parameters 
+
+<img src={ HLSParamsUrl } style={{ paddingBottom: 15 }} />
