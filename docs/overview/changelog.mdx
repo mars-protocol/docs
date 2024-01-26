@@ -157,3 +157,35 @@ sidebar_position: 9
 #### Bugfixes
 - A bug on the Trading View Chart was fixed, where changing the timeframe flipped the ratio
 - HLS accounts aren't selectable via URL anymore to avoid issues on the `AccountDetails` overlay
+
+### Release v2.2.0
+
+#### Common
+- The outpost was converted to be chain-agnostic.
+- A chain select was added to the header to enable switching between outposts.
+- Testnets only show on the testnet outpost, while the mainnet app only shows mainnet outposts (incl. V1).
+- External links now have an icon to identify them.
+
+#### Credit Accounts
+- Prices are now fetched directly from Pyth, if available. This prevents prices from showing $0.00 if the oracle is stale.
+- AssetSelect is default ordered by current balance value or borrow rate and can be sorted by symbol.
+
+#### Trade
+- The Trade link in the header is now clickable and takes users to Trade Simple.
+- The TradeChart updates every second and shows live prices.
+- Trading View was changed to show the asset price (of the asset the user wants to buy) in USD.
+- A Pyth Logo was added to the Trading Chart.
+
+#### Earn
+- Deposit caps are now highlighted if they are near the maximum capacity or full.
+
+#### Settings
+- Most settings are now chain-specific
+- Users can now opt out of updating the price oracle on every transaction. This setting does not impact Ledger users, as it is forced to "off" if the user uses a hardware wallet (to prevent the transaction messages from exceeding the wallet's character threshold).
+
+#### Bugfixes
+- Hover effects in the Trade dropdown were fixed.
+- The AutoConnect logic was improved.
+- Withdrawing from a Credit Account to the wallet when assets are lent was fixed.
+- The AutolendSwitch was updated to update the auto-lending setting accordingly.
+- The deposit-cap-exceed warning now shows the precise amount of tokens that could be provided until the cap is filled.
