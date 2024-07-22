@@ -1,0 +1,5 @@
+{
+    "label": "IBC Modules",
+    "position": 5,
+    "link": { "type": "doc", "id": "ibc-modules-intro" }
+}

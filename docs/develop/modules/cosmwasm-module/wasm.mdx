@@ -1,0 +1,680 @@
+---
+sidebar_position: 1
+---
+
+# wasm
+
+The wasm module is responsible for handling CosmWasm smart contract functionality on Mars Hub. The module is permission-gated (contracts can only be instantiated by whitelisted addresses or through governance). 
+
+For more information, visit: https://github.com/CosmWasm/cosmwasm
+
+## Message Types
+
+`Msg` defines the wasm Msg service.
+
+```go tx.proto
+service Msg {
+  // StoreCode to submit Wasm code to the system
+  rpc StoreCode(MsgStoreCode) returns (MsgStoreCodeResponse);
+  //  Instantiate creates a new smart contract instance for the given code id.
+  rpc InstantiateContract(MsgInstantiateContract)
+      returns (MsgInstantiateContractResponse);
+  // Execute submits the given message data to a smart contract
+  rpc ExecuteContract(MsgExecuteContract) returns (MsgExecuteContractResponse);
+  // Migrate runs a code upgrade/ downgrade for a smart contract
+  rpc MigrateContract(MsgMigrateContract) returns (MsgMigrateContractResponse);
+  // UpdateAdmin sets a new   admin for a smart contract
+  rpc UpdateAdmin(MsgUpdateAdmin) returns (MsgUpdateAdminResponse);
+  // ClearAdmin removes any admin stored for a smart contract
+  rpc ClearAdmin(MsgClearAdmin) returns (MsgClearAdminResponse);
+}
+```
+
+### `MsgStoreCode`
+
+`MsgStoreCode` submit Wasm code to the system.
+
+```go tx.proto
+message MsgStoreCode {
+  // Sender is the that actor that signed the messages
+  string sender = 1;
+  // WASMByteCode can be raw or gzip compressed
+  bytes wasm_byte_code = 2 [ (gogoproto.customname) = "WASMByteCode" ];
+  // Used in v1beta1
+  reserved 3, 4;
+  // InstantiatePermission access control to apply on contract creation,
+  // optional
+  AccessConfig instantiate_permission = 5;
+}
+```
+
+#### `MsgStoreCodeResponse`
+
+`MsgStoreCodeResponse` returns store result data.
+
+```go tx.proto
+message MsgStoreCodeResponse {
+  // CodeID is the reference to the stored WASM code
+  uint64 code_id = 1 [ (gogoproto.customname) = "CodeID" ];
+}
+```
+
+### `MsgInstantiateContract`
+
+`MsgInstantiateContract` create a new smart contract instance for the given code id.
+
+```go tx.proto
+message MsgInstantiateContract {
+  // Sender is the that actor that signed the messages
+  string sender = 1;
+  // Admin is an optional address that can execute migrations
+  string admin = 2;
+  // CodeID is the reference to the stored WASM code
+  uint64 code_id = 3 [ (gogoproto.customname) = "CodeID" ];
+  // Label is optional metadata to be stored with a contract instance.
+  string label = 4;
+  // Msg json encoded message to be passed to the contract on instantiation
+  bytes msg = 5 [ (gogoproto.casttype) = "RawContractMessage" ];
+  // Funds coins that are transferred to the contract on instantiation
+  repeated cosmos.base.v1beta1.Coin funds = 6 [
+    (gogoproto.nullable) = false,
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+}
+```
+
+#### `MsgInstantiateContractResponse`
+
+`MsgInstantiateContractResponse` return instantiation result data.
+
+```go tx.proto
+message MsgInstantiateContractResponse {
+  // Address is the bech32 address of the new contract instance.
+  string address = 1;
+  // Data contains base64-encoded bytes to returned from the contract
+  bytes data = 2;
+}
+```
+
+### `MsgExecuteContract`
+
+`MsgExecuteContract` submits the given message data to a smart contract.
+
+```go tx.proto
+message MsgExecuteContract {
+  // Sender is the that actor that signed the messages
+  string sender = 1;
+  // Contract is the address of the smart contract
+  string contract = 2;
+  // Msg json encoded message to be passed to the contract
+  bytes msg = 3 [ (gogoproto.casttype) = "RawContractMessage" ];
+  // Funds coins that are transferred to the contract on execution
+  repeated cosmos.base.v1beta1.Coin funds = 5 [
+    (gogoproto.nullable) = false,
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+}
+```
+
+#### `MsgExecuteContractResponse`
+`MsgExecuteContractResponse` returns execution result data.
+
+```go tx.proto
+message MsgExecuteContractResponse {
+  // Data contains base64-encoded bytes to returned from the contract
+  bytes data = 1;
+}
+```
+
+### `MsgMigrateContract`
+
+`MsgMigrateContract` runs a code upgrade/downgrade for a smart contract.
+
+```go tx.proto
+message MsgMigrateContract {
+  // Sender is the that actor that signed the messages
+  string sender = 1;
+  // Contract is the address of the smart contract
+  string contract = 2;
+  // CodeID references the new WASM code
+  uint64 code_id = 3 [ (gogoproto.customname) = "CodeID" ];
+  // Msg json encoded message to be passed to the contract on migration
+  bytes msg = 4 [ (gogoproto.casttype) = "RawContractMessage" ];
+}
+```
+
+#### `MsgMigrateContractResponse`
+
+`MsgMigrateContractResponse` returns contract migration result data.
+
+```go tx.proto
+message MsgMigrateContractResponse {
+  // Data contains same raw bytes returned as data from the wasm contract.
+  // (May be empty)
+  bytes data = 1;
+}
+```
+
+### `MsgUpdateAdmin`
+
+`MsgUpdateAdmin` sets a new admin for a smart contract.
+
+```go tx.proto
+message MsgUpdateAdmin {
+  // Sender is the that actor that signed the messages
+  string sender = 1;
+  // NewAdmin address to be set
+  string new_admin = 2;
+  // Contract is the address of the smart contract
+  string contract = 3;
+}
+```
+
+#### `MsgUpdateAdminResponse`
+
+`MsgUpdateAdminResponse` returns empty data.
+
+```go tx.proto
+message MsgUpdateAdminResponse {}
+```
+
+### `MsgClearAdmin`
+
+`MsgClearAdmin` removes any admin stored for a smart contract.
+
+```go tx.proto
+message MsgClearAdmin {
+  // Sender is the that actor that signed the messages
+  string sender = 1;
+  // Contract is the address of the smart contract
+  string contract = 3;
+}
+```
+
+#### `MsgClearAdminResponse`
+
+`MsgClearAdminResponse` returns empty data.
+
+```go tx.proto
+message MsgClearAdminResponse {}
+```
+
+## Proposal Types
+
+### `StoreCodeProposal`
+
+`StoreCodeProposal` gov proposal content type to submit WASM code to the system.
+
+```go proposal.proto
+message StoreCodeProposal {
+  // Title is a short summary
+  string title = 1;
+  // Description is a human readable text
+  string description = 2;
+  // RunAs is the address that is passed to the contract's environment as sender
+  string run_as = 3;
+  // WASMByteCode can be raw or gzip compressed
+  bytes wasm_byte_code = 4 [ (gogoproto.customname) = "WASMByteCode" ];
+  // Used in v1beta1
+  reserved 5, 6;
+  // InstantiatePermission to apply on contract creation, optional
+  AccessConfig instantiate_permission = 7;
+}
+```
+
+### `InstantiateContractProposal`
+
+`InstantiateContractProposal` gov proposal content type to instantiate a contract.
+
+```go proposal.proto
+message InstantiateContractProposal {
+  // Title is a short summary
+  string title = 1;
+  // Description is a human readable text
+  string description = 2;
+  // RunAs is the address that is passed to the contract's environment as sender
+  string run_as = 3;
+  // Admin is an optional address that can execute migrations
+  string admin = 4;
+  // CodeID is the reference to the stored WASM code
+  uint64 code_id = 5 [ (gogoproto.customname) = "CodeID" ];
+  // Label is optional metadata to be stored with a constract instance.
+  string label = 6;
+  // Msg json encoded message to be passed to the contract on instantiation
+  bytes msg = 7 [ (gogoproto.casttype) = "RawContractMessage" ];
+  // Funds coins that are transferred to the contract on instantiation
+  repeated cosmos.base.v1beta1.Coin funds = 8 [
+    (gogoproto.nullable) = false,
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+}
+```
+
+### `MigrateContractProposal`
+
+`MigrateContractProposal` gov proposal content type to migrate a contract.
+
+```go proposal.proto
+message MigrateContractProposal {
+  // Title is a short summary
+  string title = 1;
+  // Description is a human readable text
+  string description = 2;
+  // Note: skipping 3 as this was previously used for unneeded run_as
+
+  // Contract is the address of the smart contract
+  string contract = 4;
+  // CodeID references the new WASM code
+  uint64 code_id = 5 [ (gogoproto.customname) = "CodeID" ];
+  // Msg json encoded message to be passed to the contract on migration
+  bytes msg = 6 [ (gogoproto.casttype) = "RawContractMessage" ];
+}
+```
+
+### `SudoContractProposal`
+
+`SudoContractProposal` gov proposal content type to call sudo on a contract.
+
+```go proposal.proto
+message SudoContractProposal {
+  // Title is a short summary
+  string title = 1;
+  // Description is a human readable text
+  string description = 2;
+  // Contract is the address of the smart contract
+  string contract = 3;
+  // Msg json encoded message to be passed to the contract as sudo
+  bytes msg = 4 [ (gogoproto.casttype) = "RawContractMessage" ];
+}
+```
+
+### `ExecuteContractProposal`
+
+`ExecuteContractProposal` gov proposal content type to call execute on a contract.
+
+```go proposal.proto
+message ExecuteContractProposal {
+  // Title is a short summary
+  string title = 1;
+  // Description is a human readable text
+  string description = 2;
+  // RunAs is the address that is passed to the contract's environment as sender
+  string run_as = 3;
+  // Contract is the address of the smart contract
+  string contract = 4;
+  // Msg json encoded message to be passed to the contract as execute
+  bytes msg = 5 [ (gogoproto.casttype) = "RawContractMessage" ];
+  // Funds coins that are transferred to the contract on instantiation
+  repeated cosmos.base.v1beta1.Coin funds = 6 [
+    (gogoproto.nullable) = false,
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+}
+```
+
+### `UpdateAdminProposal`
+
+`UpdateAdminProposal` gov proposal content type to set an admin for a contract.
+
+```go proposal.proto
+message UpdateAdminProposal {
+  // Title is a short summary
+  string title = 1;
+  // Description is a human readable text
+  string description = 2;
+  // NewAdmin address to be set
+  string new_admin = 3 [ (gogoproto.moretags) = "yaml:\"new_admin\"" ];
+  // Contract is the address of the smart contract
+  string contract = 4;
+}
+```
+
+### `ClearAdminProposal`
+
+`ClearAdminProposal` gov proposal content type to clear the admin of a contract.
+
+```go proposal.proto
+message ClearAdminProposal {
+  // Title is a short summary
+  string title = 1;
+  // Description is a human readable text
+  string description = 2;
+  // Contract is the address of the smart contract
+  string contract = 3;
+}
+```
+
+### `PinCodesProposal`
+
+`PinCodesProposal` gov proposal content type to pin a set of code ids in the wasmvm cache.
+
+```go proposal.proto
+message PinCodesProposal {
+  // Title is a short summary
+  string title = 1 [ (gogoproto.moretags) = "yaml:\"title\"" ];
+  // Description is a human readable text
+  string description = 2 [ (gogoproto.moretags) = "yaml:\"description\"" ];
+  // CodeIDs references the new WASM codes
+  repeated uint64 code_ids = 3 [
+    (gogoproto.customname) = "CodeIDs",
+    (gogoproto.moretags) = "yaml:\"code_ids\""
+  ];
+}
+```
+
+### `UnpinCodesProposal`
+
+`UnpinCodesProposal` gov proposal content type to unpin a set of code ids in the wasmvm cache.
+
+```go proposal.proto
+message UnpinCodesProposal {
+  // Title is a short summary
+  string title = 1 [ (gogoproto.moretags) = "yaml:\"title\"" ];
+  // Description is a human readable text
+  string description = 2 [ (gogoproto.moretags) = "yaml:\"description\"" ];
+  // CodeIDs references the WASM codes
+  repeated uint64 code_ids = 3 [
+    (gogoproto.customname) = "CodeIDs",
+    (gogoproto.moretags) = "yaml:\"code_ids\""
+  ];
+}
+```
+
+### `AccessConfigUpdate`
+
+`AccessConfigUpdate` contains the code id and the access config to be applied.
+
+```go proposal.proto
+message AccessConfigUpdate {
+  // CodeID is the reference to the stored WASM code to be updated
+  uint64 code_id = 1 [ (gogoproto.customname) = "CodeID" ];
+  // InstantiatePermission to apply to the set of code ids
+  AccessConfig instantiate_permission = 2 [ (gogoproto.nullable) = false ];
+}
+```
+
+### `UpdateInstantiateConfigProposal`
+
+`UpdateInstantiateConfigProposal` gov proposal content type to update instantiate config to a set of code ids.
+
+```go proposal.proto
+message UpdateInstantiateConfigProposal {
+  // Title is a short summary
+  string title = 1 [ (gogoproto.moretags) = "yaml:\"title\"" ];
+  // Description is a human readable text
+  string description = 2 [ (gogoproto.moretags) = "yaml:\"description\"" ];
+  // AccessConfigUpdate contains the list of code ids and the access config
+  // to be applied.
+  repeated AccessConfigUpdate access_config_updates = 3
+      [ (gogoproto.nullable) = false ];
+}
+```
+
+## Queries
+
+`Query` provides defines the gRPC querier service.
+
+```go query.proto
+service Query {
+  // ContractInfo gets the contract meta data
+  rpc ContractInfo(QueryContractInfoRequest)
+      returns (QueryContractInfoResponse) {
+    option (google.api.http).get = "/cosmwasm/wasm/v1/contract/{address}";
+  }
+  // ContractHistory gets the contract code history
+  rpc ContractHistory(QueryContractHistoryRequest)
+      returns (QueryContractHistoryResponse) {
+    option (google.api.http).get =
+        "/cosmwasm/wasm/v1/contract/{address}/history";
+  }
+  // ContractsByCode lists all smart contracts for a code id
+  rpc ContractsByCode(QueryContractsByCodeRequest)
+      returns (QueryContractsByCodeResponse) {
+    option (google.api.http).get = "/cosmwasm/wasm/v1/code/{code_id}/contracts";
+  }
+  // AllContractState gets all raw store data for a single contract
+  rpc AllContractState(QueryAllContractStateRequest)
+      returns (QueryAllContractStateResponse) {
+    option (google.api.http).get = "/cosmwasm/wasm/v1/contract/{address}/state";
+  }
+  // RawContractState gets single key from the raw store data of a contract
+  rpc RawContractState(QueryRawContractStateRequest)
+      returns (QueryRawContractStateResponse) {
+    option (google.api.http).get =
+        "/cosmwasm/wasm/v1/contract/{address}/raw/{query_data}";
+  }
+  // SmartContractState get smart query result from the contract
+  rpc SmartContractState(QuerySmartContractStateRequest)
+      returns (QuerySmartContractStateResponse) {
+    option (google.api.http).get =
+        "/cosmwasm/wasm/v1/contract/{address}/smart/{query_data}";
+  }
+  // Code gets the binary code and metadata for a singe wasm code
+  rpc Code(QueryCodeRequest) returns (QueryCodeResponse) {
+    option (google.api.http).get = "/cosmwasm/wasm/v1/code/{code_id}";
+  }
+  // Codes gets the metadata for all stored wasm codes
+  rpc Codes(QueryCodesRequest) returns (QueryCodesResponse) {
+    option (google.api.http).get = "/cosmwasm/wasm/v1/code";
+  }
+
+  // PinnedCodes gets the pinned code ids
+  rpc PinnedCodes(QueryPinnedCodesRequest) returns (QueryPinnedCodesResponse) {
+    option (google.api.http).get = "/cosmwasm/wasm/v1/codes/pinned";
+  }
+}
+```
+
+### `QueryContractInfoRequest`
+`QueryContractInfoRequest` is the request type for the `Query/ContractInfo` RPC method.
+
+```go query.proto
+message QueryContractInfoRequest {
+  // address is the address of the contract to query
+  string address = 1;
+}
+```
+
+#### `QueryContractInfoResponse`
+`QueryContractInfoResponse` is the response type for the `Query/ContractInfo` RPC method.
+
+```go query.proto
+message QueryContractInfoResponse {
+  option (gogoproto.equal) = true;
+
+  // address is the address of the contract
+  string address = 1;
+  ContractInfo contract_info = 2 [
+    (gogoproto.embed) = true,
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = ""
+  ];
+}
+```
+
+### `QueryContractHistoryRequest`
+`QueryContractHistoryRequest` is the request type for the `Query/ContractHistory` RPC method.
+
+```go query.proto
+message QueryContractHistoryRequest {
+  // address is the address of the contract to query
+  string address = 1;
+  // pagination defines an optional pagination for the request.
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+```
+
+#### `QueryContractHistoryResponse`
+`QueryContractHistoryResponse` is the response type for the `Query/ContractHistory` RPC method.
+
+```go query.proto
+message QueryContractHistoryResponse {
+  repeated ContractCodeHistoryEntry entries = 1
+      [ (gogoproto.nullable) = false ];
+  // pagination defines the pagination in the response.
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+```
+
+### `QueryContractsByCodeRequest`
+`QueryContractsByCodeRequest` is the request type for the `Query/ContractsByCode` RPC method.
+
+```go query.proto
+message QueryContractsByCodeRequest {
+  uint64 code_id = 1; // grpc-gateway_out does not support Go style CodID
+  // pagination defines an optional pagination for the request.
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+```
+
+#### `QueryContractsByCodeResponse`
+
+`QueryContractsByCodeResponse` is the response type for the `Query/ContractsByCode` RPC method.
+
+```go query.proto
+message QueryContractsByCodeResponse {
+  // contracts are a set of contract addresses
+  repeated string contracts = 1;
+
+  // pagination defines the pagination in the response.
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+```
+
+### `QueryAllContractStateRequest`
+
+`QueryAllContractStateRequest` is the request type for the `Query/AllContractState` RPC method.
+
+```go query.proto
+message QueryAllContractStateRequest {
+  // address is the address of the contract
+  string address = 1;
+  // pagination defines an optional pagination for the request.
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+```
+
+#### `QueryAllContractStateResponse`
+`QueryAllContractStateResponse` is the response type for the `Query/AllContractState` RPC method.
+
+```go query.proto
+message QueryAllContractStateResponse {
+  repeated Model models = 1 [ (gogoproto.nullable) = false ];
+  // pagination defines the pagination in the response.
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+```
+
+### `QueryRawContractStateRequest`
+
+`QueryRawContractStateRequest` is the request type for the `Query/RawContractState` RPC method.
+
+```go query.proto
+message QueryRawContractStateRequest {
+  // address is the address of the contract
+  string address = 1;
+  bytes query_data = 2;
+}
+```
+
+#### `QueryRawContractStateResponse`
+
+`QueryRawContractStateResponse` is the response type for the `Query/RawContractState` RPC method.
+
+```go query.proto
+message QueryRawContractStateResponse {
+  // Data contains the raw store data
+  bytes data = 1;
+}
+```
+
+### `QuerySmartContractStateRequest`
+`QuerySmartContractStateRequest` is the request type for the `Query/SmartContractState` RPC method.
+
+```go query.proto
+message QuerySmartContractStateRequest {
+  // address is the address of the contract
+  string address = 1;
+  // QueryData contains the query data passed to the contract
+  bytes query_data = 2 [ (gogoproto.casttype) = "RawContractMessage" ];
+}
+```
+
+#### `QuerySmartContractStateResponse`
+
+`QuerySmartContractStateResponse` is the response type for the `Query/SmartContractState` RPC method.
+
+```go query.proto
+message QuerySmartContractStateResponse {
+  // Data contains the json data returned from the smart contract
+  bytes data = 1 [ (gogoproto.casttype) = "RawContractMessage" ];
+}
+```
+
+### `QueryCodeRequest`
+`QueryCodeRequest` is the request type for the `Query/Code` RPC method.
+
+```go query.proto
+message QueryCodeRequest {
+  uint64 code_id = 1; // grpc-gateway_out does not support Go style CodID
+}
+```
+
+#### `QueryCodeResponse`
+`QueryCodeResponse` is the response type for the `Query/Code` RPC method.
+
+```go query.proto
+message QueryCodeResponse {
+  option (gogoproto.equal) = true;
+  CodeInfoResponse code_info = 1
+      [ (gogoproto.embed) = true, (gogoproto.jsontag) = "" ];
+  bytes data = 2 [ (gogoproto.jsontag) = "data" ];
+}
+```
+
+### `QueryCodesRequest`
+
+`QueryCodesRequest` is the request type for the `Query/Codes` RPC method.
+
+```go query.proto
+message QueryCodesRequest {
+  // pagination defines an optional pagination for the request.
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+```
+
+#### `QueryCodesResponse`
+
+`QueryCodesResponse` is the response type for the `Query/Codes` RPC method.
+
+```go query.proto
+message QueryCodesResponse {
+  repeated CodeInfoResponse code_infos = 1 [ (gogoproto.nullable) = false ];
+  // pagination defines the pagination in the response.
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+```
+
+### `QueryPinnedCodesRequest`
+
+`QueryPinnedCodesRequest` is the request type for the `Query/PinnedCodes` RPC method.
+
+```go query.proto
+message QueryPinnedCodesRequest {
+  // pagination defines an optional pagination for the request.
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+```
+
+#### `QueryPinnedCodesResponse`
+
+`QueryPinnedCodesResponse` is the response type for the Query/PinnedCodes RPC method.
+
+```go query.proto
+message QueryPinnedCodesResponse {
+  repeated uint64 code_ids = 1
+      [ (gogoproto.nullable) = false, (gogoproto.customname) = "CodeIDs" ];
+  // pagination defines the pagination in the response.
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+```

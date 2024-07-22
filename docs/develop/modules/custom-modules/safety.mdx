@@ -1,0 +1,87 @@
+---
+sidebar_position: 3
+---
+
+import Admonition from '@theme/Admonition'
+
+# safety
+
+The `safety` module is tasked solely with receiving a fraction of an outpost’s revenues denominated in stablecoins. Spending funds in the safetyfund can only be done via a successful governance proposal.
+
+# Links
+
+- **Module address:**
+- **Testnet address:**
+- **Module repo:** https://github.com/mars-protocol/hub/tree/main/x/safety
+- **Proto repo:** https://github.com/mars-protocol/hub/tree/main/proto
+- **proposals.proto:** https://github.com/mars-protocol/hub/blob/main/proto/mars/safety/v1beta1/proposals.proto
+- **query.proto:** https://github.com/mars-protocol/hub/blob/main/proto/mars/safety/v1beta1/query.proto
+- **Video walkthrough:** https://www.youtube.com/watch?v=2UjSXEcbyuY
+- **Article breakdown:** https://blog.marsprotocol.io/blog/mars-protocol-code-review-breakdown-session-3-4-safety-fund-and-governance-modules
+- **Audit:**
+
+## Proposal Types
+
+### `SafetyFundSpendProposal`
+
+`SafetyFundSpendProposal` details a proposal for the use of safety funds, together with how many coins are proposed to be spent, and to which recipient account.
+
+<Admonition type="info" title="NOTE">
+ For now, this is just a copy of the CommunityPoolSpendProposal in the distribution module. in the long term, the goal is for the module to be able to automatically detect bad debts incurred in outposts and automatically distribute the appropriate amount of funds, without having to go through the governance process.
+</Admonition>
+
+```go proposals.proto
+message SafetyFundSpendProposal {
+  option (gogoproto.equal)            = false;
+  option (gogoproto.goproto_getters)  = false;
+  option (gogoproto.goproto_stringer) = false;
+
+  // Title is the proposal's title
+  string title = 1;
+
+  // Description is the proposal's description
+  string description = 2;
+
+  // Recipient is a string representing the account address to which the funds shall be sent to
+  string recipient = 3;
+
+  // Amount represents the coins that shall be sent to the recipient
+  repeated cosmos.base.v1beta1.Coin amount = 4 [
+    (gogoproto.nullable) = false,
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+}
+```
+
+## Queries
+
+`Query` defines the gRPC querier service for the safety fund module.
+
+```go query.proto
+service Query {
+  // Balances queries coins available in the safety fund
+  rpc Balances(QueryBalancesRequest) returns (QueryBalancesResponse) {
+    option (google.api.http).get = "/mars/safety/v1beta1/balances";
+  }
+}
+```
+
+### `QueryBalancesRequest`
+`QueBalancesRequest` is the request type of the `QuerBalancesRPC` method.
+
+```go query.proto
+message QueryBalancesRequest {}
+```
+
+#### `QueryBalancesResponse`
+`QueBalancesResponse` is the response type of the `QuerBalancesRPC` method.
+
+```go query.proto
+message QueryBalancesResponse {
+  // Balances is the coins available in the safety fund
+  repeated cosmos.base.v1beta1.Coin balances = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+}
+```
