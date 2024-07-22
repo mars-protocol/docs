@@ -1,0 +1,553 @@
+---
+sidebar_position: 1
+---
+
+import Admonition from '@theme/Admonition'
+
+# base
+
+Chain-agnostic logics for the rewards collector contract. 
+
+## Links
+
+- **Contract repo:** https://github.com/mars-protocol/outposts/tree/master/contracts/rewards-collector/base
+- **Audits:** https://github.com/mars-protocol/mars-audits/tree/main/red-bank
+
+## InstantiateMsg
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "owner": "...", 
+            "address_provider": "...", 
+            "safety_tax_rate": "1.27", 
+            "safety_fund_denom": "...", 
+            "fee_collector_denom": "...", 
+            "channel_id": "...", 
+            "timeout_seconds": 123, 
+            "slippage_tolerance": "0.01"
+        }
+        ```
+
+        ```rust rewards_collector.rs
+        #[cw_serde]
+        pub struct Config<T> {
+            pub owner: T,
+            pub address_provider: T,
+            pub safety_tax_rate: Decimal,
+            pub safety_fund_denom: String,
+            pub fee_collector_denom: String,
+            pub channel_id: String,
+            pub timeout_seconds: u64,
+            pub slippage_tolerance: Decimal,
+        }
+        ```
+
+    </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`owner`](focus://json#2)   | `T`        | The contract's owner        |
+| [`address_provider`](focus://json#3)   | `T`        | Address provider returns addresses for all protocol contracts        |
+| [`safety_tax_rate`](focus://json#4)   | `Decimal`        | Percentage of fees that are sent to the safety fund        |
+| [`safety_fund_denom`](focus://json#5)   | `String`        | The asset to which the safety fund share is converted        |
+| [`fee_collector_denom`](focus://json#6)   | `String`        | The asset to which the fee collector share is converted        |
+| [`channel_id`](focus://json#7)   | `String`        | The channel ID of the mars hub        |
+| [`timeout_seconds`](focus://json#8)   | `u64`        | Number of seconds after which an IBC transfer is to be considered failed, if no acknowledgement is received        |
+| [`slippage_tolerance`](focus://json#9)   | `Decimal`        | Maximum percentage of price movement (minimum amount you accept to receive during swap)        |
+
+
+</CH.Section>
+
+## ExecuteMsg
+
+### `update_owner`
+
+Manages admin role state.
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "update_owner": {
+                "propose_new_owner": {
+                    "proposed": "..."
+                }
+            }
+        }
+        ```
+
+        ```rust address_provider.rs focus=1:3,24
+        #[cw_serde]
+        pub enum ExecuteMsg<Route> {
+            UpdateOwner(OwnerUpdate),
+            UpdateConfig {
+                new_cfg: CreateOrUpdateConfig,
+            },
+            SetRoute {
+                denom_in: String,
+                denom_out: String,
+                route: Route,
+            },
+            WithdrawFromRedBank {
+                denom: String,
+                amount: Option<Uint128>,
+            },
+            DistributeRewards {
+                denom: String,
+                amount: Option<Uint128>,
+            },
+            SwapAsset {
+                denom: String,
+                amount: Option<Uint128>,
+            },
+        }
+        ```
+
+    </CH.Code>
+</CH.Section>
+
+### `update_config`
+
+Updates contract config. 
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "update_config": {
+                "new_cfg": {
+                    "address_provider": "...", 
+                    "safety_tax_rate": "1.27", 
+                    "safety_fund_denom": "...", 
+                    "fee_collector_denom": "...", 
+                    "channel_id": "...", 
+                    "timeout_seconds": 123, 
+                    "slippage_tolerance": "0.01"
+                }
+            }
+        }
+        ```
+
+        ```rust rewards_collector.rs focus=1:5,23
+        #[cw_serde]
+        pub enum ExecuteMsg<Route> {
+            UpdateConfig {
+                new_cfg: CreateOrUpdateConfig,
+            },
+            SetRoute {
+                denom_in: String,
+                denom_out: String,
+                route: Route,
+            },
+            WithdrawFromRedBank {
+                denom: String,
+                amount: Option<Uint128>,
+            },
+            DistributeRewards {
+                denom: String,
+                amount: Option<Uint128>,
+            },
+            SwapAsset {
+                denom: String,
+                amount: Option<Uint128>,
+            },
+        }
+        ```
+
+    </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`new_cfg`](focus://json#3:14)   | [`CreateOrUpdateConfig`](#createorupdateconfig)        | New config parameters        |
+
+</CH.Section>
+
+#### `CreateOrUpdateConfig`
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "address_provider": "...", 
+            "safety_tax_rate": "1.27", 
+            "safety_fund_denom": "...", 
+            "fee_collector_denom": "...", 
+            "channel_id": "...", 
+            "timeout_seconds": 123, 
+            "slippage_tolerance": "0.01"
+        }
+        ```
+
+        ```rust rewards_collector.rs
+        #[cw_serde]
+        #[derive(Default)]
+        pub struct CreateOrUpdateConfig {
+            pub address_provider: Option<String>,
+            pub safety_tax_rate: Option<Decimal>,
+            pub safety_fund_denom: Option<String>,
+            pub fee_collector_denom: Option<String>,
+            pub channel_id: Option<String>,
+            pub timeout_seconds: Option<u64>,
+            pub slippage_tolerance: Option<Decimal>,
+        }
+        ```
+
+    </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`address_provider`](focus://json#2)   | `Option<String>`        | Address provider returns addresses for all protocol contracts        |
+| [`safety_tax_rate`](focus://json#3)   | `Option<Decimal>`        | Percentage of fees that are sent to the safety fund        |
+| [`safety_fund_denom`](focus://json#4)   | `Option<String>`        | The asset to which the safety fund share is converted        |
+| [`fee_collector_denom`](focus://json#5)   | `Option<String>`        | The asset to which the fee collector share is converted        |
+| [`channel_id`](focus://json#6)   | `Option<String>`        | The channel id of the Mars Hub        |
+| [`timeout_seconds`](focus://json#7)   | `Option<u64>`        | Number of seconds after which an IBC transfer is to be considered failed, if no acknowledgement is received        |
+| [`slippage_tolerance`](focus://json#8)   | `Option<Decimal>`        | Maximum percentage of price movement (minimum amount you accept to receive during swap)        |
+
+</CH.Section>
+
+### `set_route`
+
+Configure the route for swapping an asset. This is chain-specific, and can include parameters such as slippage tolerance and the routes for multi-step swaps.
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "set_route": {
+                "denom_in": "...", 
+                "denom_out": "...", 
+                "route": [
+                    // Route (chain-specific)
+                ]   
+            }
+        }
+        ```
+
+        ```rust rewards_collector.rs focus=1:2,6:10,23
+        #[cw_serde]
+        pub enum ExecuteMsg<Route> {
+            UpdateConfig {
+                new_cfg: CreateOrUpdateConfig,
+            },
+            SetRoute {
+                denom_in: String,
+                denom_out: String,
+                route: Route,
+            },
+            WithdrawFromRedBank {
+                denom: String,
+                amount: Option<Uint128>,
+            },
+            DistributeRewards {
+                denom: String,
+                amount: Option<Uint128>,
+            },
+            SwapAsset {
+                denom: String,
+                amount: Option<Uint128>,
+            },
+        }
+        ```
+
+    </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom_in`](focus://json#3)   | `Option<String>`        | Denom of the asset going in        |
+| [`denom_out`](focus://json#4)   | `Option<String>`        | Denom of the asset going out         |
+| [`route`](focus://json#5:7)   | `Route`        | Route for swapping an assets.  See [`OsmosisRoute`](./osmosis#osmosisroute) for an example of a chain specific integration.        |
+
+</CH.Section>
+
+### `withdraw_from_red_bank`
+
+Withdraw maTokens from the Red Bank.
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "withdraw_from_red_bank": {
+                "denom": "...", 
+                "amount": "100000"
+            }
+        }
+        ```
+
+        ```rust rewards_collector.rs focus=1:2,11:14,23
+        #[cw_serde]
+        pub enum ExecuteMsg<Route> {
+            UpdateConfig {
+                new_cfg: CreateOrUpdateConfig,
+            },
+            SetRoute {
+                denom_in: String,
+                denom_out: String,
+                route: Route,
+            },
+            WithdrawFromRedBank {
+                denom: String,
+                amount: Option<Uint128>,
+            },
+            DistributeRewards {
+                denom: String,
+                amount: Option<Uint128>,
+            },
+            SwapAsset {
+                denom: String,
+                amount: Option<Uint128>,
+            },
+        }
+        ```
+
+    </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom`](focus://json#3)   | `String`        | Denom of the asset        |
+| [`amount`](focus://json#4)   | `Option<Uint128>`        | Amount to withdraw         |
+
+</CH.Section>
+
+### `distribute_rewards`
+
+Distribute the accrued protocol income between the safety fund and the fee modules on Mars Hub, according to the split set in config. Callable by any address.
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "distribute_rewards": {
+                "denom": "...", 
+                "amount": "100000"
+            }
+        }
+        ```
+
+        ```rust rewards_collector.rs focus=1:2,15:18,23
+        #[cw_serde]
+        pub enum ExecuteMsg<Route> {
+            UpdateConfig {
+                new_cfg: CreateOrUpdateConfig,
+            },
+            SetRoute {
+                denom_in: String,
+                denom_out: String,
+                route: Route,
+            },
+            WithdrawFromRedBank {
+                denom: String,
+                amount: Option<Uint128>,
+            },
+            DistributeRewards {
+                denom: String,
+                amount: Option<Uint128>,
+            },
+            SwapAsset {
+                denom: String,
+                amount: Option<Uint128>,
+            },
+        }
+        ```
+
+    </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom`](focus://json#3)   | `String`        | Denom of the asset        |
+| [`amount`](focus://json#4)   | `Option<Uint128>`        | Amount of rewards to distribute         |
+
+</CH.Section>
+
+### `swap_asset`
+
+Swap any asset on the contract.
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "swap_asset": {
+                "denom": "...", 
+                "amount": "100000"
+            }
+        }
+        ```
+
+        ```rust rewards_collector.rs focus=1:2,19:23
+        #[cw_serde]
+        pub enum ExecuteMsg<Route> {
+            UpdateConfig {
+                new_cfg: CreateOrUpdateConfig,
+            },
+            SetRoute {
+                denom_in: String,
+                denom_out: String,
+                route: Route,
+            },
+            WithdrawFromRedBank {
+                denom: String,
+                amount: Option<Uint128>,
+            },
+            DistributeRewards {
+                denom: String,
+                amount: Option<Uint128>,
+            },
+            SwapAsset {
+                denom: String,
+                amount: Option<Uint128>,
+            },
+        }
+        ```
+
+    </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom`](focus://json#3)   | `String`        | Denom of the asset        |
+| [`amount`](focus://json#4)   | `Option<Uint128>`        | Amount of assets to swap         |
+
+</CH.Section>
+
+## QueryMsg
+
+### `config`
+
+Queries config parameters.
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "config": {}
+        }
+        ```
+
+        ```rust rewards_collector.rs
+        #[cw_serde]
+        #[derive(QueryResponses)]
+        pub enum QueryMsg {
+            #[returns(Config<String>)]
+            Config {},
+            #[returns(RouteResponse<String>)]
+            Route {
+                denom_in: String,
+                denom_out: String,
+            },
+            #[returns(Vec<RouteResponse<String>>)]
+            Routes {
+                start_after: Option<(String, String)>,
+                limit: Option<u32>,
+            },
+        }
+        ```
+
+    </CH.Code>
+</CH.Section>
+
+### `route`
+
+Get routes for swapping an input denom into an output denom.
+
+<Admonition type="info" title="NOTE">
+The response type of this query is chain-specific.
+</Admonition>
+
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "route": {
+                "denom_in": "...", 
+                "denom_out": "..."
+            }
+        }
+        ```
+
+        ```rust rewards_collector.rs
+        #[cw_serde]
+        #[derive(QueryResponses)]
+        pub enum QueryMsg {
+            #[returns(Config<String>)]
+            Config {},
+            #[returns(RouteResponse<String>)]
+            Route {
+                denom_in: String,
+                denom_out: String,
+            },
+            #[returns(Vec<RouteResponse<String>>)]
+            Routes {
+                start_after: Option<(String, String)>,
+                limit: Option<u32>,
+            },
+        }
+        ```
+
+    </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`denom_in`](focus://json#3)   | `String`        | Denom of the asset going in        |
+| [`denom_out`](focus://json#4)   | `String`        | Denom of the asset going out         |
+
+</CH.Section>
+
+### `routes`
+
+Enumerate all swap routes.
+
+<Admonition type="info" title="NOTE">
+The response type of this query is chain-specific.
+</Admonition>
+ 
+<CH.Section>
+    <CH.Code>
+
+        ```json json
+        {
+            "routes": {
+
+            }
+        }
+        ```
+
+        ```rust rewards_collector.rs
+        #[cw_serde]
+        #[derive(QueryResponses)]
+        pub enum QueryMsg {
+            #[returns(Config<String>)]
+            Config {},
+            #[returns(RouteResponse<String>)]
+            Route {
+                denom_in: String,
+                denom_out: String,
+            },
+            #[returns(Vec<RouteResponse<String>>)]
+            Routes {
+                start_after: Option<(String, String)>,
+                limit: Option<u32>,
+            },
+        }
+        ```
+
+    </CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`start_after`](focus://json#3)   | `Option<(String, String)>`        | Denom of the asset going in        |
+| [`limit`](focus://json#4)   | `Option<u32>`        | Denom of the asset going out         |
+
+</CH.Section>

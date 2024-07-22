@@ -1,0 +1,95 @@
+# Liquidation Bots
+
+import Admonition from '@theme/Admonition'
+import LiquidationBotsUrl from '@site/static/img/develop/liquidation-bots.png';
+
+## Resources
+
+- https://github.com/mars-protocol/multichain-liquidator-bot
+
+## Summary
+
+The multichain liquidator bot is a scalable liquidation bot that ensures accounts are liquidated in a timely fashion.
+
+It is built to support both the Red Bank and Rover.
+
+
+<Admonition type="info" title="ANSWER:">
+For questions, issues or support, feel free to join the liquidators channel in the [Mars discord](https://discord.com/invite/marsprotocol/)
+</Admonition>
+
+
+The bot is composed of 4 distinct parts. As an overview of the architecture, please refer to this image. Each part is explained in more detail below.
+
+<img src={LiquidationBotsUrl} style={{ paddingBottom: 15 }} />
+
+1. **Collector:** The Collector service is responsible for fetching all the user addresses that have debts in the Mars Red Bank and passes them on to the Health Checker. 
+
+2. **Health Checker:** Health Checker is responsible for fetching the health status for positions, and flagging unhealthy positions for liquidation.
+
+3. **Liquidator:** The Liquidator service is responsible for handling liquidations of unhealthy positions. There are liquidation services (called executors) for both Redbank and rover (wip). 
+
+4. **Manager:** The Manager service is responsible for ensuring all the data is processed within a timeframe. By default, the timeframe is a single block. It is also responsible for booting up new services (i.e health checker, executor) to meet demand. 
+
+## Collector 
+
+The Collector service fetching all the user addresses that have debts in the Mars Red Bank and passes them on to the Health Checker by querying the underlying contract storage of a cw-storage-plus `Map` for keys that contain a specific prefix. This allows for querying multiple pages in parallel using regular page numbers. Paging through a `Map` using an iterator requires you to know the last key of a page to query the next page - prohibiting parallel, non-overlapping, queries.
+
+The service uses [Redis lists](https://redis.io/docs/data-types/lists/) as a queue.
+
+## Health Checker 
+
+The Health Checker fetches the health status for positions and flags unhealthy positions for liquidation by reading from a Redis Queue, called the `HealthCheckerQueue` which contains user positions to be checked. It then checks these positions in batches via a hive query, before filtering through the returned health status for unhealthy positions. These unhealthy positions are pushed into another redis queue called `LiquidationQueue`, which exposes them for liquidation by the executor module.
+
+## Liquidator 
+
+Unhealthy positions are flagged by the health checker and placed into the Liqudidation queue redis list, which the liquidator pulls from to liquidate.
+
+### Red Bank 
+
+Liquidations are then dispatched to the `liquidation-filterer` contract, which handles multiple liquidations per block and filters positions if they are no longer unhealthy to prevent failing transactions.
+
+After successfull liquidation, the liquidator service will read from the blockchain its balances, and dispatch a second collection of messages to swap won collateral back to a neutral asset, ready for another batch of liquidations
+
+### Rover
+
+Rover executor service differs from the redbank in a few ways.
+
+- It dispatches one liquidation at a time. To meet demand, when there is more than one liquidation per block to be processed, the manager process will spin up more executor services.
+- It does not require its own capital to liquidate, but instead facilitates 'flash loan' style liquidations using a collection of actions via the rover contracts.
+
+Please note that this service is still in active development
+
+## Manager 
+
+By default, the timeframe for the Manager service is a single block. If we are left with unprocessed data by the time a new block arrives, the manager would scale up by deploying more instances of the service that is currently lagging. Conversely, if we have too many instances of a service, it will be scaled down by removing deployments.
+
+This service also collects runtime performance data of all the parts of the system and will make the information available to other third-party tools so that performance dashboards can be constructed.
+
+## Usage 
+
+Each service contains utilities to build and run the code in a uniform manner by way of Makefiles. Each Makefile contains a help that can be executed via `make help`.
+
+The top-level Makefile contains helpers to build and run all the services and contains the same `make help`.
+
+```bash
+# Help
+make help
+
+# Build all services
+make
+
+# Build Docker images and start manager
+make run
+
+# Build all Docker images
+make docker_build
+```
+
+## Deploying 
+
+### Docker
+
+The multichain-liquidation bot repo provides convenience Makefiles for each service to ease compiling and building Docker containers. To build all the Docker images, use the top-level Makefile by running make docker_build in the project root. This will compile the service and build the Docker images locally for each service.
+
+To learn more about deploying the bot using Docker, visit https://github.com/mars-protocol/multichain-liquidator-bot#docker

@@ -1,0 +1,29 @@
+---
+sidebar_position: 2
+---
+
+# osmosis
+
+The Osmosis Rewards Collector contract inherits logics from the base Rewards Collector contract, with the Osmosis custom msg, query, and swap route plugins. 
+
+## Links
+
+- **Contract address:** `osmo1urvqe5mw00ws25yqdd4c4hlh8kdyf567mpcml7cdve9w08z0ydcqvsrgdy`
+- **Testnet address:** `osmo14kzsqw5tatdvwlkj383lgkh6gcdetwn7kfqm7488uargyy2lpucqsyv53j`
+- **Contract repo:** https://github.com/mars-protocol/outposts/tree/master/contracts/rewards-collector/osmosis
+- **Audits:** https://github.com/mars-protocol/mars-audits/tree/main/red-bank
+
+## ExecuteMsg
+
+### `OsmosisRoute`
+
+<CH.Section>
+    <CH.Code>
+
+        ```rust route.rs
+        #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
+        pub struct OsmosisRoute(pub Vec<SwapAmountInRoute>);
+        ```
+
+    </CH.Code>
+</CH.Section>

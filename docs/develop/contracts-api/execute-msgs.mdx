@@ -1,0 +1,667 @@
+---
+sidebar_position: 2
+---
+
+# ExecuteMsgs
+
+## Credit Accounts
+
+### Create Account 
+
+```json
+{
+  "create_credit_account": "default"
+}
+```
+
+### Fund Account 
+
+```json
+{
+  "update_credit_account": {
+    "account_id": "number",
+    "actions": [
+      {
+        "deposit": {
+          "denom": "uosmo",
+          "amount": "number"
+        }
+      }
+    ]
+  }
+}
+```
+
+### Fund Account and Lend Assets 
+
+```json
+{
+  "update_credit_account": {
+    "account_id": "number",
+    "actions": [
+      {
+        "deposit": {
+          "denom": "uosmo",
+          "amount": "number"
+        }
+      },
+      {
+        "lend": {
+          "denom": "uosmo",
+          "amount": "account_balance"
+        }
+      }
+    ]
+  }
+}
+```
+
+### Withdraw from Account
+
+```json
+{
+  "update_credit_account": {
+    "account_id": "24",
+    "actions": [
+      {
+        "withdraw": {
+          "denom": "uosmo",
+          "amount": {
+            "exact": "63793713"
+          }
+        }
+      }
+    ]
+  }
+}
+```
+
+## Lending 
+
+### Lend Assets
+
+```json
+{
+  "update_credit_account": {
+    "account_id": "number",
+    "actions": [
+      {
+        "lend": {
+          "denom": "string",
+          "amount": {
+            "exact": "number"
+          }
+        }
+      }
+    ]
+  }
+}
+```
+
+### Withdraw 
+
+```json
+{
+  "update_credit_account": {
+    "account_id": "24",
+    "actions": [
+      {
+        "reclaim": {
+          "denom": "uosmo",
+          "amount": {
+            "exact": "165163425"
+          }
+        }
+      }
+    ]
+  }
+}
+```
+
+## Borrowing 
+
+### Borrow Assets
+
+```json
+{
+  "update_credit_account": {
+    "account_id": "24",
+    "actions": [
+      {
+        "borrow": {
+          "denom": "uosmo",
+          "amount": "663131255"
+        }
+      }
+    ]
+  }
+}
+```
+
+### Borrow and Withdraw to Wallet
+
+```json
+{
+  "update_credit_account": {
+    "account_id": "24",
+    "actions": [
+      {
+        "borrow": {
+          "denom": "uosmo",
+          "amount": "179045439"
+        }
+      },
+      {
+        "withdraw": {
+          "denom": "uosmo",
+          "amount": {
+            "exact": "179045439"
+          }
+        }
+      }
+    ]
+  }
+}
+```
+
+### Repaying Loan
+
+```json
+{
+  "update_credit_account": {
+    "account_id": "24",
+    "actions": [
+      {
+        "repay": {
+          "coin": {
+            "denom": "uosmo",
+            "amount": {
+              "exact": "497354158"
+            }
+          }
+        }
+      }
+    ]
+  }
+}
+```
+
+## Trading
+
+### Spot Trade
+
+```json
+{
+  "update_credit_account": {
+    "account_id": "number",
+    "actions": [
+      {
+        "swap_exact_in": {
+          "coin_in": {
+            "denom": "string",
+            "amount": {
+              "exact": "number"
+            }
+          },
+          "denom_out": "string",
+          "slippage": "0.02"
+        }
+      }
+    ]
+  }
+}
+```
+
+## Margin Trading
+
+### Margin Long
+
+```json
+{
+  "update_credit_account": {
+    "account_id": "22",
+    "actions": [
+      {
+        "borrow": {
+          "denom": "stablecoin address",
+          "amount": "number"
+        }
+      },
+      {
+        "swap_exact_in": {
+          "coin_in": {
+            "denom": "stablecoin address",
+            "amount": {
+              "exact": "number"
+            }
+          },
+          "denom_out": "long asset",
+          "slippage": "0.02"
+        }
+      }
+    ]
+  }
+}
+```
+
+### Margin Short 
+
+```json
+{
+  "update_credit_account": {
+    "account_id": "22",
+    "actions": [
+      {
+        "borrow": {
+          "denom": "short asset",
+          "amount": "number"
+        }
+      },
+      {
+        "swap_exact_in": {
+          "coin_in": {
+            "denom": "short asset",
+            "amount": {
+              "exact": "number"
+            }
+          },
+          "denom_out": "stabecoin address",
+          "slippage": "0.02"
+        }
+      }
+    ]
+  }
+}
+```
+
+## Trading + Lending 
+
+### Spot Trade and Lend 
+
+```json
+{
+  "update_credit_account": {
+    "account_id": "24",
+    "actions": [
+      {
+        "swap_exact_in": {
+          "coin_in": {
+            "denom": "uosmo",
+            "amount": {
+              "exact": "94983584"
+            }
+          },
+          "denom_out": "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
+          "slippage": "0.02"
+        }
+      },
+      {
+        "lend": {
+          "denom": "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
+          "amount": "account_balance"
+        }
+      }
+    ]
+  }
+}
+```
+
+### Reclaim Lent Assets and Trade
+
+```json
+{
+  "update_credit_account": {
+    "account_id": "24",
+    "actions": [
+      {
+        "reclaim": {
+          "denom": "uosmo",
+          "amount": {
+            "exact": "94983584"
+          }
+        }
+      },
+      {
+        "swap_exact_in": {
+          "coin_in": {
+            "denom": "uosmo",
+            "amount": {
+              "exact": "94983584"
+            }
+          },
+          "denom_out": "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
+          "slippage": "0.02"
+        }
+      }
+    ]
+  }
+}
+```
+
+### Margin Trade and Lending - Long
+
+```json
+{
+  "update_credit_account": {
+    "account_id": "24",
+    "actions": [
+      {
+        "borrow": {
+          "denom": "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
+          "amount": "39671962"
+        }
+      },
+      {
+        "swap_exact_in": {
+          "coin_in": {
+            "denom": "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
+            "amount": {
+              "exact": "39671962"
+            }
+          },
+          "denom_out": "uosmo",
+          "slippage": "0.02"
+        }
+      },
+      {
+        "lend": {
+          "denom": "uosmo",
+          "amount": "account_balance"
+        }
+      }
+    ]
+  }
+}
+```
+
+### Margin Trade and Lending - Short 
+
+```json
+{
+  "update_credit_account": {
+    "account_id": "24",
+    "actions": [
+      {
+        "borrow": {
+          "denom": "uosmo",
+          "amount": "343368619"
+        }
+      },
+      {
+        "swap_exact_in": {
+          "coin_in": {
+            "denom": "uosmo",
+            "amount": {
+              "exact": "531474119"
+            }
+          },
+          "denom_out": "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
+          "slippage": "0.02"
+        }
+      },
+      {
+        "lend": {
+          "denom": "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
+          "amount": "account_balance"
+        }
+      }
+    ]
+  }
+}
+```
+
+## Farm
+
+### Deposit 50/50 Farm 
+
+```json
+{
+  "update_credit_account": {
+    "account_id": "24",
+    "actions": [
+      {
+        "provide_liquidity": {
+          "coins_in": [
+            {
+              "denom": "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
+              "amount": {
+                "exact": "38928713"
+              }
+            },
+            {
+              "denom": "uosmo",
+              "amount": {
+                "exact": "120072695"
+              }
+            }
+          ],
+          "lp_token_out": "gamm/pool/678",
+          "slippage": "0.02"
+        }
+      },
+      {
+        "enter_vault": {
+          "coin": {
+            "denom": "gamm/pool/678",
+            "amount": "account_balance"
+          },
+          "vault": {
+            "address": "osmo1jfmwayj8jqp9tfy4v4eks5c2jpnqdumn8x8xvfllng0wfes770qqp7jl4j"
+          }
+        }
+      }
+    ]
+  }
+}
+```
+
+### Leveraged Yield Farming 
+
+```json
+{
+  "update_credit_account": {
+    "account_id": "24",
+    "actions": [
+      {
+        "borrow": {
+          "denom": "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
+          "amount": "242378470"
+        }
+      },
+      {
+        "swap_exact_in": {
+          "coin_in": {
+            "denom": "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
+            "amount": {
+              "exact": "121189235"
+            }
+          },
+          "denom_out": "uosmo",
+          "slippage": "0.02"
+        }
+      },
+      {
+        "provide_liquidity": {
+          "coins_in": [
+            {
+              "denom": "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
+              "amount": {
+                "exact": "144599161"
+              }
+            },
+            {
+              "denom": "uosmo",
+              "amount": {
+                "exact": "446005258"
+              }
+            }
+          ],
+          "lp_token_out": "gamm/pool/678",
+          "slippage": "0.02"
+        }
+      },
+      {
+        "enter_vault": {
+          "coin": {
+            "denom": "gamm/pool/678",
+            "amount": "account_balance"
+          },
+          "vault": {
+            "address": "osmo1jfmwayj8jqp9tfy4v4eks5c2jpnqdumn8x8xvfllng0wfes770qqp7jl4j"
+          }
+        }
+      }
+    ]
+  }
+}
+```
+
+### Unlock Vault
+
+```json
+{
+  "update_credit_account": {
+    "account_id": "24",
+    "actions": [
+      {
+        "request_vault_unlock": {
+          "vault": {
+            "address": "osmo1jfmwayj8jqp9tfy4v4eks5c2jpnqdumn8x8xvfllng0wfes770qqp7jl4j"
+          },
+          "amount": "37601963208325379423921404"
+        }
+      }
+    ]
+  }
+}
+```
+
+### Farm + Margin Trade
+
+```json
+{
+  "update_credit_account": {
+    "account_id": "24",
+    "actions": [
+      {
+        "provide_liquidity": {
+          "coins_in": [
+            {
+              "denom": "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
+              "amount": {
+                "exact": "38928713"
+              }
+            },
+            {
+              "denom": "uosmo",
+              "amount": {
+                "exact": "120072695"
+              }
+            }
+          ],
+          "lp_token_out": "gamm/pool/678",
+          "slippage": "0.02"
+        }
+      },
+      {
+        "enter_vault": {
+          "coin": {
+            "denom": "gamm/pool/678",
+            "amount": "account_balance"
+          },
+          "vault": {
+            "address": "osmo1jfmwayj8jqp9tfy4v4eks5c2jpnqdumn8x8xvfllng0wfes770qqp7jl4j"
+          }
+        }
+      },
+      {
+        "borrow": {
+          "denom": "stablecoin address",
+          "amount": "number"
+        }
+      },
+      {
+        "swap_exact_in": {
+          "coin_in": {
+            "denom": "stablecoin address",
+            "amount": {
+              "exact": "number"
+            }
+          },
+          "denom_out": "long asset",
+          "slippage": "0.02"
+        }
+      }
+    ]
+  }
+}
+```
+
+### Farm + Margin Trade + Lend
+
+```json
+{
+  "update_credit_account": {
+    "account_id": "24",
+    "actions": [
+      {
+        "provide_liquidity": {
+          "coins_in": [
+            {
+              "denom": "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
+              "amount": {
+                "exact": "38928713"
+              }
+            },
+            {
+              "denom": "uosmo",
+              "amount": {
+                "exact": "120072695"
+              }
+            }
+          ],
+          "lp_token_out": "gamm/pool/678",
+          "slippage": "0.02"
+        }
+      },
+      {
+        "enter_vault": {
+          "coin": {
+            "denom": "gamm/pool/678",
+            "amount": "account_balance"
+          },
+          "vault": {
+            "address": "osmo1jfmwayj8jqp9tfy4v4eks5c2jpnqdumn8x8xvfllng0wfes770qqp7jl4j"
+          }
+        }
+      },
+      {
+        "borrow": {
+          "denom": "stablecoin address",
+          "amount": "number"
+        }
+      },
+      {
+        "swap_exact_in": {
+          "coin_in": {
+            "denom": "stablecoin address",
+            "amount": {
+              "exact": "number"
+            }
+          },
+          "denom_out": "long asset",
+          "slippage": "0.02"
+        }
+      },
+      {
+        "lend": {
+          "denom": "string",
+          "amount": {
+            "exact": "number"
+          }
+        }
+      }
+    ]
+  }
+}
+```

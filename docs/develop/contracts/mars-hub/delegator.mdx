@@ -1,0 +1,193 @@
+---
+sidebar_position: 2
+---
+
+# delegator
+
+The purpose of this contract is **to bootstrap the security of Mars Hub blockchain.**
+
+At launch, Mars Hub will have a genesis validator set of 10–20 members, each having exactly 1 MARS token. The decision was made that each genesis validator only gets 1 token and not more, such that they don't have an unfair advantage over those who join post-genesis. However, this also means that for a brief period after launch, the network will have a very low security (10–20 MARS worth of security, to be specific). If a user is eligible for a big airdrop, they can potentially create a validator with the airdrop tokens right after launch and hijack the network.
+
+To mitigate this risk, the Mars community pool will have a portion of its tokens (~1% of total supply may be a reasonable amount) deposited into this "delegator" contract, which then delegates the tokens evenly to each of the genesis validators. At instantiation, the contract will be given an `ending_time` for these delegations. Once the ending time is elapsed, anyone can invoke a method on the contract to unbond these delegations. Once unbonding is completed, anyone can invoke `refund` to return all funds to the community pool.
+
+## Links
+
+- **Contract address:** 
+- **Testnet address:** 
+- **Contract repo:** https://github.com/mars-protocol/periphery/tree/main/contracts/delegator
+- **Audits:** https://github.com/mars-protocol/mars-audits/tree/main/periphery
+
+## InstantiateMsg
+
+Instantiates the Delegator contract.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "bond_denom": "...",
+    "ending_time": 123
+}
+```
+
+```rust msg.rs
+pub type InstantiateMsg = Config;
+
+#[cw_serde]
+pub struct Config {
+    pub bond_denom: String,
+    pub ending_time: u64,
+}
+```
+
+</CH.Code>
+
+| **Params**      | **Type** | **Description** |
+| ----------- | ----------- | ----------- |
+| [`bond_denom`](focus://json#2)   | `String`       | Denomination of the coin that will be staked        |
+| [`ending_time`](focus://json#3)   | `u64`       | The ending time for the delegation program, as UNIX timestamp. Once this time has elapsed, anyone can invoke the `unbond` method to unbond the delegations. Additionally, Mars Hub governance can decide to prematurely end the delegation program if they see fit, ignoring the ending time, by invoking the `force_unbond` sudo message.        |
+
+</CH.Section>
+
+
+## ExecuteMsg
+
+### `bond`
+
+Delegate tokens that the contract holds evenly to the current validator set.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "bond": {}
+}
+```
+
+```rust msg.rs focus=1:3,6
+#[cw_serde]
+pub enum ExecuteMsg {
+    Bond {},
+    Unbond {},
+    Refund {},
+}
+```
+
+</CH.Code>
+</CH.Section>
+
+
+
+
+
+### `unbond`
+
+Unbond the delegations. Can be invoked by anyone after `ending_time` is reached.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "unbond": {}
+}
+```
+
+```rust msg.rs focus=1:2,4,6
+#[cw_serde]
+pub enum ExecuteMsg {
+    Bond {},
+    Unbond {},
+    Refund {},
+}
+```
+
+</CH.Code>
+</CH.Section>
+
+
+
+### `refund`
+
+Donate all coins held by the contract to the community pool.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "refund": {}
+}
+```
+
+```rust msg.rs focus=1:2,5:6
+#[cw_serde]
+pub enum ExecuteMsg {
+    Bond {},
+    Unbond {},
+    Refund {},
+}
+```
+
+</CH.Code>
+</CH.Section>
+
+## SudoMsg
+
+Forcibly unbond the delegations.
+
+This "sudo" message can only be invoked by the gov module, and ignores whether the `ending_time` has been reached.
+
+### `force_unbond`
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "force_unbond": {}
+}
+```
+
+```rust msg.rs
+#[cw_serde]
+pub enum SudoMsg {
+    ForceUnbond {},
+}
+```
+
+</CH.Code>
+</CH.Section>
+
+
+## QueryMsg
+
+### `config`
+
+Return the contract configuration.
+
+<CH.Section>
+<CH.Code>
+
+```json json
+{
+    "config": {}
+}
+```
+
+```rust msg.rs
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(Config)]
+    Config {},
+}
+```
+
+</CH.Code>
+</CH.Section>
+
+#### [`Config` (response)](#instantiatemsg)
+

@@ -1,0 +1,412 @@
+---
+sidebar_position: 1
+---
+
+# gov
+
+The `gov` module is a wrapper module around the [vanilla governance](https://docs.cosmos.network/main/modules/gov/) module that comes as standard within the Cosmos SDK. This wrapper inherits most of the standard governance module but implements alternative vote tallying logic. That is, tokens locked in a vesting contract contribute towards that token-holders’ voting power. This module has been built to account for the builders’ token allocation and to facilitate their participation in governance.
+
+## Links
+
+- **Module address:**
+- **Testnet address:**
+- **Module repo:** https://github.com/mars-protocol/hub/tree/main/x/gov
+- **Proto repo:** https://github.com/mars-protocol/hub/tree/main/third_party/proto/cosmos/gov/v1
+- **tx.proto:** https://github.com/mars-protocol/hub/blob/main/third_party/proto/cosmos/gov/v1/tx.proto
+- **query.proto:** https://github.com/mars-protocol/hub/blob/main/third_party/proto/cosmos/gov/v1/query.proto
+- **Video walkthrough:** https://youtu.be/M9i7s04fYgw
+- **Article breakdown:** https://blog.marsprotocol.io/blog/mars-protocol-code-review-breakdown-session-3-4-safety-fund-and-governance-modules 
+- **Audit:**
+
+## Message Types
+
+`Msg` defines the gov `Msg` service.
+
+```go tx.proto
+service Msg {
+  // SubmitProposal defines a method to create new proposal given a content.
+  rpc SubmitProposal(MsgSubmitProposal) returns (MsgSubmitProposalResponse);
+
+  // ExecLegacyContent defines a Msg to be in included in a MsgSubmitProposal
+  // to execute a legacy content-based proposal.
+  rpc ExecLegacyContent(MsgExecLegacyContent) returns (MsgExecLegacyContentResponse);
+
+  // Vote defines a method to add a vote on a specific proposal.
+  rpc Vote(MsgVote) returns (MsgVoteResponse);
+
+  // VoteWeighted defines a method to add a weighted vote on a specific proposal.
+  rpc VoteWeighted(MsgVoteWeighted) returns (MsgVoteWeightedResponse);
+
+  // Deposit defines a method to add deposit on a specific proposal.
+  rpc Deposit(MsgDeposit) returns (MsgDepositResponse);
+}
+```
+
+### `MsgSubmitProposal`
+
+`MsgSubmitProposal` defines an `sdk.Msg` type that supports submitting arbitrary proposal Content.
+
+```go tx.proto
+message MsgSubmitProposal {
+  option (cosmos.msg.v1.signer) = "proposer";
+
+  repeated google.protobuf.Any messages             = 1;
+  repeated cosmos.base.v1beta1.Coin initial_deposit = 2 [(gogoproto.nullable) = false];
+  string                            proposer        = 3 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  // metadata is any arbitrary metadata attached to the proposal.
+  string metadata = 4;
+}
+```
+
+#### `MsgSubmitProposalResponse`
+
+`MsgSubmitProposalResponse` defines the `Msg/SubmitProposal` response type.
+
+```go tx.proto
+message MsgSubmitProposalResponse {
+  uint64 proposal_id = 1;
+}
+```
+
+### `MsgExecLegacyContent`
+
+`MsgExecLegacyContent` is used to wrap the legacy content field into a message. This ensures backwards compatibility with v1beta1.`MsgSubmitProposal`.
+
+```go tx.proto
+message MsgExecLegacyContent {
+  option (cosmos.msg.v1.signer) = "authority";
+
+  // content is the proposal's content.
+  google.protobuf.Any content = 1 [(cosmos_proto.accepts_interface) = "Content"];
+  // authority must be the gov module address.
+  string authority = 2;
+}
+```
+
+#### `MsgExecLegacyContentResponse`
+
+`MsgExecLegacyContentResponse` defines the `Msg/ExecLegacyContent` response type.
+
+```go tx.proto
+message MsgExecLegacyContentResponse {}
+```
+
+### `MsgVote`
+
+`MsgVote` defines a message to cast a vote.
+
+```go tx.proto
+message MsgVote {
+  option (cosmos.msg.v1.signer) = "voter";
+
+  uint64     proposal_id = 1 [(gogoproto.jsontag) = "proposal_id"];
+  string     voter       = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  VoteOption option      = 3;
+  string     metadata    = 4;
+}
+```
+
+#### `MsgVoteResponse`
+
+`MsgVoteResponse` defines the `Msg/Vote` response type.
+
+```go tx.proto
+message MsgVoteResponse {}
+```
+
+### `MsgVoteWeighted`
+
+`MsgVoteWeighted` defines a message to cast a vote.
+
+```go tx.proto
+message MsgVoteWeighted {
+  option (cosmos.msg.v1.signer) = "voter";
+
+  uint64                      proposal_id = 1 [(gogoproto.jsontag) = "proposal_id"];
+  string                      voter       = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  repeated WeightedVoteOption options     = 3;
+  string                      metadata    = 4;
+}
+```
+
+#### `MsgVoteWeightedResponse`
+
+`MsgVoteWeightedResponse` defines the `Msg/VoteWeighted` response type.
+
+```go tx.proto
+message MsgVoteWeightedResponse {}
+```
+
+### `MsgDeposit`
+
+`MsgDeposit` defines a message to submit a deposit to an existing proposal.
+
+```go tx.proto
+message MsgDeposit {
+  option (cosmos.msg.v1.signer) = "depositor";
+
+  uint64   proposal_id                     = 1 [(gogoproto.jsontag) = "proposal_id"];
+  string   depositor                       = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  repeated cosmos.base.v1beta1.Coin amount = 3 [(gogoproto.nullable) = false];
+}
+```
+
+#### `MsgDepositResponse`
+
+`MsgDepositResponse` defines the `Msg/Deposit` response type.
+
+```go tx.proto
+message MsgDepositResponse {}
+```
+
+## Queries
+
+`Query` defines the gRPC querier service for gov module.
+
+```go query.proto
+service Query {
+  // Proposal queries proposal details based on ProposalID.
+  rpc Proposal(QueryProposalRequest) returns (QueryProposalResponse) {
+    option (google.api.http).get = "/cosmos/gov/v1/proposals/{proposal_id}";
+  }
+
+  // Proposals queries all proposals based on given status.
+  rpc Proposals(QueryProposalsRequest) returns (QueryProposalsResponse) {
+    option (google.api.http).get = "/cosmos/gov/v1/proposals";
+  }
+
+  // Vote queries voted information based on proposalID, voterAddr.
+  rpc Vote(QueryVoteRequest) returns (QueryVoteResponse) {
+    option (google.api.http).get = "/cosmos/gov/v1/proposals/{proposal_id}/votes/{voter}";
+  }
+
+  // Votes queries votes of a given proposal.
+  rpc Votes(QueryVotesRequest) returns (QueryVotesResponse) {
+    option (google.api.http).get = "/cosmos/gov/v1/proposals/{proposal_id}/votes";
+  }
+
+  // Params queries all parameters of the gov module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/cosmos/gov/v1/params/{params_type}";
+  }
+
+  // Deposit queries single deposit information based proposalID, depositAddr.
+  rpc Deposit(QueryDepositRequest) returns (QueryDepositResponse) {
+    option (google.api.http).get = "/cosmos/gov/v1/proposals/{proposal_id}/deposits/{depositor}";
+  }
+
+  // Deposits queries all deposits of a single proposal.
+  rpc Deposits(QueryDepositsRequest) returns (QueryDepositsResponse) {
+    option (google.api.http).get = "/cosmos/gov/v1/proposals/{proposal_id}/deposits";
+  }
+
+  // TallyResult queries the tally of a proposal vote.
+  rpc TallyResult(QueryTallyResultRequest) returns (QueryTallyResultResponse) {
+    option (google.api.http).get = "/cosmos/gov/v1/proposals/{proposal_id}/tally";
+  }
+}
+```
+
+### `QueryProposalRequest`
+
+`QueryProposalRequest` is the request type for the `Query/Proposal RPC` method.
+
+```go query.proto
+message QueryProposalRequest {
+  // proposal_id defines the unique id of the proposal.
+  uint64 proposal_id = 1;
+}
+```
+
+#### `QueryProposalResponse`
+
+`QueryProposalResponse` is the response type for the `Query/Proposal` RPC method.
+
+```go query.proto
+message QueryProposalResponse {
+  Proposal proposal = 1;
+}
+```
+
+### `QueryProposalsRequest`
+
+`QueryProposalsRequest` is the request type for the `Query/Proposals` RPC method.
+
+```go query.proto
+message QueryProposalsRequest {
+  // proposal_status defines the status of the proposals.
+  ProposalStatus proposal_status = 1;
+
+  // voter defines the voter address for the proposals.
+  string voter = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // depositor defines the deposit addresses from the proposals.
+  string depositor = 3 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // pagination defines an optional pagination for the request.
+  cosmos.base.query.v1beta1.PageRequest pagination = 4;
+}
+```
+
+#### `QueryProposalsResponse`
+
+`QueryProposalsResponse` is the response type for the `Query/Proposals` RPC method.
+
+```go query.proto
+message QueryProposalsResponse {
+  repeated Proposal proposals = 1;
+
+  // pagination defines the pagination in the response.
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+```
+
+### `QueryVoteRequest`
+
+`QueryVoteRequest` is the request type for the `Query/Vote` RPC method.
+
+```go query.proto
+message QueryVoteRequest {
+  // proposal_id defines the unique id of the proposal.
+  uint64 proposal_id = 1;
+
+  // voter defines the oter address for the proposals.
+  string voter = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+```
+
+#### `QueryVoteResponse`
+
+`QueryVoteResponse` is the response type for the Query/Vote RPC method.
+
+```go query.proto
+message QueryVoteResponse {
+  // vote defined the queried vote.
+  Vote vote = 1;
+}
+```
+
+### `QueryVotesRequest`
+
+`QueryVotesRequest` is the request type for the `Query/Votes` RPC method.
+
+```go query.proto
+message QueryVotesRequest {
+  // proposal_id defines the unique id of the proposal.
+  uint64 proposal_id = 1;
+
+  // pagination defines an optional pagination for the request.
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+```
+
+#### `QueryVotesResponse`
+
+`QueryVotesResponse` is the response type for the `Query/Votes` RPC method.
+
+```go query.proto
+message QueryVotesResponse {
+  // votes defined the queried votes.
+  repeated Vote votes = 1;
+
+  // pagination defines the pagination in the response.
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+```
+
+### `QueryParamsRequest`
+
+`QueryParamsRequest` is the request type for the `Query/Params` RPC method.
+
+```go query.proto
+message QueryParamsRequest {
+  // params_type defines which parameters to query for, can be one of "voting",
+  // "tallying" or "deposit".
+  string params_type = 1;
+}
+```
+
+#### `QueryParamsResponse`
+
+`QueryParamsResponse` is the response type for the `Query/Params` RPC method.
+
+```go query.proto
+message QueryParamsResponse {
+  // voting_params defines the parameters related to voting.
+  VotingParams voting_params = 1;
+  // deposit_params defines the parameters related to deposit.
+  DepositParams deposit_params = 2;
+  // tally_params defines the parameters related to tally.
+  TallyParams tally_params = 3;
+}
+```
+
+### `QueryDepositRequest`
+`QueryDepositRequest` is the request type for the `Query/Deposit` RPC method.
+
+```go query.proto
+message QueryDepositRequest {
+  // proposal_id defines the unique id of the proposal.
+  uint64 proposal_id = 1;
+
+  // depositor defines the deposit addresses from the proposals.
+  string depositor = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+```
+
+#### `QueryDepositResponse`
+`QueryDepositResponse` is the response type for the `Query/Deposit` RPC method.
+
+```go query.proto
+message QueryDepositResponse {
+  // deposit defines the requested deposit.
+  Deposit deposit = 1;
+}
+```
+
+### `QueryDepositsRequest`
+`QueryDepositsRequest` is the request type for the `Query/Deposits` RPC method.
+
+```go query.proto
+message QueryDepositsRequest {
+  // proposal_id defines the unique id of the proposal.
+  uint64 proposal_id = 1;
+
+  // pagination defines an optional pagination for the request.
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+```
+
+#### `QueryDepositsResponse`
+
+`QueryDepositsResponse` is the response type for the `Query/Deposits` RPC method.
+
+```go query.proto
+message QueryDepositsResponse {
+  repeated Deposit deposits = 1;
+
+  // pagination defines the pagination in the response.
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+```
+
+### `QueryTallyResultRequest`
+`QueryTallyResultRequest` is the request type for the `Query/Tally` RPC method.
+
+```go query.proto
+message QueryTallyResultRequest {
+  // proposal_id defines the unique id of the proposal.
+  uint64 proposal_id = 1;
+}
+```
+
+#### `QueryTallyResultResponse`
+
+`QueryTallyResultResponse` is the response type for the `Query/Tally` RPC method.
+
+```go query.proto
+message QueryTallyResultResponse {
+  // tally defines the requested tally.
+  TallyResult tally = 1;
+}
+```

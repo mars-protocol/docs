@@ -1,0 +1,52 @@
+---
+sidebar_position: 1
+---
+
+# interchain_accounts
+
+The `interchain_accounts` module is responsible for the implementation of the ICS-27 protocol, which enables cross-chain account management built upon IBC. Chains using the Interchain Accounts module can programmatically create accounts on other chains and control these accounts via IBC transactions.
+
+For more info, visit https://ibc.cosmos.network/main/apps/interchain-accounts/overview.html
+
+## Queries
+
+`Query` (controller) defines the gRPC querier service of the ICA controller submodule.
+
+```go query.proto
+service Query {
+  // Params queries all parameters of the ICA controller submodule.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/ibc/apps/interchain_accounts/controller/v1/params";
+  }
+}
+```
+
+`Query` (host) defines the gRPC querier service of the ICA host submodule.
+
+```go query.proto
+service Query {
+  // Params queries all parameters of the ICA host submodule.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/ibc/apps/interchain_accounts/host/v1/params";
+  }
+}
+```
+
+### `QueryParamsRequest`
+
+`QueryParamsRequest` is the request type for the Query/Params RPC method.
+
+```go query.proto
+message QueryParamsRequest {}
+```
+
+#### `QueryParamsResponse`
+
+`QueryParamsResponse` is the response type for the Query/Params RPC method.
+
+```go query.proto
+message QueryParamsResponse {
+  // params defines the parameters of the module.
+  Params params = 1;
+}
+```

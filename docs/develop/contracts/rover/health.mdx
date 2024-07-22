@@ -1,0 +1,176 @@
+---
+sidebar_position: 3
+---
+
+# health
+
+## Links
+
+- **Deployments**: https://github.com/mars-protocol/rover/tree/master/scripts/deploy/addresses
+- **Types**:
+    - **Rust**: https://github.com/mars-protocol/rover/blob/master/packages/health-types/src/msg.rs
+    - **Typescript**: https://github.com/mars-protocol/rover/blob/master/scripts/types/generated/mars-rover-health/MarsRoverHealth.types.ts
+- **Contract repo**: https://github.com/mars-protocol/rover/blob/master/contracts/health/src/contract.rs
+- **Audits**: https://github.com/mars-protocol/mars-audits/tree/main/rover
+
+## InstantiateMsg
+
+<CH.Section>
+    <CH.Code>
+
+        ```json
+        {
+          "credit_manager"?: "string" | null
+          "owner": "string"
+        }
+        ```
+
+    </CH.Code>
+</CH.Section>
+
+## ExecuteMsg
+
+### `update_owner`
+
+<CH.Section>
+    <CH.Code>
+
+        ```json
+        {
+          "update_owner": OwnerUpdate
+        }
+        ```
+
+    </CH.Code>
+</CH.Section>
+
+#### `OwnerUpdate`
+
+<CH.Section>
+    <CH.Code>
+
+        ```json
+        | {
+            "propose_new_owner": {
+              "proposed": "string"
+            }
+          }
+        | "clear_proposed"
+        | "accept_proposed"
+        | "abolish_owner_role"
+        | {
+            "set_emergency_owner": {
+              "emergency_owner": "string"
+            }
+          }
+        | "clear_emergency_owner"
+        ```
+
+    </CH.Code>
+</CH.Section>
+
+### `update_config`
+
+<CH.Section>
+    <CH.Code>
+
+        ```json
+        {
+            "update_config": {
+                "credit_manager": "string"
+            }
+        }
+        ```
+
+    </CH.Code>
+</CH.Section>
+
+## QueryMsg
+
+### `health_values`
+
+<CH.Section>
+    <CH.Code>
+
+        ```json
+        {
+            "health_values": {
+                "account_id": "string",
+                "action": ActionKind,
+                "kind": AccountKind
+            }
+        }
+        ```
+
+    </CH.Code>
+</CH.Section>
+
+#### `ActionKind`
+
+<CH.Section>
+    <CH.Code>
+
+        ```json
+        ActionKind = "default" | "liquidation"
+        ```
+
+    </CH.Code>
+</CH.Section>
+
+#### `AccountKind`
+
+<CH.Section>
+    <CH.Code>
+
+        ```json
+        AccountKind = "default" | "high_levered_strategy"
+        ```
+
+    </CH.Code>
+</CH.Section>
+
+
+### `health_state`
+
+<CH.Section>
+    <CH.Code>
+
+        ```json
+        {
+            "health_state": {
+                "account_id": "string",
+                "action": ActionKind,
+                "kind": AccountKind
+            }
+        }
+        ```
+
+    </CH.Code>
+</CH.Section>
+
+#### `ActionKind`
+
+See [above](#actionkind).
+
+#### `AccountKind`
+
+See [above](#accountkind).
+
+### config
+
+<CH.Section>
+    <CH.Code>
+
+        ```json
+        {
+            "config": {}
+        }
+        ```
+
+    </CH.Code>
+</CH.Section>
+
+
+
+
+
