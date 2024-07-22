@@ -152,22 +152,6 @@ const config = {
         editUrl: 'https://github.com/mars-protocol/docs/blob/master',
       }, 
     ],
-    [
-      '@docusaurus/plugin-content-docs',
-      {
-        beforeDefaultRemarkPlugins: [
-          [remarkCodeHike, { 
-            showCopyButton: true,
-            lineNumbers: true,
-            theme }],
-        ],
-        id: 'develop',
-        path: 'docs/develop',
-        routeBasePath: 'docs/develop',
-        sidebarPath: require.resolve('./sidebars.js'),
-        editUrl: 'https://github.com/mars-protocol/docs/blob/master',
-      }, 
-    ],
 
     [
       '@docusaurus/plugin-content-docs',
@@ -265,14 +249,6 @@ const config = {
             label: 'Learn',
             position: 'left',
             activeBaseRegex: `/learn/`,
-          },
-
-          {
-            // to: '/docs/develop/smart-contracts/astroport-contract-addresses',   
-            to: '/docs/develop/overview',   
-            label: 'Develop',
-            position: 'left',
-            activeBaseRegex: `/develop/`,
           },
 
           // {to: '/blog', label: 'Blog', position: 'left'},
