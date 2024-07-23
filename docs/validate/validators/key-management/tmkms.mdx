@@ -4,4 +4,41 @@ sidebar_position: 5
 
 # TMKMS
 
-## TBD
+You can enable remote signing with `TMKMS`, a [key management tool for Tendermint validators](https://github.com/iqlusioninc/tmkms). You can install TMKMS by [following the provided instructions](https://github.com/iqlusioninc/tmkms#installation) from the TMKMS maintainers.
+
+To enable remote signing, edit your `.mars/config/config.toml` to read 
+
+```
+priv_validator_laddr = "tcp://0.0.0.0:26658"
+```
+
+You'll then need to edit `tmkms.toml` to be configured with the Mars network. A sample configuration is provided below.
+```
+# Tendermint KMS configuration file
+## Chain Configuration
+### Mars Network
+
+[[chain]]
+id = "mars-1"
+key_format = { type = "cosmos-json", account_key_prefix = "marspub", consensus_key_prefix = "marsvalconspub" }
+state_file = "/home/user/tmkms/state/mars-1-consensus.json"
+
+## Signing Provider Configuration
+### YubiHSM2 Provider Configuration
+
+[[providers.yubihsm]]
+adapter = { type = "usb" }
+auth = { key = <VALIDATOR AUTH KEY NUMBER>, password_file = "<PASSWORD FILE>" }
+keys = [
+    { key = <MARS CONSENSUS KEY NUMBER>, type = "consensus", chain_ids = ["mars-1"] },
+]
+
+## Validator Configuration
+
+[[validator]]
+chain_id = "mars-1"
+addr = "tcp://<YOUR VALIDATOR IP>:<YOUR VALIDATOR LISTEN ADDRESS (default 26658)>"
+secret_key = "/home/user/tmkms/secrets/kms-identity.key"
+protocol_version = "v0.34"
+reconnect = true
+```
