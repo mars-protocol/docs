@@ -30,7 +30,7 @@ const boxProps = {
 
     creditAccounts: {
       title: "Credit Accounts", 
-      description: "Discover Mars v2's new DeFi primitive: Rover credit accounts.",
+      description: "Discover Mars v2's new DeFi primitive: Credit accounts.",
     },
 
     tradeV2: {
