@@ -3,14 +3,68 @@ import TheVision2Url from '@site/static/img/the-vision2.png';
 
 # Welcome to Mars v2
 
-Welcome Martians! 🔴
+**WELCOME TO MARS** 🔴
 
-**Mars is a credit protocol for the future: decentralized, self-sovereign, inter-chain, non-custodial, open-sourced, and community-governed.**
+Mars is the future of Defi, a complete suite you need to navigate the Web3 ecosystem: Lending, Borrowing, Spot Trading, Marginal Trading, Leveraged LPing, High Leverage Strategies, Copy-Trading Vaults, and Perps. Mars is focused on creating a Web3 ecosystem that is decentralized, self-sovereign, inter-chain, non-custodial, open-sourced, and community-governed with an aim to be the best place to trade on Leverage in Crypto.
 
-Like existing credit protocols, Mars' "Red Bank" facilitates overcollateralized loans with a two-slope interest rate model (similar to Aave or Compound). In addition, Mars brings outstanding improvements in Contract-to-Contract (C2C) lending, allowing for smart contracts that are whitelisted to borrow assets from Mars liquidity pools collateralized by the whitelisted contracts' own assets rather than being collateralized by Red Bank deposits. These credit lines power Mars’ credit accounts ("Rovers"), giving end users access to leverage when interacting with other Mars-compatible DeFi protocols' smart contracts.
+# Credit Account 
 
-Any user can create their own Rover on an Outpost through that Outpost's Credit Manager smart contract. This Rover will initially be funded  by the user's own tokens, which then may be used as collateral to borrow additional tokens into the Rover from the Red Bank. The Rover architecture resembles the “sub-account” experience familiar to users of centralised exchanges and enables Rovers to composably integrate with other DeFi mechanisms, whether such mechanisms are part of Mars (borrowing/lending on the Red Bank) or belong to other whistelisted DeFi protocols. Through Rovers and Vaults, users can cross-collateralise leveraged strategies with multiple assets counting toward a single liquidation LTV.
+A credit account is a virtual account used for margin trading, lending and borrowing, and the High Leverage Strategies on Mars Protocol. Mars has two types of credit accounts. One is for the general purpose of trading (Spot and Margin), lending, and borrowing and the other one is for High Leverage Strategies (HLS). It is also the fundamental leverage money Lego used by managed vaults (copy trading vaults) and perpetual markets. The credit account allows users to borrow funds against their existing assets (also known as leverage) to increase their trading positions. It also presents another opportunity to use all the deposited collateral in the credit account to open cross-margined perps positions. You can also view your total net worth in a given moment and it is calculated based on the value of the user's collateral and borrowed funds.
 
 <img src={TheVision2Url} style={{ paddingBottom: 15 }} />
 
-Rovers effectively allow for a “rebundled” DeFi experience as users would be able to access their favourite tokens, farms, and protocols, using leverage, through the Mars credit account. This integrated experience represents the next evolution of DeFi, providing a user experience (UX) comparable to centralised exchanges (CEXes) on many important dimensions (such as speed, leverage, liquidation penalty, and asset choice), while gaining the potential to integrate key DeFi primitives and maintaining the advantages of decentralisation: self-custody and censorship-resistance.
+## 1. Lending and Borrowing
+Mars V2 helps you leverage your collateral to earn passive income on your holding through lending. Here’s how it works:
+
+- **Red Bank**: Red Bank is a secure platform for over-collateralized loans. You can deposit your assets and earn lending yield, or borrow against them using a flexible two-slope interest rate model similar to Aave or Compound.
+- **Credit Account**: Mars's credit account enables its users to borrow directly from its liquidity pools, using their own assets as collateral with great capital efficiency.
+
+In the traditional DeFi ecosystem, leverage is often over-collateralized, meaning you must deposit more than you can borrow. However, with Mars V2, this changes. You can now optimize your leverage with under-collateralization, allowing for more efficient and secure borrowing.
+
+## 2. Spot and Margin Trading
+
+Now, Mars v2 is beyond just lending and borrowing, it offers a comprehensive trading suite:
+
+**Spot Trading**: On Mars you can execute trades efficiently, swapping assets directly on Mars. You can enjoy the convenience of a centralized exchange experience while retaining the security and transparency of a decentralized platform.
+
+**Margin Trading**: Margin Trading helps you amplify your returns with leverage. You simply need to deposit assets as collateral and borrow additional funds to magnify your trading positions. 
+
+**Traditionally, DeFi margin trading involved a complex process known as "looping."** This inefficient method required multiple steps, including depositing collateral, borrowing stablecoins, swapping for the desired asset on a different platform, and repeating the cycle. This process was time-consuming and costly due to high gas fees and slippage.
+**Mars Protocol changes this process by offering a streamlined credit account system.** Users can directly borrow funds against their collateral with just a few clicks, eliminating the need for complex looping. This approach significantly improves capital efficiency and user experience. Additionally, Mars often provides higher loan-to-value (LTV) ratios, allowing users to maximize their borrowing power.
+By offering direct borrowing and higher LTVs, Mars Protocol delivers a superior margin trading experience compared to traditional DeFi platforms.
+
+
+## 3. Perpetual Trading
+
+Mars v2 pushes the boundaries of DeFi by introducing Perps Trading. With **Perpetual Contracts**, you can trade contracts that track the underlying value of an asset without expiry. This allows you to amplify bets on price movements (up to 10x leverage) in both directions (going long or short).  Mars Perps will be both cross-margined and cross-collateralized. Which in turn also opens up several advanced yield opportunities unique to DeFi on Mars.
+
+- Cross-margined: each Perp PnL can act as collateral against another Perp Position in the Credit Account.
+- Cross-collateralized: each asset in your account can act as collateral for perp positions, ranging from stablecoins to volatile tokens and even LP tokens.
+
+## 4. HLS (High Leverage Strategies) 
+
+HLS is a specialized credit account designed to obtain leverage to amplify your staking position. These are special types of accounts that restrict users to specific collateral to be used with specific debt (borrowable assets). This restriction is in place to guarantee that both the collateral and the debt in the account are highly correlated, which in turn enables the protocol to allow high leverage in these special accounts (up to 10x) as the account liquidation risk is effectively contained and lower compared to holding other uncorrelated assets. Users can deposit their cryptocurrencies/tokens (e.g., stATOM, stOSMO, OSMO, or NTRN) into their HLS-specific credit account and borrow additional funds to increase their positions. 
+
+It can be used for two purposes on Mars:
+
+### HLS for Leveraged Staking
+By depositing assets (e.g., stATOM, stOSMO) as collateral in an HLS account, users can borrow additional funds to increase their staking positions. This strategy amplifies potential rewards but also increases risk.
+
+### HLS for Leveraged LPing
+HLS accounts can also be used to enhance liquidity provision. Users can deposit LP tokens as collateral and borrow additional funds to increase their LP position. This can potentially boost earned fees but also magnifies the impact of impermanent loss.
+
+This unique feature can significantly amplify traders and stakers profits and rewards. 
+
+It is just a beginning and as we move forward, multiple other features are expected to be integrated further amplifying the impact Mars will create. 
+
+## Copy Trading Vault
+The Copy Trading Vault is a feature of Mars Protocol that allows users to invest in the trading strategies of experienced traders. It operates on a pool-based system where investors can allocate funds to a specific vault managed by a skilled trader. It’s important to note that a vault manager doesn’t have to be a person or an active trader, it could be a bot or even an immutable smart contract.
+
+### Key Benefits:
+
+- **Accessibility**: Provides opportunities for both novice and experienced traders to participate in the market.
+- **Diversification**: Allows investors to spread risk across multiple trading strategies.
+- **Professional Management**: Benefits from the expertise of experienced traders.
+- **Passive Income**: Enables investors to earn returns without active trading.
+
+By offering Copy Trading Vaults, Mars Protocol aims to democratize access to successful trading strategies and provide a user-friendly platform for investors to grow their portfolios.
