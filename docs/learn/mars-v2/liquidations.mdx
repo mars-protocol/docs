@@ -2,225 +2,122 @@
 sidebar_position: 7
 ---
 
-import Admonition from '@theme/Admonition'
+import LTVExample from '@site/static/img/mars-v2/ltv-example.png';
 
-import RedBankLiquidationsFormulaUrl from '@site/static/img/learn/red-bank/red-bank-liquidations-formula.png';
-
-import RedBankLiquidations1Url from '@site/static/img/learn/red-bank/red-bank-liquidations1.png';
-
-import RedBankLiquidations2Url from '@site/static/img/learn/red-bank/red-bank-liquidations2.png';
-
-import FormulaUrl from '@site/static/img/mars-v2/formula.png';
-
-import Formula2Url from '@site/static/img/mars-v2/formula-2.png';
-import Formula3Url from '@site/static/img/mars-v2/formula-3.png';
-
-import NewHFCurveUrl from '@site/static/img/mars-v2/new-hf-curve.png';
+import HFExample from '@site/static/img/mars-v2/hf-example.png';
 
 
 # Liquidations 
 
-## Overview
+Liquidation is a critical mechanism within Mars V2 designed to protect the protocol from losses due to undercollateralized loans. When a borrower's collateral value falls below a certain threshold, their position becomes undercollateralized, posing a risk to lenders. Liquidation serves to mitigate this risk by automatically selling the borrower's collateral to repay the outstanding loan.
+A thorough understanding of the liquidation process is essential for both lenders and borrowers within the Mars V2 ecosystem. For lenders, it ensures the safety of their deposited funds. For borrowers, it provides knowledge on how to avoid liquidation and manage their positions effectively. By comprehending the liquidation mechanics, participants can make informed decisions and optimize their interactions with the protocol.
 
-One of the most critical upgrades of Mars v2 relates to its new liquidations mechanism. Within Mars (and generally within DeFi lending products), the liquidations mechanism is the fundamental component that guarantees (or intends to) the solvency of the system. As such, its importance cannot be overstated.
+## What is Liquidation on Mars
 
-When and if an asset passes the whitelisting process, it will be assigned a Liquidation LTV. Liquidation LTVs are used to calculate a Health Factor (HF) for each credit account. A HF determines if the risk-adjusted value of the total positions in a credit account exceeds the total amount borrowed in the account and is represented in the form of a ratio. If the HF drops below 1, the account is deemed at risk and is available to be liquidated. Note that a health factor below 1 does not necessarily mean that the credit account is insolvent, but rather that it has exceeded its Liquidation LTV and may be approaching insolvency.
+Liquidation is the process of closing an undercollateralized loan by selling the borrower's collateral. This action is triggered when the value of the collateral falls below a predetermined liquidation threshold (i.e., 1), which is calculated based on the loan-to-value (LTV) ratio and the close factor.
 
-Since HFs apply to all assets in a given rover credit account, all of the user’s collateral becomes eligible for liquidation. Liquidators could receive back a diverse range of tokens (i.e. axlUSDC, OSMO and ATOM). The liquidation mechanism in rover credit accounts mirrors the process outlined in the section on Red Bank Liquidation Mechanisms.
+## How Liquidation Protects the Protocol
 
-<Admonition type="info" title="NOTE">
-Liquidations occur inside the liquidator’s credit account. Any liquidated assets are sent directly to the liquidator’s rover rather than the user’s wallet. Because liquidators must use the credit manager to initiate a liquidation, they can borrow the funds required to pay down Red Bank debt. This is possible because the transactions can be completed in a single transaction. Specifically, a liquidator can borrow the debt asset, swap the collateral asset back to the debt asset and repay the Red Bank all at once. In this way, credit accounts enable a flash-loan like mechanism to facilitate liquidations.
-</Admonition>
+Liquidation safeguards the protocol by preventing losses for lenders. When a borrower's position becomes undercollateralized, there's a risk that the borrower might default on their loan. By liquidating the position, the protocol recovers a portion of the borrowed funds, reducing potential losses for lenders.
 
-Liquidations follow a multi-step process:
+## Role of Liquidation in Maintaining System Health
 
-1. A third-party liquidator uses on-chain data to identify an account that has a health factor -1.
-2. This liquidator identifies a debt asset they wish to pay back on behalf of an account.
-3. This liquidator also identifies the collateral asset they wish to receive.
-4. The liquidator pays back an arbitrary amount of the user’s debt, up to the close factor (i.e. if the close factor is 50%, the liquidator can only repay up to 50% of the user’s debt in a single liquidation transaction).
-5. The liquidator receives a portion of the user’s collateral equal to the debt repaid and a liquidation bonus (i.e. if the liquidation bonus of the given collateral asset is 10% and the liquidator repaid an equivalent of $100 USD of the user’s debt, the liquidator would receive $110 USD worth of the user’s collateral)
+Liquidation plays a crucial role in maintaining the overall health of the Mars V2 ecosystem. By incentivizing liquidation, the protocol ensures that undercollateralized positions are promptly addressed, preventing a cascade of defaults and protecting the stability of the platform.
 
-Consider the following liquidation example.
+## Liquidation Parameters
 
-First, a user deposits and borrows from a Red Bank outpost. Over time, the value of their deposit falls. This pushes their health factor below 1 and makes the account eligible for liquidation.
+There are two major Liquidation Parameters on Mars
+- 1. Liquidation Bonus
+- 2. Close Factor (CF)
 
-<img src={RedBankLiquidations1Url} alt={"Liquidation flow, Part 1"} />
+### Liquidation Bonus
 
-<p style={{
-    textAlign: 'center', 
-    color: 'rgb(136, 153, 168)', 
-    fontWeight: '700',
-    fontSize: '14px',
-}}>Liquidation flow, Part 1</p>
+The liquidation bonus is a reward offered to liquidators who initiate the liquidation of an undercollateralized position. This incentive encourages users to actively participate in maintaining the protocol's health by liquidating risky positions. The bonus is typically a percentage of the seized collateral, distributed to the liquidator.
+The potential for profit motivates liquidators to monitor the protocol for undercollateralized positions, thereby helping to prevent losses for lenders.
 
-A liquidator then identifies the account, pays off a portion of the debt, and receives a 5% liquidation bonus. The user retains a portion of their debt plus their original deposit(s) minus the liquidation bonus.
+### Close Factor
 
-<img src={RedBankLiquidations2Url} alt={"Liquidation flow, Part 2"} />
+The close factor is a multiplier applied to the loan-to-value (LTV) ratio to determine the liquidation threshold. It is a safety buffer that ensures sufficient collateral remains after liquidation to protect lenders.
+Within this new system, the CF will be determined dynamically using a parameter known as the Target Health Factor (THF). The THF is a governance-defined (and updatable) parameter that determines the ideal HF a position should be left at immediately after the position has been liquidated. The CF, in turn, is a result of this parameter: the maximum amount of debt that can be repaid to take the position to the THF. For example, if the THF is 1.10 and a position gets liquidated at HF = 0.98, then the maximum amount of debt a liquidator can repay (in other words, the CF) will be an amount such that the HF after the liquidation is at maximum 1.10.
 
-<p style={{
-    textAlign: 'center', 
-    color: 'rgb(136, 153, 168)', 
-    fontWeight: '700',
-    fontSize: '14px',
-}}>Liquidation flow, Part 2</p>
+### Key Terms
 
-## Credit Account Health Calculation in the UI
+Before moving ahead, it is important we understand the other key terms:
 
-In the UI, Credit Account Health is calculated using a logarithmic function with a base of 3.5. This logarithmic HF calculation offers a more intuitive and responsive representation of account health. Here's how the Health Factor (HF) is interpreted in this system:
+- **1. Max LTV (Loan-to-Value Ratio):** The maximum amount that can be borrowed relative to the value of the collateral. For example, if you deposit 1WBTC worth $60,000 as collateral and it’s Max LTV is 80%, you can only borrow up to $48,000.
 
-### Health Status Thresholds
+- **2. Liquidation LTV:** It is the threshold at which a position is considered undercollateralized and subject to liquidation. It's typically set below the Max LTV to provide a safety margin. However, on Mars, it is greater than Max LTV. If the value of your collateral falls below the Liquidation LTV, the platform may automatically sell your collateral to repay the loan. 
 
-- **Healthy Accounts**: An account is considered "Healthy" when its HF reaches 1.5 or higher, signifying a relatively stable and secure state.
-- **100% Health**: An account achieves 100% health at an HF of 3.5, indicating optimal health and safety.
-- **Liquidate-able Accounts**: The health of a liquidate-able Credit Account is 0%, underscoring the need for timely action when an account reaches this state.
+You can check the example below. In this scenario, the Max LTV is 74% and Liquidation LTV is 75%.
 
-<img src={ NewHFCurveUrl } style={{ marginBottom: 15 } } />
+<img src={LTVExample} style={{ paddingBottom: 15 }} />
 
-This logarithmic approach ensures that users can more easily understand and monitor the health of their credit accounts without the need for linear conversion. If your credit account is approaching 0, you know you are at risk of liquidation. 
+- **3. Health Factor:** A ratio of collateral value as per Liq LTV to debt, indicating the health of a loan position. For example in the below scenario, the health of the user is 50% with a health factor of 1.87. However, if the user borrows more and due to price fluctuations the value of collateral falls down or the value of debt increases, the Health factor may fall below one, which may lead to liquidation.
 
-## Mars v1 Liquidation Mechanism
+<img src={HFExample} style={{ paddingBottom: 15 }} />
 
-Generally, liquidation mechanisms consist of the set of rules and processes that determine when and how risky positions should be closed (or liquidated) and the incentives for outside parties to do so.
+## Liquidation Process
 
-Mars v1 used a simple liquidations mechanism where the Close Factor (CF)* and the Liquidation Bonus** are fixed. The way this mechanism works is, whenever a position becomes liquidatable (i.e. its Health Factor drops below 1), any third party can repay a portion of the debt of that position (determined by the CF) to receive a portion of the collateral of the same position. The difference between the value of the collateral received and the value of the debt repaid is determined by the Liquidation Bonus (LB). Let’s explore an example:
+The liquidation process on Mars V2 can be broken down into the following steps:
 
-- Assume there’s a position with 100 ABC tokens as collateral and 200 XYZ tokens as debt.
-- Assume the value of ABC drops and the Health Factor of the position drops below 1.
-- As soon as that happens, any third party (commonly known as liquidators) can repay a portion of the debt to receive a portion of the collateral.
-- The portion of the debt that the liquidator can repay is determined by the CF. If the CF is 50%, then the liquidator will be able to repay a maximum of 100 XYZ tokens, or 50% of the total XYK tokens.
-- As an incentive to perform this task, the system offers the liquidator a portion of the collateral worth more than the debt repaid in return. This value is determined by the LB. For example, if the LB is 10% and the value of the debt repaid is 1,000 USD, then the liquidator would receive 1,100 USD worth of collateral for liquidating the given position.
+- 1. A third-party liquidator uses on-chain data to identify an account that has a health factor of less than 1 as per LiqLTV
+- 2. This liquidator identifies a debt asset they wish to pay back on behalf of an account.
+- 3. This liquidator also identifies the collateral asset they wish to receive.
+- 4. The liquidator pays back an arbitrary amount of the user’s debt, up to the close factor (i.e. if the close factor is 50%, the liquidator can only repay up to 50% of the user’s debt in a single liquidation transaction).
+- 5. The liquidator receives a portion of the user’s collateral equal to the debt repaid and a liquidation bonus (i.e. if the liquidation bonus of the given collateral asset is 10% and the liquidator repaid an equivalent of $100 USD of the user’s debt, the liquidator would receive $110 USD worth of the user’s collateral)
 
-While this mechanism has served Mars well, it offers significant improvement opportunities for the protocol. These improvements relate to:
+**To illustrate the process, let’s take an example:**
 
-- Capital efficiency:
-    - Since the LB isn’t market driven but rather needs to be defined a priori, the LB needs to be set aggressively such that under any condition it offers a significant incentive for liquidations to happen. A large LB translates into borrowers being punished more than they need to and more value leaking away from the protocol and towards liquidators.
-    - A similar situation happens with the CF. Given that it needs to be defined a priori, it should be set conservatively such that it offers security under any potential future scenarios. A larger than needed CF punishes borrowers and further leaks value from the protocol.
-- Systemic Robustness:
-    - Cascading liquidations: As this system tends to lead to higher than needed LB and CF, it is more prone to produce liquidation cascades. The reason for this is that a higher LB and CF lead to a higher value of the liquidated user’s collateral offered to the liquidator and thus, can lead to a larger value of collateral being liquidated on the market. This in turn can have a negative price impact on the collateral’s price and lead to further liquidations (i.e. a liquidations cascade).
-    - MEV: Given that as soon as the HF of a position drops below 1 the whole LB is offered to third parties, this system tends to lead to liquidators competing for the same liquidation opportunity at the same time, which may lead to congestion and other negative externalities on the network.
-- Flexibility: As the LB is inflexible and needs to be set a priori, it could happen that the LB offered isn’t significant enough for a position to be closed. If this happens, the position won’t be closed and can lead to the system accruing bad debt.
+Alice has deposited 5 BTC = `$100,000` in the Mars credit account as collateral and has borrowed 40 ETH at `$10,000`. Assuming the LiqLTV at 82% of the value the collateral power of BTC will be `$420,000 [(5*100,000)*82%]`.
+In this scenario, the health factor is `1.05 (420,000/400,000)`.
+If the price of ETH increases to `$11,000`, the value of the borrowing/debt will also rise to $440,000. Now, the net worth will be equal to `$60,000 ($500,000 - $ $440,000)` This price fluctuation may lead to a fall in health factors from `1.05 to 0.93`.
 
-## Mars v2 Liquidation Mechanism
+Now because the health factor is `<1` the position can be liquidated.
+Now, the liquidator can decide to provide  30 ETH back to the protocol and get a Liquidation Bonus.
+Let’s say the Liquidation Bonus is `10%`, then here’s how it will work:
 
-The new liquidations mechanism incorporated into Mars v2 intends to improve upon each of the above concerns. The way it does so is by implementing a dynamic methodology for determining the LB and CF. Let’s explore.
+- 1. The liquidator will liquidate BTC equivalent to 30 ETH from the collateral (considering the closing factor)
+- 2. BTC amount = `3.3 ($11,000*30)/100,000`
+- 3. He will also get `0.33 BTC` as a Liquidation Bonus `($100,000*0.3 = $30,000)`
+- 4. Provide those `30 ETH` back to the protocol and reduce the total debt of the user.
 
-In the new liquidations mechanism, the LB isn’t static but rather changes with the HF of the position. All else equal, the lower the HF of a position, the higher the LB offered to liquidators will be. This mechanism, pioneered by Euler, intends to recreate a Dutch Auction where, instead of time determining how the LB increases, the HF does. Let’s explore a simplified example of how this model could work*:
 
-- Assume we have a position with some collateral and some debt.
-- Assume we have parameterized the liquidations system such that the LB increases linearly as the HF decreases (i.e. for every 1pp the HF drops, the LB increases by 1pp).
-- Now, imagine the price of the collateral drops and the HF decreases to 0.99. At that moment the LB would be 1% (1-0.99).
-- 1% doesn’t seem to be enough incentive for liquidators as no liquidations happen at that time.
-- After some time, however, the HF drops to 0.97. At that moment, the LB offered would be 3%.
-- As 3% is enough for a liquidator, a liquidation happens at that level.
+Now the new equation will be:
 
-*Note that this example follows a specific parametrization of the system. If parametrized differently, the results might be different. What will tend to be the same across all parametrizations though, is the inverse relationship between the HF and the LB.*
+`Collateral = (5 BTC - 3.6 BTC) @100,000 = 1.4 BTC @100,000 = $140,000`
 
-The exact formula for calculating the LB under the new mechanism is as follows:
+`Adjusted Liquid LTV @82% = $140,000*82% = 114,800`
 
-Liquidation Bonus = min(intercept + (slope * (1 - HF)), maxLB*)
+`Borrowing = (40 ETH - 30 ETH) @11,0000 = 10 ETH @11,000 = $110,000`
 
-maxLB* = max(min(CR - 1, maxLB), minLB)
+`New Health Factor: 140,000/110,000 = 1.04`.
 
-Where:
+`Net worth after liquidation: $140,000 - $110,000 =  $30,000`
 
-- CR is the Collateralization Ratio of the position, defined as the value of the assets divided by the value of the debt.
-- HF is the Health Factor of the position.
-- Intercept and slope are governance defined parameters that determine how the LB increases as the HF decreases.
-- maxLB and minLB are governance defined parameters that determine the maximum and minimum values the LB can have.
+That means the user had to incur a penalty of `$30,000 ($60,000 - $30,00)` i.e., (net worth before liquidation - net worth after liquidation).
 
-Now let’s explore how the CF is determined under this model. Within this new system, the CF will be determined dynamically using a parameter known as the Target Health Factor (THF). The THF is a governance defined parameter that determines the ideal HF a position should be left at immediately after the position has been liquidated. The CF, in turn, is a result of this parameter: the maximum amount of debt that can be repaid to take the position to the THF. For example, if the THF is 1.05 and a position gets liquidated at HF = 0.98, then the maximum amount of debt a liquidator can repay (in other words, the CF) will be an amount such that the HF after the liquidation is at maximum 1.05. Notice that, in a similar vein to the LB, all else equal, the lower the HF of a position, the higher the CF will be. This makes sense since the HF is the best proxy we have for the riskiness of a position. As such, the riskier a position, the higher the CF allowed when liquidating it.
 
-So, how does this system improve upon the points described above?:
+## Governance's Role In Setting Parameters
 
-- Capital efficiency:
-    - The LB is determined dynamically as a function of the HF. If we assume that the HF of a position will tend to drop gradually, then this mechanism will tend to gradually increase the LB offered to liquidators as the HF decreases. If this happens, then we generally expect liquidations to happen at the lowest possible LB that generates a profitable liquidation. Thus, this system will likely lead to lower LBs (and better conditions for borrowers) and less value leakage for the protocol.
-    - The CF methodology also has the potential to lead to better capital efficiency. In particular, the lower the THF chosen, the lower the CF will be and the more capital efficient the system will be. The lower the THF, however, the less margin of safety the liquidation gives the position after liquidation. Thus, there’s a balance to strike here between capital efficiency and margin of safety when determining the THF.
-- Systemic Robustness:
-    - Liquidations cascades: As covered above, this system is likely to lead to lower LBs and CFs. All else equal, this means lower values of liquidated collateral and thus, a lower risk of liquidation cascades. Furthermore, this system is likely to lead to fewer liquidations overall. Under this system, for instance, a position that hovers around HF = 1 might not offer a sufficient LB for immediate liquidation. In time, such positions could become healthy again, meaning that fewer liquidations were even needed. This property also leads to a decreased risk of liquidation cascades.
-    - MEV: As mentioned above, if the LB increases gradually, the most efficient liquidator will tend to liquidate first. If that’s the case, this has the potential to lead to no congestion issues at all, since the most efficient liquidator will tend to liquidate alone, without any competition from more inefficient liquidators.
-- Flexibility: Under this model, the right LB doesn’t need to be determined a priori. Rather, it will be set by a market-driven mechanism where the final LB will depend on market conditions at that specific point in time. This solves for the arbitrariness of having to define a fixed LB a priori for any and all future market scenarios.
+The protocol's governance body plays a crucial role in determining liquidation parameters such as liquidation bonuses, close factors, and health factor thresholds. These parameters are subject to change based on market conditions and risk assessments.
 
-**As with most decisions in DeFi, the implementation of this new mechanism comes with tradeoffs. The most important one is that it’s a more complex mechanism. This additional complexity might translate into unforeseen issues at both the economic (incentives) and smart contract levels. Furthermore, this migration implies moving from a relatively battle-tested mechanism to a completely new implementation. These risks mean that there is increased potential for hacks, exploits, economic manipulations, and smart contract bugs, which could result in loss of funds for both current and future depositors, with no remedy, recovery or refund mechanism to the adversely affected users.**
+### Key functions of the governance body in setting liquidation parameters:
 
-## Liquidation Fee
+**Risk Assessment:** The governance body of Mars protocol analyzes market conditions, asset volatility, and potential risks to determine appropriate liquidation thresholds.
 
-The total liquidation fee (TLF) charged to a liquidated user will be equal to the liquidation bonus:
+**Parameter Adjustment:** Based on these assessments, Mars can propose and implement changes to liquidation bonuses, close factors, and health factor thresholds.
 
-`Total Liquidation Fee = Liquidation Bonus`
+**Community Input:** Mars often seeks community involvement in decision-making processes through proposals and voting mechanisms. This ensures that the parameters reflect the needs and preferences of the user base.
 
-### Protocol Liquidation Fee
+**Transparency and Accountability:** Mars's governance body is responsible for transparently communicating changes to liquidation parameters and providing justifications for its decisions.
 
-The Protocol Liquidation Fee (PLF) is a fee charged whenever a liquidation happens that flows to the protocol. The PLF is defined as a % taken from the Liquidation Bonus. For example, if the PLF is 20% and the liquidation bonus of a given liquidation transaction is 100 USD, the PLF would be equal to 20 USD and would flow to the protocol (the remaining 80 USD would flow to the liquidator). Some additional details:
+## Precautions for users to protect themselves from Liquidation
 
-- Fee Flow: Initially, 100% of the fee will flow to the Safety Fund in axlUSDC.
-    - *^ The swapping of these fees to axlUSDC could be handled in a similar way to protocol fees received from interest payments; they get accumulated somewhere until swapping them makes sense.*
-- How it’s determined: Governance determined and updatable on a global basis.
+Borrowers can implement several strategies to minimize the risk of liquidation:
 
-### Liquidation Bonus (LB) 
+- **Maintain Adequate Collateralization:** Ensuring that the value of the collateral consistently exceeds the loan amount by a substantial margin helps prevent liquidation.
+- **Monitor Health Factor:** Regularly checking the health factor of a loan position allows borrowers to identify potential risks early on and take corrective actions.
+- **Manage Debt Levels:** Prudent borrowing and timely debt repayment can significantly reduce the likelihood of liquidation.
+- **Diversify Collateral:** Spreading collateral across different assets can help mitigate the impact of price fluctuations on a single asset.
 
-The LB flows to liquidators (and a part to the protocol) and is designed to incentivize liquidators to liquidate unhealthy positions. Specifically, the LB defines the additional reward liquidators will receive when liquidating a user. For example, if the LB is 5% and the PLF is 20%, a liquidator that repays 100 USD worth of debt will receive 104 USD (= 100 * (1 + ((1 - PLF) * LB)) = 100 * (1 + (0.8 * 5%)) = 100 * 1.04 = 104) worth of collateral as a reward for liquidating the unhealthy position.
-
-The LB will depend on the Health Factor and a couple other parameters as follows:
-
-`Liquidation Bonus = min(B + (slope * (1 - HF)), maxLB*)`
-
-`maxLB* = max(min(CR - 1, maxLB), minLB)`, 
-
-Where:
-
-- `B` marks the level at which the LB starts when HF drops marginally below 1.
-    - If set at 1%, at HF = 0.999 the LB will be 1%. If set at 0%, the LB starts increasing from 0% as the HF drops below 1.
-    - How it’s determined: Governance determined and updatable on a per collateral basis.
-    - Values it can take: [0%, 10%]
-- `slope` defines the slope at which the LB increases as the HF decreases. The higher the slope, the faster the LB increases as the HF decreases.
-    - If set at 1, for every percentage point the HF decreases, the LB increases by a percentage point.
-    - How it’s determined: Governance determined and updatable on a per collateral basis.
-    - Values it can take: [1, 5]
-- `maxLB*` determines the maximum liquidation bonus that can be granted to the liquidator, taking into account the Collateralization Ratio (CR) of the position and a governance defined minLB parameter.
-- `CR` is the Collateralization Ratio of the position.
-    - Calculated as `CR = Total Assets / Total Debt`.
-    - Notice that, all else equal, the lower the CR, the lower the LB that can be granted to the liquidator. The rationale here is to avoid granting large liquidation bonuses when the position has a low collateralization level or is undercollateralized.
-- `maxLB` is the maximum LB that can be granted to a liquidator; in other words, the maxLB establishes a ceiling to the LB. This is a precautionary parameter to mitigate liquidated users being over-punished.
-    - How it’s determined: Governance determined and updatable on a global basis.
-    - Values it can take: [5%, 30%]
-- `minLB` is the minimum LB that will be granted to liquidators even when the position is undercollateralized.
-    - This is the minimum incentive we want to offer liquidators to close a position even when it is undercollateralized.
-    - How it’s determined: Governance determined and updatable on a global basis.
-    - Values it can take: [0%, 10%]
-
-## Close Factor
-
-The Close Factor (CF) determines the maximum amount of debt that can be repaid in a single liquidation transaction. For example, if the CF is 50%, a liquidator can repay up to 50% of the user’s debt in one single transaction.
-
-### *How it works
-
-Within this new system, the CF will be determined dynamically using a parameter known as the Target Health Factor (THF). The `THF` is a governance defined (and updatable) parameter that determines the ideal HF a position should be left at immediately after the position has been liquidated. The CF, in turn, is a result of this parameter: the maximum amount of debt that can be repaid to take the position to the THF. For example, if the THF is 1.10 and a position gets liquidated at HF = 0.98, then the maximum amount of debt a liquidator can repay (in other words, the CF) will be an amount such that the HF after the liquidation is at maximum 1.10.
-
-### Code Safeguards
-
-Values `THF` can take: [1, 2]
-
-### Formula
-
-The formula to calculate the maximum debt that can be repaid by a liquidator is as follows:
-
-<img src={ FormulaUrl } style={{ marginBottom: 15, width: 500 } } />
-
-Where:
-
-- MDR: Maximum Debt Repayable
-- THF: Target Health Factor
-- $Debt_0$: Value of debt before the liquidation happens
-- $Collateral_0$: Value of collateral before the liquidation happens
-- LTV: LTV of the collateral
-- TLF: Total Liquidation Fee
-
-### Edge cases 
-
-All debt is liquidatable: When MDR is less than 0, it means even repaying the whole debt is not going to be enough to bring the account back to the THF, so the liquidator should be able to repay all the available debt. Given the numerator in the MDR formula above is always greater than 0, MDR less than 0 happens when the denominator is less than 0 (we include the case where it’s 0 given it would make MDR equal infinite in the above formula):
-
-<img src={ Formula2Url } style={{ marginBottom: 15, width: 500 } } />
-
- Which equals:
-
- <img src={ Formula3Url } style={{ marginBottom: 15, width: 500 } } />
+The health factor is a crucial indicator of a loan's health. It represents the ratio of the collateral value to the loan amount. By closely monitoring the health factor, borrowers can proactively manage their positions and take steps to avoid liquidation.
