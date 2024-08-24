@@ -1,0 +1,120 @@
+---
+sidebar_position: 1
+---
+
+import MarginTrading from '@site/static/img/mars-v2/margin-trading.png';
+import OSMO from '@site/static/img/mars-v2/osmo.png';
+import OSMO45 from '@site/static/img/mars-v2/45-osmo.png';
+import TradeUSDC from '@site/static/img/mars-v2/trade-usdc.png';
+import HealthFactor from '@site/static/img/mars-v2/healthfactor.png';
+
+
+
+# Spot and Margin Trading on Mars Protocol
+
+Mars Protocol offers two primary trading modes: Spot and Margin. Understanding the distinction between the two and the innovative features that Mars offers is crucial for optimizing trading strategies and managing risk effectively.
+
+## Spot Trading
+
+Spot trading involves the immediate exchange of one asset for another at the current market price. Essentially, you buy or sell an asset with the funds you already hold in your wallet. There are two types of Spot Trading options available on Mars:
+
+**Spot Simple**
+
+- Focuses on trading volatile assets against stablecoins.
+- Offers a simplified trading interface for new users.
+- Supports trading pairs like NTRN/USDT, OSMO/USDC.
+
+**Spot Advanced**
+
+- Allows trading of any asset pair directly.
+- Provides flexibility for experienced traders.
+- Supports trading pairs like NTRN/WETH, ATOM/OSMO.
+
+### Key characteristics
+
+- Immediate execution of trades
+- No borrowing or leverage involved
+- Suitable for traders who prefer lower risk and a simpler trading experience
+
+### How it works
+
+- Connect your wallet with Mars
+- Select the trading pair (e.g., NTRN/USDT)
+- Choose a buy or sell order
+- Input the desired amount of the asset to buy or sell
+- Confirm the order
+
+Note: Mars trading view, by default, is set for Margin trading. If you wish to execute spot trades, you can turn off the Margin trading view.
+
+<img src={MarginTrading} style={{ marginBottom: 15 }} />
+
+## Margin Trading
+
+Margin trading allows traders to amplify their buying power by borrowing funds against their existing assets. It can be applied directly for both Spot Simple and Spot Advanced.  All the user needs to do is turn on the "Margin" toggle button. This enables larger positions and potentially higher profits but also comes with increased risk.
+
+### Key characteristics
+
+Use of borrowed funds to increase trading position size.
+Leverage magnifies both profits and losses.
+Requires a higher level of trading expertise and risk management.
+
+### Example of Margin Trading WBTC
+
+Let's illustrate margin trading with a WBTC example.
+Assume you have 1 WBTC worth $30,000. You want to increase your exposure to Bitcoin without investing additional funds. By using a 3x leverage, you can effectively control a position worth $90,000.
+
+### Benefits of Margin Trading
+
+- Amplified returns: Potential for higher profits on successful trades.
+- Flexibility: Ability to leverage existing assets to increase trading positions.
+- Short selling: Opportunity to profit from declining asset prices.
+
+### Risks of Margin Trading
+
+- **Increased risk of loss:** Leverage magnifies both profits and losses.
+- **Liquidation risk:** If your margin level falls below the maintenance margin, your position may be liquidated.
+- **Interest charges:** You'll be charged interest on the borrowed funds.
+
+## Credit Account: Health and Liquidations
+
+A [credit](https://docs.marsprotocol.io/docs/learn/mars-v2/credit-accounts) account is a virtual account used for margin trading, lending and borrowing, and the High Leverage Strategies on Mars Protocol. Mars has two types of credit accounts. One is for the general purpose of trading (Spot and Margin), lending, and borrowing and the other one is for High Leverage Strategies (HLS). It is also the fundamental leverage money Lego used by managed vaults (copy trading vaults) and perpetual markets. The credit account allows users to borrow funds against their existing assets (also known as leverage) to increase their trading positions. It also presents another opportunity to use all the deposited collateral in the credit account to open cross-margined perps positions. You can also view your total net worth in a given moment and it is calculated based on the value of the user's collateral and borrowed funds.
+
+For example, if you have a collateral of 10 OSMO in your credit account, you can trade up to 45 OSMO.
+
+<img src={OSMO} style={{ marginBottom: 15 }} />
+
+<img src={OSMO45} style={{ marginBottom: 15 }} />
+
+Besides over-collateralization, you can also do cross-collateralization. For example, if you have deposited OSMO, you can also use USDC to buy any other asset, let’s say ATOM. 
+
+<img src={TradeUSDC} style={{ marginBottom: 15 }} />
+
+### How it works:
+
+- Connect your wallet to Mars protocol, preferably Keplr. 
+- Fund your credit account.
+- Start trading.
+- You can use deposited assets in your credit account to get leverage on your trade to increase your trading position.
+- But you will also need to manage your margin level to avoid liquidation.
+
+A crucial aspect of margin trading is maintaining a sufficient health factor. The credit account is a measure of your account's solvency.
+
+**Health factor is calculated as the ratio of your collateral value as per Liquidation LTV to your borrowed amount.** For instance, if your collateral liquidation value is $100 and $50 worth of borrowed funds, your health factor would be 2.
+
+If your **health factor** falls below a predetermined threshold (generally 1), your position is at risk of liquidation.
+
+This means the platform will automatically sell part or all of your collateral to repay the borrowed funds. To prevent liquidation, it's essential to maintain a healthy health factor by either increasing your collateral or reducing your borrowed funds.
+
+**For example** in the given image, if you've maximized your borrow limit on an OSMO position and the price of OSMO drops significantly, your health factor will decline. If it falls below the liquidation threshold, your OSMO holdings will be automatically sold to repay the borrowed funds.
+
+<img src={HealthFactor} style={{ marginBottom: 15 }} />
+
+To avoid liquidation, it's essential to monitor your margin level closely and adjust your position as needed.
+
+## Looping with One Click
+
+Traditionally, DeFi platforms achieved leveraged exposure through a process known as **"looping."** This involved multiple steps, including depositing collateral, borrowing a stablecoin, swapping it for the desired asset on a different platform, and then repeating the cycle. This method was inefficient due to high gas fees and slippage.
+
+Mars Protocol simplifies this process with its **"looping with one click"** feature. By directly borrowing any asset against your collateral, you can increase your position efficiently. This streamlined approach saves time and reduces the potential for errors. However, maintaining a healthy credit account is crucial to avoid liquidation.
+
+Essentially, Mars Protocol's **margin trading is a more capital-efficient form of looping**. By offering direct borrowing and often higher LTVs, Mars provides a superior user experience as of CEX compared to traditional DeFi methods.

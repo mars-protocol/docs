@@ -2,29 +2,71 @@
 sidebar_position: 4
 ---
 
-# Mars Risk Framework
+# Risk Methodology
 
-Each new protocol and asset approved for borrowing and lending comes with unique risks and unique profit opportunities. It’s the job of the Martian Council to balance these risks and rewards and safeguard against shortfall events by setting calculated risk parameters.
+Risk methodology refers to the set of parameters and calculations used by the Mars protocol to determine the risk associated with different assets, protocols, and user positions, in order to minimize the risk of bad debt and ensure orderly and profitable liquidations.
+The process involves several key steps:
 
-Delphi Labs has proposed a [rigorous risk framework](https://github.com/mars-protocol/mips/blob/main/Mars-Risk-Framework.md) to help guide those decisions for Mars v2. Designed to assess the riskiness and determine the risk parameters of protocols and assets to be incorporated into the protocol, this framework adapts internationally used best practices to the fast-changing, experimental reality of DeFi. While the framework is initially put at the disposal of the Mars Council, it could be applied more broadly to any DeFi platform that needs to evaluate asset or protocol-related risks.
+## 1. Protocol Integration	
 
-It would supersede Mars’ [original risk framework](https://mars-protocol.medium.com/introducing-mars-protocols-risk-framework-1a452b49ad33), and covers new protocol integrations as well as two specific token types:
+The first step is to determine whether a specific protocol is suitable for use as collateral. This involves considering two categories of risk, i.e, Technical Risk and Centralization Risk:
 
-- Single-asset tokens (i.e. OSMO) 
-- Liquidity provisioning (LP) tokens (i.e. OSMO-axlUSDC LP tokens)
+### Technical Risk
+It involves: Smart contract risk, audit track record, critical vulnerabilities, and bug bounty programs
 
-## Framework Summary
+- **Smart Contract Risk:** Analyzing the underlying smart contract of the asset for vulnerabilities that could impact its value or functionality.
+- **Audit Track Record:** Regular audits by reputable security firms provide assurance of the smart contracts' integrity. The results of these audits should be made public to foster trust and transparency.
 
-The Mars risk framework combines proven TradFi risk metrics (including Conditional Value at Risk or CVaR and the Amihud Illiquidity Measure) with new crypto-specific metrics (including oracle analysis and decentralization tests) to standardize how risk is measured in DeFi.
+### Centralization Risk
 
-A two-step process is used to incorporate a new protocol or asset into the platform. The first step involves assessing the protocol or asset’s technical and centralization risks. In the second step, the framework defines how the different risk parameters should be set for the given asset/LP token based on market and liquidity risk metrics.
+Assessing the degree of control or centralization associated with the asset. Highly centralized assets pose greater risks due to potential manipulation or mismanagement.
 
-The Risk Framework scores all assets on a spectrum. The riskier an asset is, the greater the limitations the protocol imposes on that asset. 
+## 2. Determining Max LTV and Liquidation LTV
 
-## Supporting New Assets and LP Tokens
+Just like protocol integration, the asset and LP tokens also go through a critical examination of associated technical risk and centralization risk. However, as per the [Mars Risk Framework](https://blog.marsprotocol.io/blog/introducing-mars-protocols-risk-framework-2-0) two additional vectors are taken into account before listing them, i.e., oracle and bridging risk. 
 
-Like new protocols, any new asset or LP token that’s under consideration for support on Mars should be carefully examined for technical and centralization risks. The Martian Council should also consider oracle and bridging risks (where applicable).
+If a protocol passes the eligibility criteria, the next step is to determine the appropriate Max LTV and Liquidation LTV based on factors like centralization, asset volatility, smart contract security, bridging risk, and liquidation thresholds.
 
-Because LP tokens are potentially subject to impermanent loss (IL), they may have further limits imposed on their LTVs.
+### Max LTV (Loan-to-Value Ratio)
+
+The Max LTV is the maximum percentage of a collateral asset's value that can be borrowed. It's a crucial parameter in determining the risk associated with a loan. For instance, if an asset is valued at $100 and the Max LTV is 70%, the maximum loanable amount is $70.
+
+### Liquidation LTV
+
+The Liquidation LTV is the threshold at which a borrower's position is automatically liquidated to protect the lender. It's typically set below the Max LTV to provide a safety margin. However, on Mars it has been set above the Max LTV, For instance, if the Max LTV is 74%, the Liquidation LTV could be 75% for an asset, and the position will be liquidated when the loan-to-value ratio reaches 75%.
+The difference between the Max LTV and Liquidation LTV creates a buffer zone, allowing Liquidators to liquidate the asset to maintain profitability and avoid potential losses.
+
+### Health Factor
+
+The Health Factor is a real-time measure of a borrower's position health. It's calculated by dividing the total value of collateral as per Liquidation LTV by the total debt. A health factor greater than 1 indicates a healthy position, while a value below 1 signals liquidation risk.
+For example, if a borrower has $150 worth of collateral as per Liquid LTV and owes $100, their health factor is 1.5. This indicates a relatively safe position. However, if the collateral value drops to $100 while the debt remains constant, the health factor becomes 1, indicating a liquidation risk.
+
+## 3. Implementing Deposit Caps
+
+To further manage risk, [Deposit Caps](https://forum.marsprotocol.io/t/mrc-35-deposit-caps-methodology/1050) are imposed on individual assets. These are limits imposed on the amount of a specific asset that can be deposited into the protocol. These caps help mitigate systemic risks by preventing excessive concentration of a particular asset.
+Mars Protocol employs a sophisticated Deposit Cap Framework to determine deposit caps, considering factors such as:
+
+- a. On-Chain Liquidity: The amount of liquidity available for a specific asset on the blockchain.
+- b. Global Liquidity: The total liquidity across both centralized and decentralized exchanges.
+- c. Price Impact: The potential impact of large-scale liquidations on asset prices.
+
+### Calculation Methodology: 
+
+**MaxCap = min(MedianOnChainDepth_25pct_90d, 10 * Global Depth_2pct)**
+
+Where:
+- MedianOnChainDepth_25pct_90d: The median dollar cost required to move the on-chain price down by 25% over the past 90 days.
+- GlobalDepth_2pct: The total dollar liquidity required to move the price by -2% across major exchanges.
+
+By setting [deposit caps](https://forum.marsprotocol.io/t/mrc-35-deposit-caps-methodology/1050), the protocol can reduce the impact of a significant price decline in a single asset on the overall platform while deterring malicious actors from manipulating the protocol by artificially inflating asset prices. It also helps to maintain a diversified collateral pool, which can improve the protocol's resilience.
+
+## Overall Goal
+
+The risk methodology framework aims to balance risk and reward by carefully selecting eligible assets, setting appropriate risk parameters, and implementing deposit caps. The ultimate goal is to create a stable and sustainable lending platform while maximizing opportunities for borrowers and lenders.
+All these parameters and factors work in conjunction to manage risk effectively. A well-balanced combination of Max LTV, Liquidation LTV, Deposit Caps, and Health Factors is essential for the stability and sustainability of a lending protocol.
+
+By following this structured approach, Mars Protocol aims to effectively manage risk and protect the interests of all participants.
+
+Read More: [Mars Risk Framework](https://github.com/mars-protocol/mips/blob/main/Mars-Risk-Framework.md#4-model-usage-monitoring-and-update)
 
 
