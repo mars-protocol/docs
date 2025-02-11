@@ -348,7 +348,7 @@ const config = {
               },
               {
                 label: 'Discord',
-                href: 'https://discord.com/invite/marsprotocol',
+                href: 'https://discord.marsprotocol.io',
               },
               {
                 label: 'Forum',
